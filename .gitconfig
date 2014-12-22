@@ -1,0 +1,14 @@
+[core]
+	quotepath = false
+	precomposeunicode = true
+	excludesfile = /Users/zhang-yu/.global_ignore
+	editor = vim -c \"set fenc=utf-8\"
+[user]
+	name = zhyu
+	email = angellwings@gmail.com
+[push]
+	default = simple
+[filter "media"]
+	required = true
+	clean = git media clean %f
+	smudge = git media smudge %f
