@@ -97,6 +97,9 @@ set incsearch
 set backspace=indent,eol,start
 set et sta sw=2 ts=2 sts=2
 
+" Space as Leader
+let mapleader = "\<Space>"
+
 if has("autocmd")
 	autocmd FileType perl setlocal et sta sw=4 ts=4 sts=4
 	autocmd FileType python setlocal et sta sw=4 ts=4 sts=4
