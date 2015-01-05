@@ -100,6 +100,14 @@ set et sta sw=2 ts=2 sts=2
 " Space as Leader
 let mapleader = "\<Space>"
 
+" system clipboard
+vmap <Leader>y "+y
+vmap <Leader>d "+d
+nmap <Leader>p "+p
+nmap <Leader>P "+P
+vmap <Leader>p "+p
+vmap <Leader>P "+P
+
 if has("autocmd")
 	autocmd FileType perl setlocal et sta sw=4 ts=4 sts=4
 	autocmd FileType python setlocal et sta sw=4 ts=4 sts=4
