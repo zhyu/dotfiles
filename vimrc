@@ -69,6 +69,7 @@ Plugin 'perl-support.vim'
 Plugin 'c9s/perlomni.vim'
 Plugin 'hotchpotch/perldoc-vim'
 Plugin 'nvie/vim-flake8'
+Plugin 'vim-autopep8'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
