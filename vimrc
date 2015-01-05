@@ -2,7 +2,6 @@ set encoding=utf-8
 setglobal fileencoding=utf-8
 scriptencoding utf-8
 
-set foldmethod=indent
 set nocompatible              " be iMproved
 
 set nu
@@ -107,6 +106,12 @@ nmap <Leader>p "+p
 nmap <Leader>P "+P
 vmap <Leader>p "+p
 vmap <Leader>P "+P
+
+" fold
+set foldmethod=indent
+set foldlevel=99
+nnoremap <Leader><Leader> za
+vnoremap <Leader><Leader> zf
 
 if has("autocmd")
 	autocmd FileType perl setlocal et sta sw=4 ts=4 sts=4
