@@ -69,6 +69,8 @@ Plugin 'c9s/perlomni.vim'
 Plugin 'hotchpotch/perldoc-vim'
 Plugin 'nvie/vim-flake8'
 Plugin 'vim-autopep8'
+Plugin 'dag/vim2hs'
+Plugin 'eagletmt/neco-ghc'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -198,6 +200,7 @@ let g:ycm_seed_identifiers_with_syntax=1
 let g:ycm_collect_identifiers_from_tags_files = 1
 let g:ycm_semantic_triggers =  {
       \   'coffee' : ['.'],
+      \   'haskell' : ['.'],
       \ }
 
 " for Dash
