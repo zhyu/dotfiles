@@ -116,6 +116,7 @@ nnoremap <Leader><Leader> za
 vnoremap <Leader><Leader> zf
 
 if has("autocmd")
+	autocmd FileType haskell setlocal et sta sw=4 ts=4 sts=4
 	autocmd FileType perl setlocal et sta sw=4 ts=4 sts=4
 	autocmd FileType python setlocal et sta sw=4 ts=4 sts=4
 	autocmd FileType jinja setlocal et sta sw=2 ts=2 sts=2
