@@ -100,6 +100,8 @@ set et sta sw=2 ts=2 sts=2
 let mapleader = "\<Space>"
 
 " system clipboard
+nmap <Leader>y "+y
+nmap <Leader>d "+d
 vmap <Leader>y "+y
 vmap <Leader>d "+d
 nmap <Leader>p "+p
