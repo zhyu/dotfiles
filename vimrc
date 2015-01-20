@@ -147,6 +147,8 @@ if has("autocmd")
 	au FileType go nmap <Leader>dt <Plug>(go-def-tab)
 	au FileType go nmap gd <Plug>(go-def)
   au FileType go nmap <Leader>e <Plug>(go-rename)
+  " force redraw when activate the new buffer
+  au BufEnter * :redraw!
 endif
 
 set list
