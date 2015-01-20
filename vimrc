@@ -151,6 +151,8 @@ if has("autocmd")
   au BufEnter * :redraw!
 endif
 
+let g:autopep8_aggressive=1
+
 set list
 set listchars=tab:\|\ ,eol:¬
 
