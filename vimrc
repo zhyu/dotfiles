@@ -67,8 +67,7 @@ Plugin 'mattn/emmet-vim'
 Plugin 'perl-support.vim'
 Plugin 'c9s/perlomni.vim'
 Plugin 'hotchpotch/perldoc-vim'
-Plugin 'nvie/vim-flake8'
-Plugin 'vim-autopep8'
+Plugin 'klen/python-mode'
 Plugin 'dag/vim2hs'
 Plugin 'eagletmt/neco-ghc'
 
@@ -153,8 +152,6 @@ if has("autocmd")
   " force redraw when activate the new buffer
   au BufEnter * :redraw!
 endif
-
-let g:autopep8_aggressive=1
 
 set list
 set listchars=tab:\|\ ,eol:¬
