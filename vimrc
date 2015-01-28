@@ -159,6 +159,8 @@ set listchars=tab:\|\ ,eol:¬
 " --- format visually selected JavaScript using esformatter --
 vnoremap <silent> <leader>es :! esformatter<CR>
 
+nnoremap <silent> <leader>f :PymodeLintAuto<cr>
+
 "vim-airline config
 set laststatus=2
 let g:airline_powerline_fonts = 1
