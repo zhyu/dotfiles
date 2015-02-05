@@ -202,6 +202,9 @@ let g:ycm_semantic_triggers =  {
       \   'haskell' : ['.'],
       \ }
 
+" fix the conflict between rope and ycm
+let g:pymode_rope_completion = 0
+
 " for Dash
 nmap <silent> <leader>da <Plug>DashSearch
 
