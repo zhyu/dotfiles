@@ -70,6 +70,7 @@ Plugin 'hotchpotch/perldoc-vim'
 Plugin 'klen/python-mode'
 Plugin 'dag/vim2hs'
 Plugin 'eagletmt/neco-ghc'
+Plugin 'wakatime/vim-wakatime'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
