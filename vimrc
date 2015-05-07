@@ -72,6 +72,8 @@ Plugin 'dag/vim2hs'
 Plugin 'eagletmt/neco-ghc'
 Plugin 'plasticboy/vim-markdown'
 Plugin 'wakatime/vim-wakatime'
+Plugin 'elixir-lang/vim-elixir'
+Plugin 'carlosgaldino/elixir-snippets'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
