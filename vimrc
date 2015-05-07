@@ -64,9 +64,6 @@ Plugin 'wavded/vim-stylus'
 Plugin 'Glench/Vim-Jinja2-Syntax'
 Plugin 'briancollins/vim-jst'
 Plugin 'mattn/emmet-vim'
-Plugin 'perl-support.vim'
-Plugin 'c9s/perlomni.vim'
-Plugin 'hotchpotch/perldoc-vim'
 Plugin 'klen/python-mode'
 Plugin 'dag/vim2hs'
 Plugin 'eagletmt/neco-ghc'
@@ -123,7 +120,6 @@ vnoremap <Leader><Leader> zf
 
 if has("autocmd")
 	autocmd FileType haskell setlocal et sta sw=4 ts=4 sts=4
-	autocmd FileType perl setlocal et sta sw=4 ts=4 sts=4
 	autocmd FileType python setlocal et sta sw=4 ts=4 sts=4
 	autocmd FileType jinja setlocal et sta sw=2 ts=2 sts=2
 	autocmd FileType html setlocal et sta sw=2 ts=2 sts=2
@@ -231,9 +227,6 @@ let g:pymode_rope_completion = 0
 nmap <silent> <leader>da <Plug>DashSearch
 
 let g:CoffeeAutoTagIncludeVars=1
-
-" for Nakamap
-set path+=~/Workspace/perl/nakamap/web/lib
 
 " ctrlp
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.png,*.jpg,*.jpeg,*.gif " MacOSX/Linux
