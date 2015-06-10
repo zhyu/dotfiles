@@ -72,6 +72,7 @@ Plugin 'wakatime/vim-wakatime'
 Plugin 'elixir-lang/vim-elixir'
 Plugin 'carlosgaldino/elixir-snippets'
 Plugin 'kien/ctrlp.vim'
+Plugin 'dyng/ctrlsf.vim'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -239,3 +240,7 @@ if executable('ag')
   " Ag is fast enough that CtrlP doesn't need to cache
   let g:ctrlp_use_caching = 0
 endif
+
+nmap <silent> <leader>gf <Plug>CtrlSFPrompt
+nnoremap <silent><F4> :CtrlSFToggle<cr>
+imap <F4> <Esc>:CtrlSFToggle<cr>
