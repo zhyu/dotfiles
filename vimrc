@@ -100,6 +100,7 @@ filetype plugin indent on    " required
 set incsearch
 set backspace=indent,eol,start
 set et sta sw=2 ts=2 sts=2
+set tags=tags;
 
 " Space as Leader
 let mapleader = "\<Space>"
