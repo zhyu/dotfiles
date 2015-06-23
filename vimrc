@@ -73,6 +73,7 @@ Plugin 'elixir-lang/vim-elixir'
 Plugin 'carlosgaldino/elixir-snippets'
 Plugin 'kien/ctrlp.vim'
 Plugin 'dyng/ctrlsf.vim'
+Plugin 'Lokaltog/vim-easymotion'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -244,3 +245,22 @@ endif
 nmap <silent> <leader>gf <Plug>CtrlSFPrompt
 nnoremap <silent><F4> :CtrlSFToggle<cr>
 imap <F4> <Esc>:CtrlSFToggle<cr>
+
+" easymotion
+let g:EasyMotion_do_mapping = 0 " Disable default mappings
+" Bi-directional find motion
+" Jump to anywhere you want with minimal keystrokes, with just one key binding.
+" `s{char}{label}`
+map <Leader>s <Plug>(easymotion-s)
+
+" Turn on case insensitive feature
+let g:EasyMotion_smartcase = 1
+" Smartsign (type `3` and match `3`&`#`)
+let g:EasyMotion_use_smartsign_us = 1
+" Match multibyte Japanese characters with alphabetical input
+let g:EasyMotion_use_migemo = 1
+
+map <Leader>l <Plug>(easymotion-lineforward)
+map <Leader>j <Plug>(easymotion-j)
+map <Leader>k <Plug>(easymotion-k)
+map <Leader>h <Plug>(easymotion-linebackward)
