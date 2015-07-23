@@ -100,3 +100,6 @@ export C_INCLUDE_PATH=`brew --prefix`/include:$C_INCLUDE_PATH
 eval "$(plenv init - zsh)"
 LC_CTYPE=en_US.UTF-8
 LC_ALL=en_US.UTF-8
+
+# delete merged branchs
+alias gbrm='git branch --merged | grep -v "\*" | xargs -n 1 git branch -d'
