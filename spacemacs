@@ -36,6 +36,7 @@
      elixir
      emacs-lisp
      erlang
+     fasd
      git
      github
      html
