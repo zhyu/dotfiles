@@ -11,6 +11,10 @@ set t_Co=256
 
 filetype off
 
+set timeout timeoutlen=1000 ttimeoutlen=100
+set <F13>=fd
+imap <F13> <Esc>
+
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
