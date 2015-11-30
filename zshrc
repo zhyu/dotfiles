@@ -103,3 +103,6 @@ LC_ALL=en_US.UTF-8
 
 # delete merged branchs
 alias gbrm='git branch --merged | grep -v "\*" | xargs -n 1 git branch -d'
+
+# use vim when edit-command-line
+export EDITOR=vim
