@@ -6,9 +6,11 @@
 	<string>me.zhyu.Jitouch</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>/Users/jp20761/Library/PreferencePanes/Jitouch.prefPane/Contents/Resources/Jitouch.app/Contents/MacOS/Jitouch</string>
+		<string>~/Library/PreferencePanes/Jitouch.prefPane/Contents/Resources/Jitouch.app/Contents/MacOS/Jitouch</string>
 	</array>
 	<key>RunAtLoad</key>
+	<true/>
+	<key>LaunchOnlyOnce</key>
 	<true/>
 	<key>KeepAlive</key>
 	<true/>
