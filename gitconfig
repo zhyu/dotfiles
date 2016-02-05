@@ -1,7 +1,7 @@
 [core]
 	quotepath = false
 	precomposeunicode = true
-	excludesfile = /Users/zhang-yu/.global_ignore
+	excludesfile = ~/.global_ignore
 	editor = vim -c \"set fenc=utf-8\"
 [user]
 	name = zhyu
