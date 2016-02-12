@@ -104,5 +104,8 @@ LC_ALL=en_US.UTF-8
 # delete merged branchs
 alias gbrm='git branch --merged | grep -v "\*" | xargs -n 1 git branch -d'
 
+# clean up dangling images
+alias dockergc='docker rmi $(docker images -f "dangling=true" -q)'
+
 # use vim when edit-command-line
 export EDITOR=vim
