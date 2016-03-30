@@ -6,11 +6,11 @@
 	<string>me.zhyu.Jitouch</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>~/Library/PreferencePanes/Jitouch.prefPane/Contents/Resources/Jitouch.app/Contents/MacOS/Jitouch</string>
+		<string>/bin/bash</string>
+		<string>-c</string>
+		<string>killall Jitouch; ~/Library/PreferencePanes/Jitouch.prefPane/Contents/Resources/Jitouch.app/Contents/MacOS/Jitouch</string>
 	</array>
 	<key>RunAtLoad</key>
-	<true/>
-	<key>LaunchOnlyOnce</key>
 	<true/>
 	<key>KeepAlive</key>
 	<true/>
