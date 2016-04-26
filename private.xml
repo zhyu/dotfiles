@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<root>
+  <appdef>
+    <appname>IntelliJ_IDEA</appname>
+    <equal>com.jetbrains.intellij</equal>
+  </appdef>
+
+  <item>
+    <name>Change Input Source to Chinese when press right option key.</name>
+    <identifier>private.change_input_source_to_chinese</identifier>
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::OPTION_R,
+      KeyCode::OPTION_R,
+      KeyCode::VK_CHANGE_INPUTSOURCE_ENGLISH,
+      KeyCode::VK_WAIT_100MS,
+      KeyCode::SPACE, ModifierFlag::COMMAND_L | ModifierFlag::OPTION_L,
+    </autogen>
+  </item>
+  <item>
+    <name>Simultaneous Key Presses [F+D] to Escape</name>
+    <identifier>remap.simultaneouskeypresses_fd2escape</identifier>
+    <autogen>__SimultaneousKeyPresses__ KeyCode::F, KeyCode::D, KeyCode::ESCAPE</autogen>
+  </item>
+  <item>
+    <name>Disable EMACS key bindings in Intellij IDEA</name>
+    <identifier>private.intellij_idea_disable_emacs_key_bindings</identifier>
+    <only>IntelliJ_IDEA</only>
+    <autogen>
+      __KeyToKey__
+      KeyCode::D, MODIFIERFLAG_EITHER_LEFT_OR_RIGHT_CONTROL,
+      KeyCode::D, MODIFIERFLAG_EITHER_LEFT_OR_RIGHT_CONTROL,
+    </autogen>
+    <autogen>
+      __KeyToKey__
+      KeyCode::U, MODIFIERFLAG_EITHER_LEFT_OR_RIGHT_CONTROL,
+      KeyCode::U, MODIFIERFLAG_EITHER_LEFT_OR_RIGHT_CONTROL,
+    </autogen>
+  </item>
+</root>
