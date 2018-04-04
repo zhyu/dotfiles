@@ -1,0 +1,39 @@
+{
+    // font
+    "editor.fontFamily": "Fira Code",
+    "editor.fontLigatures": true,
+    // theme
+    "workbench.colorTheme": "Material Theme",
+    "workbench.iconTheme": "eq-material-theme-icons",
+    "materialTheme.cache.workbench.settings": {
+        "themeColours": "Default"
+    },
+    // vim
+    "vim.easymotion": true,
+    "vim.sneak": true,
+    "vim.incsearch": true,
+    "vim.useSystemClipboard": true,
+    "vim.hlsearch": true,
+    "vim.insertModeKeyBindings": [
+        {
+            "before": ["f","d"],
+            "after": ["<Esc>"]
+        }
+    ],
+    "vim.otherModesKeyBindingsNonRecursive": [
+        {
+            "before": ["<leader>","d"],
+            "after": ["d", "d"]
+        },
+        {
+            "before":["<C-n>"],
+            "after":[],
+            "commands": [
+                {
+                    "command": ":nohl"
+                }
+            ]
+        }
+    ],
+    "vim.leader": "<space>"
+}
