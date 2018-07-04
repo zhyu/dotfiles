@@ -5,9 +5,6 @@
     // theme
     "workbench.colorTheme": "Material Theme",
     "workbench.iconTheme": "eq-material-theme-icons",
-    "materialTheme.cache.workbench.settings": {
-        "themeColours": "Default"
-    },
     // vim
     "vim.easymotion": true,
     "vim.sneak": true,
@@ -20,11 +17,7 @@
             "after": ["<Esc>"]
         }
     ],
-    "vim.otherModesKeyBindingsNonRecursive": [
-        {
-            "before": ["<leader>","d"],
-            "after": ["d", "d"]
-        },
+    "vim.normalModeKeyBindingsNonRecursive": [
         {
             "before":["<C-n>"],
             "after":[],
@@ -33,7 +26,17 @@
                     "command": ":nohl"
                 }
             ]
+        },
+        {
+            "before": ["leader", "w"],
+            "commands": [
+                {
+                    "command": "workbench.action.files.save",
+                }
+            ]
         }
     ],
-    "vim.leader": "<space>"
+    "vim.leader": "<space>",
+    // python
+    "python.formatting.provider": "yapf"
 }
