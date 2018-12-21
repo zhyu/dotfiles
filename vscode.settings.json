@@ -46,5 +46,6 @@
     "vim.leader": "<space>",
     // python
     "python.formatting.provider": "black",
+    "python.linting.mypyEnabled": true,
     "editor.formatOnSave": true
 }
