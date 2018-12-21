@@ -45,5 +45,6 @@
     ],
     "vim.leader": "<space>",
     // python
-    "python.formatting.provider": "yapf"
+    "python.formatting.provider": "black",
+    "editor.formatOnSave": true
 }
