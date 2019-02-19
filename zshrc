@@ -109,3 +109,5 @@ alias dockergc='docker rmi $(docker images -f "dangling=true" -q)'
 
 # use vim when edit-command-line
 export EDITOR=vim
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
