@@ -6,100 +6,57 @@ set nocompatible              " be iMproved
 
 set nu
 syntax on
-color molokai
 set t_Co=256
-
-filetype off
 
 set timeout timeoutlen=1000 ttimeoutlen=100
 set <F13>=fd
 imap <F13> <Esc>
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
+" Automatic installation for vim-plug
+" should be placed before plug#begin() call
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
 
-" let Vundle manage Vundle, required
-Plugin 'gmarik/Vundle.vim'
+" Specify a directory for plugins
+" - For Neovim: ~/.local/share/nvim/plugged
+" - Avoid using standard Vim directory names like 'plugin'
+call plug#begin('~/.vim/plugged')
 
-" The following are examples of different formats supported.
-" Keep Plugin commands between vundle#begin/end.
-" plugin on GitHub repo
-" Plugin 'tpope/vim-fugitive'
-" plugin from http://vim-scripts.org/vim/scripts.html
-" Plugin 'L9'
-" Git plugin not hosted on GitHub
-" Plugin 'git://git.wincent.com/command-t.git'
-" git repos on your local machine (i.e. when working on your own plugin)
-" Plugin 'file:///home/gmarik/path/to/plugin'
-" The sparkup vim script is in a subdirectory of this repo called vim.
-" Pass the path to set the runtimepath properly.
-" Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
-" Avoid a name conflict with L9
-" Plugin 'user/L9', {'name': 'newL9'}
+Plug 'arcticicestudio/nord-vim'
+Plug 'tpope/vim-fugitive'
+Plug 'jelera/vim-javascript-syntax'
+Plug 'othree/javascript-libraries-syntax.vim'
+Plug 'MarcWeber/vim-addon-mw-utils'
+Plug 'tomtom/tlib_vim'
+Plug 'maksimr/vim-jsbeautify'
+Plug 'bling/vim-airline'
+Plug 'fatih/vim-go'
+Plug 'Valloric/YouCompleteMe'
+Plug 'SirVer/ultisnips'
+Plug 'majutsushi/tagbar'
+Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/nerdcommenter'
+Plug 'Raimondi/delimitMate'
+Plug 'Yggdroot/indentLine'
+Plug 'ntpeters/vim-better-whitespace'
+Plug 'rizzatti/dash.vim'
+Plug 'ap/vim-css-color'
+Plug 'mattn/emmet-vim'
+Plug 'klen/python-mode'
+Plug 'plasticboy/vim-markdown'
+Plug 'dyng/ctrlsf.vim'
+Plug 'Lokaltog/vim-easymotion'
+Plug '/usr/local/opt/fzf'
+Plug 'junegunn/fzf.vim'
 
-Plugin 'tpope/vim-fugitive'
-Plugin 'L9'
-Plugin 'JavaScript-Indent'
-Plugin 'jelera/vim-javascript-syntax'
-Plugin 'othree/javascript-libraries-syntax.vim'
-Plugin 'marijnh/tern_for_vim'
-Plugin 'othree/tern_for_vim_coffee'		" need for tern-coffee
-Plugin 'MarcWeber/vim-addon-mw-utils'
-Plugin 'tomtom/tlib_vim'
-Plugin 'maksimr/vim-jsbeautify'
-Plugin 'bling/vim-airline'
-Plugin 'fatih/vim-go'
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'SirVer/ultisnips'
-Plugin 'majutsushi/tagbar'
-Plugin 'scrooloose/nerdtree'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'Raimondi/delimitMate'
-Plugin 'Yggdroot/indentLine'
-Plugin 'ntpeters/vim-better-whitespace'
-Plugin 'rizzatti/dash.vim'
-Plugin 'kchmck/vim-coffee-script'
-Plugin 'lukaszkorecki/CoffeeTags'
-Plugin 'ap/vim-css-color'
-Plugin 'wavded/vim-stylus'
-Plugin 'Glench/Vim-Jinja2-Syntax'
-Plugin 'briancollins/vim-jst'
-Plugin 'mattn/emmet-vim'
-Plugin 'klen/python-mode'
-Plugin 'dag/vim2hs'
-Plugin 'eagletmt/neco-ghc'
-Plugin 'plasticboy/vim-markdown'
-Plugin 'wakatime/vim-wakatime'
-Plugin 'elixir-lang/vim-elixir'
-Plugin 'carlosgaldino/elixir-snippets'
-Plugin 'kien/ctrlp.vim'
-Plugin 'dyng/ctrlsf.vim'
-Plugin 'Lokaltog/vim-easymotion'
+" Initialize plugin system
+call plug#end()
 
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
+colorscheme nord
 
-" if has("autocmd") && exists("+omnifunc")
-" 	autocmd Filetype *
-"     \	if &omnifunc == "" |
-"     \	 setlocal omnifunc=syntaxcomplete#Complete |
-"     \	endif
-" endif
 
 set incsearch
 set backspace=indent,eol,start
@@ -126,13 +83,8 @@ nnoremap <Leader><Leader> za
 vnoremap <Leader><Leader> zf
 
 if has("autocmd")
-	autocmd FileType haskell setlocal et sta sw=4 ts=4 sts=4
 	autocmd FileType python setlocal et sta sw=4 ts=4 sts=4
-	autocmd FileType jinja setlocal et sta sw=2 ts=2 sts=2
 	autocmd FileType html setlocal et sta sw=2 ts=2 sts=2
-	autocmd FileType coffee setlocal et sta sw=2 ts=2 sts=2
-	autocmd FileType coffee nmap <Leader>w :CoffeeWatch vert<CR>
-	autocmd BufWritePost *.coffee silent make!
 	autocmd QuickFixCmdPost * nested cwindow
 	autocmd FileType javascript setlocal et sta sw=2 ts=2 sts=2
 	autocmd Filetype javascript call JavaScriptFold()
@@ -218,36 +170,18 @@ let g:go_highlight_build_constraints = 1
 " fix GoDoc bug caused by Arch's Golang bin conflicts with vim-go
 " source ~/.vim/bundle/vim-go/ftplugin/go/godoc.vim
 
+let g:ycm_server_python_interpreter = '/usr/bin/python'
 let g:ycm_complete_in_comments = 1
 let g:ycm_complete_in_strings = 1
 let g:ycm_collect_identifiers_from_comments_and_strings = 1
 let g:ycm_seed_identifiers_with_syntax=1
 let g:ycm_collect_identifiers_from_tags_files = 1
-let g:ycm_semantic_triggers =  {
-      \   'coffee' : ['.'],
-      \   'haskell' : ['.'],
-      \ }
 
 " fix the conflict between rope and ycm
 let g:pymode_rope_completion = 0
 
 " for Dash
 nmap <silent> <leader>da <Plug>DashSearch
-
-let g:CoffeeAutoTagIncludeVars=1
-
-" ctrlp
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.png,*.jpg,*.jpeg,*.gif " MacOSX/Linux
-let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
-if executable('ag')
-  " Use Ag over Grep
-  set grepprg=ag\ --nogroup\ --nocolor
-  " Use ag in CtrlP for listing files.
-  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-  " Ag is fast enough that CtrlP doesn't need to cache
-  let g:ctrlp_use_caching = 0
-endif
-nnoremap <leader>. :CtrlPTag<cr>
 
 nmap <silent> <leader>gf <Plug>CtrlSFPrompt
 nnoremap <silent><F4> :CtrlSFToggle<cr>
