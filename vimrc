@@ -45,7 +45,7 @@ Plug 'ntpeters/vim-better-whitespace'
 Plug 'rizzatti/dash.vim'
 Plug 'ap/vim-css-color'
 Plug 'mattn/emmet-vim'
-Plug 'klen/python-mode'
+Plug 'python-mode/python-mode', { 'branch': 'develop' }
 Plug 'plasticboy/vim-markdown'
 Plug 'dyng/ctrlsf.vim'
 Plug 'Lokaltog/vim-easymotion'
