@@ -45,7 +45,7 @@ ENABLE_CORRECTION="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git brew coffee npm osx pip python sudo common-aliases fasd)
+plugins=(git osx sudo common-aliases fasd pyenv tmux npm)
 
 source $ZSH/oh-my-zsh.sh
 
