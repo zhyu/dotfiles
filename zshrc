@@ -107,6 +107,9 @@ alias gbrm='git branch --merged | grep -v "\*" | xargs -n 1 git branch -d'
 # clean up dangling images
 alias dockergc='docker rmi $(docker images -f "dangling=true" -q)'
 
+# it's in the common-alias (fd='find -type d'). I want https://github.com/sharkdp/fd
+unalias fd
+
 # use vim when edit-command-line
 export EDITOR=vim
 
