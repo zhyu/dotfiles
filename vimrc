@@ -33,7 +33,7 @@ Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'tomtom/tlib_vim'
 Plug 'maksimr/vim-jsbeautify'
 Plug 'bling/vim-airline'
-Plug 'fatih/vim-go'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'Valloric/YouCompleteMe'
 Plug 'SirVer/ultisnips'
 Plug 'jiangmiao/auto-pairs'
@@ -43,6 +43,7 @@ Plug 'rizzatti/dash.vim'
 Plug 'ap/vim-css-color'
 Plug 'mattn/emmet-vim'
 Plug 'python-mode/python-mode', { 'branch': 'develop' }
+Plug 'Glench/Vim-Jinja2-Syntax'
 Plug 'plasticboy/vim-markdown'
 Plug 'dyng/ctrlsf.vim'
 Plug 'Lokaltog/vim-easymotion'
@@ -124,7 +125,6 @@ let g:airline_powerline_fonts = 1
 let g:airline_detect_paste=1
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#syntastic#enabled = 1
-let g:airline#extensions#tagbar#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#buffer_idx_mode = 1
 
@@ -137,24 +137,6 @@ nmap <leader>6 <Plug>AirlineSelectTab6
 nmap <leader>7 <Plug>AirlineSelectTab7
 nmap <leader>8 <Plug>AirlineSelectTab8
 nmap <leader>9 <Plug>AirlineSelectTab9
-
-nnoremap <silent><F3> :TagbarToggle<cr>
-imap <F3> <Esc>:TagbarToggle<cr>
-let g:tagbar_autofocus = 1
-let g:tagbar_sort = 0
-let g:tagbar_compact = 1
-"let g:tagbar_indent = 1
-let g:tagbar_autoshowtag = 1
-let g:tagbar_type_elixir = {'ctagstype': 'elixir', 'kinds': ['f:functions:0:0', 'c:callbacks:0:0', 'd:delegates:0:0', 'e:exceptions:0:0', 'i:implementations:0:0', 'a:macros:0:0', 'o:operators:0:0', 'm:modules:0:0', 'p:protocols:0:0', 'r:records:0:0'], 'sro': '.', 'kind2scope': {'m': 'modules'}, 'scope2kind': {'modules': 'm'}}
-
-nnoremap <silent><F2> :NERDTreeToggle<cr>
-imap <F2> <Esc>:NERDTreeToggle<cr>
-let NERDTreeIgnore=['\.o$', '\.ko$', '\.symvers$', '\.order$', '\.mod.c$', '\.swp$', '\.bak$', '\~$', '\.pyc$', '\.pyo$']
-"let NERDTreeSortOrder=['\/$', 'Makefile', 'makefile', '\.c$', '\.cc$', '\.cpp$', '\.h$', '*', '\~$']
-let NERDTreeMinimalUI=1
-let NERDTreeQuitOnOpen=1
-"let NERDTreeWinPos = 'right'
-"let NERDTreeWinSize = 31
 
 let g:UltiSnipsExpandTrigger='<c-j>'
 
@@ -202,3 +184,7 @@ map <Leader>l <Plug>(easymotion-lineforward)
 map <Leader>j <Plug>(easymotion-j)
 map <Leader>k <Plug>(easymotion-k)
 map <Leader>h <Plug>(easymotion-linebackward)
+
+" fzf
+" Files: command with preview, need to install https://github.com/sharkdp/bat
+command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
