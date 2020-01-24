@@ -110,5 +110,9 @@ alias dockergc='docker rmi $(docker images -f "dangling=true" -q)'
 # it's in the common-alias (fd='find -type d'). I want https://github.com/sharkdp/fd
 unalias fd
 
+# let's try neovim
+alias vim='nvim'
+alias vimdiff='nvim -d '
+
 # use vim when edit-command-line
 export EDITOR=vim
