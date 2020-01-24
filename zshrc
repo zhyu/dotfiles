@@ -45,7 +45,7 @@ ENABLE_CORRECTION="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(tmux sudo common-aliases fasd git pyenv)
+plugins=(tmux fzf sudo common-aliases fasd git pyenv)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -112,5 +112,3 @@ unalias fd
 
 # use vim when edit-command-line
 export EDITOR=vim
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
