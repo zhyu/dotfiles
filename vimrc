@@ -149,7 +149,7 @@ let g:go_highlight_build_constraints = 1
 " fix GoDoc bug caused by Arch's Golang bin conflicts with vim-go
 " source ~/.vim/bundle/vim-go/ftplugin/go/godoc.vim
 
-let g:ycm_server_python_interpreter = '/usr/bin/python'
+let g:ycm_server_python_interpreter = $HOME . '/.pyenv/versions/neovim/bin/python'
 let g:ycm_complete_in_comments = 1
 let g:ycm_complete_in_strings = 1
 let g:ycm_collect_identifiers_from_comments_and_strings = 1
