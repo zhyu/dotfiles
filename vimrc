@@ -2,15 +2,12 @@ set encoding=utf-8
 setglobal fileencoding=utf-8
 scriptencoding utf-8
 
-set nocompatible              " be iMproved
-
 set nu
 syntax on
 set t_Co=256
 
 set timeout timeoutlen=1000 ttimeoutlen=100
-set <F13>=fd
-imap <F13> <Esc>
+imap fd <Esc>
 
 " Automatic installation for vim-plug
 " should be placed before plug#begin() call
@@ -25,27 +22,29 @@ endif
 " - Avoid using standard Vim directory names like 'plugin'
 call plug#begin('~/.vim/plugged')
 
+" UI
 Plug 'arcticicestudio/nord-vim'
-Plug 'tpope/vim-fugitive'
+Plug 'bling/vim-airline'
+" complete
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+" language specific
 Plug 'jelera/vim-javascript-syntax'
 Plug 'othree/javascript-libraries-syntax.vim'
+Plug 'maksimr/vim-jsbeautify'
+Plug 'ap/vim-css-color'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'python-mode/python-mode', { 'branch': 'develop' }
+Plug 'Glench/Vim-Jinja2-Syntax'
+Plug 'plasticboy/vim-markdown'
+" utils
+Plug 'tpope/vim-fugitive'
 Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'tomtom/tlib_vim'
-Plug 'maksimr/vim-jsbeautify'
-Plug 'bling/vim-airline'
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-Plug 'Valloric/YouCompleteMe'
-Plug 'SirVer/ultisnips'
 Plug 'jiangmiao/auto-pairs'
 Plug 'Yggdroot/indentLine'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'rizzatti/dash.vim'
-Plug 'ap/vim-css-color'
 Plug 'mattn/emmet-vim'
-Plug 'python-mode/python-mode', { 'branch': 'develop' }
-Plug 'Glench/Vim-Jinja2-Syntax'
-Plug 'plasticboy/vim-markdown'
-Plug 'dyng/ctrlsf.vim'
 Plug 'Lokaltog/vim-easymotion'
 Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
@@ -79,6 +78,17 @@ set foldmethod=indent
 set foldlevel=99
 nnoremap <Leader><Leader> za
 vnoremap <Leader><Leader> zf
+
+" start deoplete
+let g:deoplete#enable_at_startup = 1
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ deoplete#manual_complete()
+function! s:check_back_space() abort "{{{
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction"}}}
 
 if has("autocmd")
 	autocmd FileType python setlocal et sta sw=4 ts=4 sts=4
@@ -138,8 +148,6 @@ nmap <leader>7 <Plug>AirlineSelectTab7
 nmap <leader>8 <Plug>AirlineSelectTab8
 nmap <leader>9 <Plug>AirlineSelectTab9
 
-let g:UltiSnipsExpandTrigger='<c-j>'
-
 let g:go_auto_type_info = 1
 let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
@@ -149,14 +157,7 @@ let g:go_highlight_build_constraints = 1
 " fix GoDoc bug caused by Arch's Golang bin conflicts with vim-go
 " source ~/.vim/bundle/vim-go/ftplugin/go/godoc.vim
 
-let g:ycm_server_python_interpreter = $HOME . '/.pyenv/versions/neovim/bin/python'
-let g:ycm_complete_in_comments = 1
-let g:ycm_complete_in_strings = 1
-let g:ycm_collect_identifiers_from_comments_and_strings = 1
-let g:ycm_seed_identifiers_with_syntax=1
-let g:ycm_collect_identifiers_from_tags_files = 1
-
-" fix the conflict between rope and ycm
+"fix the conflict between rope and ycm
 let g:pymode_rope_completion = 0
 
 " for Dash
