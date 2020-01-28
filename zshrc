@@ -115,4 +115,4 @@ alias vim='nvim'
 alias vimdiff='nvim -d '
 
 # use vim when edit-command-line
-export EDITOR=vim
+export EDITOR=nvim
