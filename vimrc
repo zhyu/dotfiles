@@ -13,7 +13,7 @@ imap fd <Esc>
 " should be placed before plug#begin() call
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
@@ -28,13 +28,22 @@ Plug 'bling/vim-airline'
 " complete
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 " language specific
+" - Elixir
+Plug 'slashmili/alchemist.vim'
+Plug 'elixir-editors/vim-elixir'
+" - Python
+Plug 'python-mode/python-mode', { 'branch': 'develop' }
+Plug 'psf/black'
+Plug 'Glench/Vim-Jinja2-Syntax'
+" - Javascript
 Plug 'jelera/vim-javascript-syntax'
 Plug 'othree/javascript-libraries-syntax.vim'
 Plug 'maksimr/vim-jsbeautify'
+" - CSS
 Plug 'ap/vim-css-color'
+" - Golang
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-Plug 'python-mode/python-mode', { 'branch': 'develop' }
-Plug 'Glench/Vim-Jinja2-Syntax'
+" - Markdown
 Plug 'plasticboy/vim-markdown'
 " utils
 Plug 'tpope/vim-fugitive'
@@ -89,36 +98,40 @@ function! s:check_back_space() abort "{{{
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~ '\s'
 endfunction"}}}
+inoremap <silent><expr> <S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
 
 if has("autocmd")
-	autocmd FileType python setlocal et sta sw=4 ts=4 sts=4
-	autocmd FileType html setlocal et sta sw=2 ts=2 sts=2
-	autocmd QuickFixCmdPost * nested cwindow
-	autocmd FileType javascript setlocal et sta sw=2 ts=2 sts=2
-	autocmd Filetype javascript call JavaScriptFold()
-	" js-beautify
-	autocmd FileType javascript noremap <buffer>  <c-f> :call JsBeautify()<cr>
-	" for html
-	autocmd FileType html noremap <buffer> <c-f> :call HtmlBeautify()<cr>
-	" for css or scss
-	autocmd FileType css noremap <buffer> <c-f> :call CSSBeautify()<cr>
-	" for go
-	au FileType go setlocal et sta sw=8 ts=8 sts=8
-  au FileType go nmap <Leader>s <Plug>(go-implements)
-	au FileType go nmap <Leader>i <Plug>(go-info)
-	au FileType go nmap <Leader>gd <Plug>(go-doc)
-	au FileType go nmap <Leader>gv <Plug>(go-doc-vertical)
-	au FileType go nmap <leader>r <Plug>(go-run)
-	au FileType go nmap <leader>b <Plug>(go-build)
-	au FileType go nmap <leader>t <Plug>(go-test)
-	au FileType go nmap <leader>c <Plug>(go-coverage)
-	au FileType go nmap <Leader>ds <Plug>(go-def-split)
-	au FileType go nmap <Leader>dv <Plug>(go-def-vertical)
-	au FileType go nmap <Leader>dt <Plug>(go-def-tab)
-	au FileType go nmap gd <Plug>(go-def)
-  au FileType go nmap <Leader>e <Plug>(go-rename)
+  " quickfix
+  autocmd QuickFixCmdPost * nested cwindow
+  " Python
+  autocmd FileType python setlocal et sta sw=4 ts=4 sts=4
+  autocmd BufWritePre *.py execute ':Black'
+  " Javascript
+  autocmd FileType javascript setlocal et sta sw=2 ts=2 sts=2
+  autocmd Filetype javascript call JavaScriptFold()
+  autocmd FileType javascript noremap <buffer>  <c-f> :call JsBeautify()<cr>
+  " HTML
+  autocmd FileType html setlocal et sta sw=2 ts=2 sts=2
+  autocmd FileType html noremap <buffer> <c-f> :call HtmlBeautify()<cr>
+  " CSS
+  autocmd FileType css noremap <buffer> <c-f> :call CSSBeautify()<cr>
+  " Golang
+  autocmd FileType go setlocal et sta sw=8 ts=8 sts=8
+  autocmd FileType go nmap <Leader>s <Plug>(go-implements)
+  autocmd FileType go nmap <Leader>i <Plug>(go-info)
+  autocmd FileType go nmap <Leader>gd <Plug>(go-doc)
+  autocmd FileType go nmap <Leader>gv <Plug>(go-doc-vertical)
+  autocmd FileType go nmap <leader>r <Plug>(go-run)
+  autocmd FileType go nmap <leader>b <Plug>(go-build)
+  autocmd FileType go nmap <leader>t <Plug>(go-test)
+  autocmd FileType go nmap <leader>c <Plug>(go-coverage)
+  autocmd FileType go nmap <Leader>ds <Plug>(go-def-split)
+  autocmd FileType go nmap <Leader>dv <Plug>(go-def-vertical)
+  autocmd FileType go nmap <Leader>dt <Plug>(go-def-tab)
+  autocmd FileType go nmap gd <Plug>(go-def)
+  autocmd FileType go nmap <Leader>e <Plug>(go-rename)
   " force redraw when activate the new buffer
-  au BufEnter * :redraw!
+  autocmd BufEnter * :redraw!
 endif
 
 set list
