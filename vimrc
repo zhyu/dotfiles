@@ -26,11 +26,8 @@ call plug#begin('~/.vim/plugged')
 Plug 'arcticicestudio/nord-vim'
 Plug 'bling/vim-airline'
 " complete
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'ycm-core/YouCompleteMe'
 " language specific
-" - Elixir
-Plug 'slashmili/alchemist.vim'
-Plug 'elixir-editors/vim-elixir'
 " - Python
 Plug 'python-mode/python-mode', { 'branch': 'develop' }
 Plug 'psf/black'
@@ -87,18 +84,6 @@ set foldmethod=indent
 set foldlevel=99
 nnoremap <Leader><Leader> za
 vnoremap <Leader><Leader> zf
-
-" start deoplete
-let g:deoplete#enable_at_startup = 1
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ deoplete#manual_complete()
-function! s:check_back_space() abort "{{{
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~ '\s'
-endfunction"}}}
-inoremap <silent><expr> <S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
 
 if has("autocmd")
   " quickfix
@@ -169,6 +154,13 @@ let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
 " fix GoDoc bug caused by Arch's Golang bin conflicts with vim-go
 " source ~/.vim/bundle/vim-go/ftplugin/go/godoc.vim
+
+let g:ycm_server_python_interpreter = $HOME . '/.pyenv/versions/neovim/bin/python'
+let g:ycm_complete_in_comments = 1
+let g:ycm_complete_in_strings = 1
+let g:ycm_collect_identifiers_from_comments_and_strings = 1
+let g:ycm_seed_identifiers_with_syntax=1
+let g:ycm_collect_identifiers_from_tags_files = 1
 
 "fix the conflict between rope and ycm
 let g:pymode_rope_completion = 0
