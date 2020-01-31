@@ -164,6 +164,7 @@ let g:ycm_collect_identifiers_from_tags_files = 1
 
 "fix the conflict between rope and ycm
 let g:pymode_rope_completion = 0
+let g:pymode_options_max_line_length = 88
 
 " for Dash
 nmap <silent> <leader>da <Plug>DashSearch
