@@ -101,6 +101,9 @@ eval "$(plenv init - zsh)"
 LC_CTYPE=en_US.UTF-8
 LC_ALL=en_US.UTF-8
 
+# human-readable sizes
+alias df='df -h'
+
 # delete merged branchs
 alias gbrm='git branch --merged | grep -v "\*" | xargs -n 1 git branch -d'
 
@@ -110,9 +113,13 @@ alias dockergc='docker rmi $(docker images -f "dangling=true" -q)'
 # it's in the common-alias (fd='find -type d'). I want https://github.com/sharkdp/fd
 unalias fd
 
+# use fd as backend of fzf, it will respect ignore files like .gitignore
+export FZF_DEFAULT_COMMAND='fd --type f'
+
 # let's try neovim
 alias vim='nvim'
 alias vimdiff='nvim -d '
 
 # use vim when edit-command-line
-export EDITOR=nvim
+export VISUAL=nvim
+export EDITOR="${VISUAL}"
