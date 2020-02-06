@@ -3,8 +3,7 @@
     "editor.fontFamily": "Fira Code",
     "editor.fontLigatures": true,
     // theme
-    "workbench.colorTheme": "Material Theme",
-    "workbench.iconTheme": "eq-material-theme-icons",
+    "workbench.colorTheme": "Nord",
     // vim
     "vim.easymotion": true,
     "vim.sneak": true,
