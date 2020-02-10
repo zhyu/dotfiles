@@ -18,7 +18,7 @@
     ],
     "vim.normalModeKeyBindingsNonRecursive": [
         {
-            "before":["<C-n>"],
+            "before": ["<C-n>"],
             "commands": [
                 {
                     "command": ":nohl"
@@ -38,6 +38,14 @@
             "commands": [
                 {
                     "command": "workbench.action.closeActiveEditor"
+                }
+            ]
+        },
+        {
+            "before": ["g", "D"],
+            "commands": [
+                {
+                    "command": "editor.action.revealDefinition"
                 }
             ]
         }
