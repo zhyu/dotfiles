@@ -6,6 +6,7 @@
     "workbench.colorTheme": "Nord",
     // vim
     "vim.easymotion": true,
+    "vim.foldfix": true,
     "vim.sneak": true,
     "vim.incsearch": true,
     "vim.useSystemClipboard": true,
@@ -40,6 +41,26 @@
                     "command": "workbench.action.closeActiveEditor"
                 }
             ]
+        },
+        {
+            "before": ["leader", "s"],
+            "after": ["leader", "leader", "s"]
+        },
+        {
+            "before": ["leader", "h"],
+            "after": ["leader", "leader", "h"]
+        },
+        {
+            "before": ["leader", "j"],
+            "after": ["leader", "leader", "j"]
+        },
+        {
+            "before": ["leader", "k"],
+            "after": ["leader", "leader", "k"]
+        },
+        {
+            "before": ["leader", "l"],
+            "after": ["leader", "leader", "l"]
         },
         {
             "before": ["g", "D"],
