@@ -52,7 +52,7 @@ Plug 'ntpeters/vim-better-whitespace'
 Plug 'rizzatti/dash.vim'
 Plug 'mattn/emmet-vim'
 Plug 'Lokaltog/vim-easymotion'
-Plug '/usr/local/opt/fzf'
+Plug '~/.fzf'
 Plug 'junegunn/fzf.vim'
 
 " Initialize plugin system
