@@ -29,7 +29,6 @@ Plug 'bling/vim-airline'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " language specific
 " - Python
-Plug 'python-mode/python-mode', { 'branch': 'develop' }
 Plug 'psf/black'
 Plug 'Glench/Vim-Jinja2-Syntax'
 " - Javascript
@@ -333,6 +332,8 @@ nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
 " Do default action for previous item.
 " nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
-nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+nnoremap <silent> <space>P  :<C-u>CocListResume<CR>
+" Show all options
+nnoremap <silent> <space>L  :<C-u>CocList<CR>
 "
 " coc.nvim end
