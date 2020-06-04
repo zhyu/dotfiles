@@ -29,7 +29,6 @@ Plug 'bling/vim-airline'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " language specific
 " - Python
-Plug 'psf/black'
 Plug 'Glench/Vim-Jinja2-Syntax'
 " - Javascript
 Plug 'yuezk/vim-js'
@@ -88,7 +87,6 @@ if has("autocmd")
   autocmd QuickFixCmdPost * nested cwindow
   " Python
   autocmd FileType python setlocal et sta sw=4 ts=4 sts=4
-  autocmd BufWritePre *.py execute ':Black'
   " Javascript
   autocmd FileType javascript setlocal et sta sw=2 ts=2 sts=2
   " HTML
@@ -114,11 +112,6 @@ endif
 
 set list
 set listchars=tab:\|\ ,eol:¬
-
-" --- format visually selected JavaScript using esformatter --
-vnoremap <silent> <leader>es :! esformatter<CR>
-
-nnoremap <silent> <leader>f :PymodeLintAuto<cr>
 
 "vim-airline config
 set laststatus=2
