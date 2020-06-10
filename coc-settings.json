@@ -1,6 +1,7 @@
 {
   "python.jediEnabled": false,
   "python.formatting.provider": "black",
-  "python.formatting.blackPath": "~/.pyenv/versions/neovim/bin/black",
+  "python.formatting.blackPath": "${env.HOME}/.pyenv/versions/neovim/bin/black",
+  "python.sortImports.path": "${env.HOME}/.pyenv/versions/neovim/bin/isort",
   "coc.preferences.formatOnSaveFiletypes": ["python"]
 }
