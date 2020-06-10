@@ -36,7 +36,7 @@ Plug 'maxmellon/vim-jsx-pretty'
 " - CSS
 Plug 'ap/vim-css-color'
 " - Golang
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+"Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 " - Markdown
 Plug 'plasticboy/vim-markdown'
 " utils
@@ -79,8 +79,6 @@ vmap <Leader>P "+P
 " fold
 set foldmethod=indent
 set foldlevel=99
-nnoremap <Leader><Leader> za
-vnoremap <Leader><Leader> zf
 
 if has("autocmd")
   " quickfix
@@ -88,24 +86,11 @@ if has("autocmd")
   " Python
   autocmd FileType python setlocal et sta sw=4 ts=4 sts=4
   " Javascript
-  autocmd FileType javascript setlocal et sta sw=2 ts=2 sts=2
+  autocmd FileType javascript setlocal et sta sw=4 ts=4 sts=4
   " HTML
-  autocmd FileType html setlocal et sta sw=2 ts=2 sts=2
+  autocmd FileType html setlocal et sta sw=4 ts=4 sts=4
   " Golang
   autocmd FileType go setlocal et sta sw=8 ts=8 sts=8
-  autocmd FileType go nmap <Leader>s <Plug>(go-implements)
-  autocmd FileType go nmap <Leader>i <Plug>(go-info)
-  autocmd FileType go nmap <Leader>gd <Plug>(go-doc)
-  autocmd FileType go nmap <Leader>gv <Plug>(go-doc-vertical)
-  autocmd FileType go nmap <leader>r <Plug>(go-run)
-  autocmd FileType go nmap <leader>b <Plug>(go-build)
-  autocmd FileType go nmap <leader>t <Plug>(go-test)
-  autocmd FileType go nmap <leader>c <Plug>(go-coverage)
-  autocmd FileType go nmap <Leader>ds <Plug>(go-def-split)
-  autocmd FileType go nmap <Leader>dv <Plug>(go-def-vertical)
-  autocmd FileType go nmap <Leader>dt <Plug>(go-def-tab)
-  autocmd FileType go nmap gd <Plug>(go-def)
-  autocmd FileType go nmap <Leader>e <Plug>(go-rename)
   " force redraw when activate the new buffer
   autocmd BufEnter * :redraw!
 endif
@@ -148,16 +133,11 @@ let g:pymode_options_max_line_length = 88
 " for Dash
 nmap <silent> <leader>da <Plug>DashSearch
 
-nmap <silent> <leader>gf <Plug>CtrlSFPrompt
-nnoremap <silent><F4> :CtrlSFToggle<cr>
-imap <F4> <Esc>:CtrlSFToggle<cr>
-
 " easymotion
 let g:EasyMotion_do_mapping = 0 " Disable default mappings
 " Bi-directional find motion
 " Jump to anywhere you want with minimal keystrokes, with just one key binding.
-" `s{char}{label}`
-map <Leader>s <Plug>(easymotion-s)
+map <Leader><Leader> <Plug>(easymotion-s)
 
 " Turn on case insensitive feature
 let g:EasyMotion_smartcase = 1
@@ -257,10 +237,6 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
 
-" Formatting selected code.
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
-
 augroup mygroup
   autocmd!
   " Setup formatexpr specified filetype(s).
@@ -318,6 +294,10 @@ nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
 nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
 " Find symbol of current document.
 nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+" Find files
+nnoremap <silent> <space>f  :<C-u>CocList files<cr>
+" Grep
+nnoremap <silent> <space>g  :<C-u>CocList grep<cr>
 " Search workspace symbols.
 " nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
 " Do default action for next item.
@@ -328,5 +308,21 @@ nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
 nnoremap <silent> <space>P  :<C-u>CocListResume<CR>
 " Show all options
 nnoremap <silent> <space>L  :<C-u>CocList<CR>
-"
+
+" disable coc temporarily when EasyMotion is active, for details
+" check https://github.com/neoclide/coc.nvim/issues/110#issuecomment-631868877
+let g:easymotion#is_active = 0
+function! EasyMotionCoc() abort
+  if EasyMotion#is_active()
+    let g:easymotion#is_active = 1
+    CocDisable
+  else
+    if g:easymotion#is_active == 1
+      let g:easymotion#is_active = 0
+      CocEnable
+    endif
+  endif
+endfunction
+autocmd TextChanged,CursorMoved * call EasyMotionCoc()
+
 " coc.nvim end
