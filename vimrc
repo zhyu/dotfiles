@@ -126,10 +126,6 @@ let g:go_highlight_build_constraints = 1
 " fix GoDoc bug caused by Arch's Golang bin conflicts with vim-go
 " source ~/.vim/bundle/vim-go/ftplugin/go/godoc.vim
 
-"fix the conflict between rope and ycm
-let g:pymode_rope_completion = 0
-let g:pymode_options_max_line_length = 88
-
 " for Dash
 nmap <silent> <leader>da <Plug>DashSearch
 
