@@ -6,6 +6,9 @@ set nu
 syntax on
 set t_Co=256
 
+set ignorecase
+set smartcase
+
 set timeout timeoutlen=1000 ttimeoutlen=100
 imap fd <Esc>
 
@@ -28,6 +31,8 @@ Plug 'bling/vim-airline'
 " complete
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " language specific
+" - Elixir
+Plug 'elixir-editors/vim-elixir'
 " - Python
 Plug 'Glench/Vim-Jinja2-Syntax'
 " - Javascript
@@ -35,8 +40,6 @@ Plug 'yuezk/vim-js'
 Plug 'maxmellon/vim-jsx-pretty'
 " - CSS
 Plug 'ap/vim-css-color'
-" - Golang
-"Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 " - Markdown
 Plug 'plasticboy/vim-markdown'
 " utils
@@ -49,6 +52,7 @@ Plug 'ntpeters/vim-better-whitespace'
 Plug 'rizzatti/dash.vim'
 Plug 'mattn/emmet-vim'
 Plug 'Lokaltog/vim-easymotion'
+Plug 'justinmk/vim-sneak'
 Plug '~/.fzf'
 Plug 'junegunn/fzf.vim'
 
@@ -146,6 +150,10 @@ map <Leader>l <Plug>(easymotion-lineforward)
 map <Leader>j <Plug>(easymotion-j)
 map <Leader>k <Plug>(easymotion-k)
 map <Leader>h <Plug>(easymotion-linebackward)
+
+" sneak
+let g:sneak#label = 1
+let g:sneak#use_ic_scs = 1
 
 " fzf
 " Files: command with preview, need to install https://github.com/sharkdp/bat
