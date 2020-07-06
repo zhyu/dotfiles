@@ -90,7 +90,7 @@ if has("autocmd")
   " Python
   autocmd FileType python setlocal et sta sw=4 ts=4 sts=4
   " Javascript
-  autocmd FileType javascript setlocal et sta sw=4 ts=4 sts=4
+  autocmd FileType javascript,javascriptreact setlocal et sta sw=4 ts=4 sts=4
   " HTML
   autocmd FileType html setlocal et sta sw=4 ts=4 sts=4
   " Golang
