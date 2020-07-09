@@ -45,7 +45,7 @@ ENABLE_CORRECTION="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(tmux fzf sudo common-aliases fasd git pyenv)
+plugins=(tmux fzf sudo common-aliases fasd git pyenv nvm)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -93,17 +93,6 @@ export PATH=$PATH:$GOPATH/bin
 
 # suggested by brew
 export PATH=$PATH:/usr/local/opt/go/libexec/bin
-
-# for nvm
-export NVM_DIR=~/.nvm   # prevent node losting upon upgrading nvm
-source $(brew --prefix nvm)/nvm.sh
-# eval "`npm completion`"   # fix npm completion error
-
-export LD_LIBRARY_PATH=`brew --prefix`/lib:$LD_LIBRARY_PATH
-export C_INCLUDE_PATH=`brew --prefix`/include:$C_INCLUDE_PATH
-eval "$(plenv init - zsh)"
-LC_CTYPE=en_US.UTF-8
-LC_ALL=en_US.UTF-8
 
 # human-readable sizes
 alias df='df -h'
