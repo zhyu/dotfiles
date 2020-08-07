@@ -1,5 +1,6 @@
 {
   "elixirLS.dialyzerEnabled": false,
+  "eslint.autoFixOnSave": true,
   "python.jediEnabled": false,
   "python.formatting.provider": "black",
   "python.formatting.blackPath": "${env.HOME}/.pyenv/versions/neovim/bin/black",
