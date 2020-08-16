@@ -53,8 +53,9 @@ Plug 'rizzatti/dash.vim'
 Plug 'mattn/emmet-vim'
 Plug 'Lokaltog/vim-easymotion'
 Plug 'justinmk/vim-sneak'
-Plug '~/.fzf'
-Plug 'junegunn/fzf.vim'
+Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
+Plug 'vn-ki/coc-clap'
+Plug 'tpope/vim-surround'
 
 " Initialize plugin system
 call plug#end()
@@ -146,19 +147,12 @@ let g:EasyMotion_use_smartsign_us = 1
 " Match multibyte Japanese characters with alphabetical input
 let g:EasyMotion_use_migemo = 1
 
-map <Leader>l <Plug>(easymotion-lineforward)
 map <Leader>j <Plug>(easymotion-j)
 map <Leader>k <Plug>(easymotion-k)
-map <Leader>h <Plug>(easymotion-linebackward)
 
 " sneak
 let g:sneak#label = 1
 let g:sneak#use_ic_scs = 1
-
-" fzf
-" Files: command with preview, need to install https://github.com/sharkdp/bat
-command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
-
 
 " coc.nvim
 "
@@ -289,29 +283,23 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 " provide custom statusline: lightline.vim, vim-airline.
 " set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
-" Mappings using CoCList:
+" Mappings using coc-clap:
 " Show all diagnostics.
-nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+nnoremap <silent> <space>a  :<C-u>Clap coc_diagnostics<cr>
 " Manage extensions.
-nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+nnoremap <silent> <space>e  :<C-u>Clap coc_extensions<cr>
 " Show commands.
-nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+nnoremap <silent> <space>c  :<C-u>Clap coc_commands<cr>
 " Find symbol of current document.
-nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+nnoremap <silent> <space>o  :<C-u>Clap coc_outline<cr>
 " Find files
-nnoremap <silent> <space>f  :<C-u>CocList files<cr>
+nnoremap <silent> <space>f  :<C-u>Clap files<cr>
 " Grep
-nnoremap <silent> <space>g  :<C-u>CocList grep<cr>
+nnoremap <silent> <space>g  :<C-u>Clap grep<cr>
 " Search workspace symbols.
-" nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-" nnoremap <silent> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-" nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list.
-nnoremap <silent> <space>P  :<C-u>CocListResume<CR>
-" Show all options
-nnoremap <silent> <space>L  :<C-u>CocList<CR>
+nnoremap <silent> <space>s  :<C-u>Clap coc_symbols<cr>
+" Show all Clap options
+nnoremap <silent> <space>l  :<C-u>Clap<cr>
 
 " disable coc temporarily when EasyMotion is active, for details
 " check https://github.com/neoclide/coc.nvim/issues/110#issuecomment-631868877
