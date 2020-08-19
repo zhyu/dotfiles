@@ -51,11 +51,11 @@ Plug 'Yggdroot/indentLine'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'rizzatti/dash.vim'
 Plug 'mattn/emmet-vim'
-Plug 'Lokaltog/vim-easymotion'
 Plug 'justinmk/vim-sneak'
 Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
 Plug 'vn-ki/coc-clap'
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
 
 " Initialize plugin system
 call plug#end()
@@ -133,22 +133,6 @@ let g:go_highlight_build_constraints = 1
 
 " for Dash
 nmap <silent> <leader>da <Plug>DashSearch
-
-" easymotion
-let g:EasyMotion_do_mapping = 0 " Disable default mappings
-" Bi-directional find motion
-" Jump to anywhere you want with minimal keystrokes, with just one key binding.
-map <Leader><Leader> <Plug>(easymotion-s)
-
-" Turn on case insensitive feature
-let g:EasyMotion_smartcase = 1
-" Smartsign (type `3` and match `3`&`#`)
-let g:EasyMotion_use_smartsign_us = 1
-" Match multibyte Japanese characters with alphabetical input
-let g:EasyMotion_use_migemo = 1
-
-map <Leader>j <Plug>(easymotion-j)
-map <Leader>k <Plug>(easymotion-k)
 
 " sneak
 let g:sneak#label = 1
@@ -283,38 +267,20 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 " provide custom statusline: lightline.vim, vim-airline.
 " set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
-" Mappings using coc-clap:
-" Show all diagnostics.
-nnoremap <silent> <space>a  :<C-u>Clap coc_diagnostics<cr>
-" Manage extensions.
-nnoremap <silent> <space>e  :<C-u>Clap coc_extensions<cr>
-" Show commands.
-nnoremap <silent> <space>c  :<C-u>Clap coc_commands<cr>
-" Find symbol of current document.
-nnoremap <silent> <space>o  :<C-u>Clap coc_outline<cr>
-" Find files
-nnoremap <silent> <space>f  :<C-u>Clap files<cr>
-" Grep
-nnoremap <silent> <space>g  :<C-u>Clap grep<cr>
-" Search workspace symbols.
-nnoremap <silent> <space>s  :<C-u>Clap coc_symbols<cr>
-" Show all Clap options
-nnoremap <silent> <space>l  :<C-u>Clap<cr>
-
-" disable coc temporarily when EasyMotion is active, for details
-" check https://github.com/neoclide/coc.nvim/issues/110#issuecomment-631868877
-let g:easymotion#is_active = 0
-function! EasyMotionCoc() abort
-  if EasyMotion#is_active()
-    let g:easymotion#is_active = 1
-    CocDisable
-  else
-    if g:easymotion#is_active == 1
-      let g:easymotion#is_active = 0
-      CocEnable
-    endif
-  endif
-endfunction
-autocmd TextChanged,CursorMoved * call EasyMotionCoc()
-
 " coc.nvim end
+
+" Mappings using vim-clap:
+" Manage coc extensions.
+nnoremap <silent> <leader>ce  :<C-u>Clap coc_extensions<cr>
+" Show coc commands.
+nnoremap <silent> <leader>cc  :<C-u>Clap coc_commands<cr>
+" Find files
+nnoremap <silent> <leader>f  :<C-u>Clap files<cr>
+" Grep
+nnoremap <silent> <leader>g  :<C-u>Clap grep2<cr>
+" Show all Clap options
+nnoremap <silent> <leader>cl  :<C-u>Clap<cr>
+" Filter lines in the current buffer.
+nnoremap <silent> <leader>l  :<C-u>Clap blines<cr>
+" Filter lines in loaded buffers.
+nnoremap <silent> <leader>L  :<C-u>Clap lines<cr>
