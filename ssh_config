@@ -1,0 +1,7 @@
+Host server
+  Hostname server
+  RequestTTY yes
+  # RemoteCommand is better than adding ssh connection check to the .zshrc in
+  # the server, since in this way, ssh will auto disconnect when the tmux
+  # session detached or closed.
+  RemoteCommand tmux -u attach || tmux -u new
