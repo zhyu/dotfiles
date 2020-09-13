@@ -56,6 +56,7 @@ Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
 Plug 'vn-ki/coc-clap'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-commentary'
 
 " Initialize plugin system
 call plug#end()
