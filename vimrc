@@ -9,7 +9,7 @@ set t_Co=256
 set ignorecase
 set smartcase
 
-set timeout timeoutlen=1000 ttimeoutlen=100
+set timeout timeoutlen=300 ttimeoutlen=10
 imap fd <Esc>
 
 " Automatic installation for vim-plug
@@ -44,8 +44,6 @@ Plug 'ap/vim-css-color'
 Plug 'plasticboy/vim-markdown'
 " utils
 Plug 'tpope/vim-fugitive'
-Plug 'MarcWeber/vim-addon-mw-utils'
-Plug 'tomtom/tlib_vim'
 Plug 'jiangmiao/auto-pairs'
 Plug 'Yggdroot/indentLine'
 Plug 'ntpeters/vim-better-whitespace'
@@ -96,7 +94,7 @@ if has("autocmd")
   " HTML
   autocmd FileType html setlocal et sta sw=4 ts=4 sts=4
   " Golang
-  autocmd FileType go setlocal et sta sw=8 ts=8 sts=8
+  autocmd FileType go setlocal noet sw=4 ts=4 sts=4
   " force redraw when activate the new buffer
   autocmd BufEnter * :redraw!
 endif
@@ -278,7 +276,11 @@ nnoremap <silent> <leader>cc  :<C-u>Clap coc_commands<cr>
 " Find files
 nnoremap <silent> <leader>f  :<C-u>Clap files<cr>
 " Grep
-nnoremap <silent> <leader>g  :<C-u>Clap grep2<cr>
+nnoremap <silent> <leader>g  :<C-u>Clap grep<cr>
+" Grep the word under cursor
+nnoremap <silent> <leader>gw  :<C-u>Clap grep ++query=<cword><cr>
+" Grep the visual selection
+vnoremap <silent> <leader>gs  :<C-u>Clap grep ++query=@visual<cr>
 " Show all Clap options
 nnoremap <silent> <leader>cl  :<C-u>Clap<cr>
 " Filter lines in the current buffer.
