@@ -9,7 +9,7 @@ set t_Co=256
 set ignorecase
 set smartcase
 
-set timeout timeoutlen=300 ttimeoutlen=10
+set timeout timeoutlen=500 ttimeoutlen=10
 imap fd <Esc>
 
 " Automatic installation for vim-plug
@@ -43,18 +43,21 @@ Plug 'ap/vim-css-color'
 " - Markdown
 Plug 'plasticboy/vim-markdown'
 " utils
-Plug 'tpope/vim-fugitive'
+Plug 'justinmk/vim-sneak'
+Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
+Plug 'zhyu/clap-tasks'
+Plug 'vn-ki/coc-clap'
 Plug 'jiangmiao/auto-pairs'
 Plug 'Yggdroot/indentLine'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'rizzatti/dash.vim'
 Plug 'mattn/emmet-vim'
-Plug 'justinmk/vim-sneak'
-Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
-Plug 'vn-ki/coc-clap'
+Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-commentary'
+Plug 'skywind3000/asynctasks.vim'
+Plug 'skywind3000/asyncrun.vim'
 
 " Initialize plugin system
 call plug#end()
@@ -273,6 +276,8 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 nnoremap <silent> <leader>ce  :<C-u>Clap coc_extensions<cr>
 " Show coc commands.
 nnoremap <silent> <leader>cc  :<C-u>Clap coc_commands<cr>
+" Show vim commands.
+nnoremap <silent> <leader>cm  :<C-u>Clap command<cr>
 " Find files
 nnoremap <silent> <leader>f  :<C-u>Clap files<cr>
 " Grep
@@ -287,3 +292,9 @@ nnoremap <silent> <leader>cl  :<C-u>Clap<cr>
 nnoremap <silent> <leader>l  :<C-u>Clap blines<cr>
 " Filter lines in loaded buffers.
 nnoremap <silent> <leader>L  :<C-u>Clap lines<cr>
+" Show tasks of asynctasks.vim
+nnoremap <silent> <leader>t :<C-u>Clap tasks<cr>
+
+" asyncrun
+" open quickfix at 4 lines height after command starts
+let g:asyncrun_open = 4
