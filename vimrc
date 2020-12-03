@@ -124,6 +124,14 @@ nmap <leader>7 <Plug>AirlineSelectTab7
 nmap <leader>8 <Plug>AirlineSelectTab8
 nmap <leader>9 <Plug>AirlineSelectTab9
 
+" Append asyncrun status to section b
+let g:asyncrun_status = "stopped"
+function! CustomAirline(...)
+  let w:airline_section_b = g:airline_section_b . ' T:%{g:asyncrun_status}'
+endfunction
+call airline#add_statusline_func('CustomAirline')
+call airline#add_inactive_statusline_func('CustomAirline')
+
 let g:go_auto_type_info = 1
 let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
@@ -294,7 +302,3 @@ nnoremap <silent> <leader>l  :<C-u>Clap blines<cr>
 nnoremap <silent> <leader>L  :<C-u>Clap lines<cr>
 " Show tasks of asynctasks.vim
 nnoremap <silent> <leader>t :<C-u>Clap tasks<cr>
-
-" asyncrun
-" open quickfix at 4 lines height after command starts
-let g:asyncrun_open = 4
