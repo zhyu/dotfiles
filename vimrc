@@ -11,6 +11,7 @@ set smartcase
 
 set timeout timeoutlen=500 ttimeoutlen=10
 imap fd <Esc>
+imap jk <Esc>
 
 " Automatic installation for vim-plug
 " should be placed before plug#begin() call
@@ -127,7 +128,7 @@ nmap <leader>9 <Plug>AirlineSelectTab9
 " Append asyncrun status to section b
 let g:asyncrun_status = "stopped"
 function! CustomAirline(...)
-  let w:airline_section_b = g:airline_section_b . ' T:%{g:asyncrun_status}'
+  let w:airline_section_b = g:airline_section_b . "\uE0B1 %{g:asyncrun_status}"
 endfunction
 call airline#add_statusline_func('CustomAirline')
 call airline#add_inactive_statusline_func('CustomAirline')
