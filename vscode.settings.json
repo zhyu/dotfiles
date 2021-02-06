@@ -1,6 +1,6 @@
 {
     // font
-    "editor.fontFamily": "Fira Code",
+    "editor.fontFamily": "Sarasa Fixed SC",
     "editor.fontLigatures": true,
     // theme
     "workbench.colorTheme": "Nord",
