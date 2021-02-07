@@ -8,6 +8,7 @@
     "vim.easymotion": true,
     "vim.foldfix": true,
     "vim.sneak": true,
+    "vim.sneakUseIgnorecaseAndSmartcase": true,
     "vim.incsearch": true,
     "vim.useSystemClipboard": true,
     "vim.hlsearch": true,
