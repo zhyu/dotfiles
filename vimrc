@@ -287,6 +287,8 @@ nnoremap <silent> <leader>ce  :<C-u>Clap coc_extensions<cr>
 nnoremap <silent> <leader>cc  :<C-u>Clap coc_commands<cr>
 " Show vim commands.
 nnoremap <silent> <leader>cm  :<C-u>Clap command<cr>
+" Opened buffers
+nnoremap <silent> <leader>b  :<C-u>Clap buffers<cr>
 " Find files
 nnoremap <silent> <leader>f  :<C-u>Clap files<cr>
 " Grep
