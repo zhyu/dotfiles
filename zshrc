@@ -81,7 +81,9 @@ export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-# ~/.ssh/ssh_auth_sock is a symlink created by ~/.ssh/rc.
+# Server only setup, needs to be used in conjunction with ~/.ssh/rc.
+# ~/.ssh/ssh_auth_sock is a symlink created by ssh daemon when a ssh
+# connection is created.
 # Setting SSH_AUTH to a fixed location will help the tmux/screen
 # sessions finding the ssh agent forwarded by differnt ssh sessions.
 export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
