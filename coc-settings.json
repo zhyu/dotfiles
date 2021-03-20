@@ -1,7 +1,7 @@
 {
   "elixirLS.dialyzerEnabled": false,
   "eslint.autoFixOnSave": true,
-  "eslint.filetypes": [
+  "eslint.probe": [
     "javascript",
     "javascriptreact"
   ],
