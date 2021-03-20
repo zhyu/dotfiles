@@ -101,9 +101,6 @@ export PATH=$PATH:/usr/local/opt/go/libexec/bin
 # human-readable sizes
 alias df='df -h'
 
-# delete merged branchs
-alias gbrm='git branch --merged | grep -v "\*" | xargs -n 1 git branch -d'
-
 # clean up dangling images
 alias dockergc='docker rmi $(docker images -f "dangling=true" -q)'
 
@@ -118,3 +115,8 @@ alias vimdiff='nvim -d '
 # use vim when edit-command-line
 export VISUAL=nvim
 export EDITOR="${VISUAL}"
+
+# source
+if [[ -f $HOME/.zshrc.post ]]; then
+  source $HOME/.zshrc.post
+fi
