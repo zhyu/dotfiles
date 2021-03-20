@@ -14,5 +14,11 @@
   "python.linting.flake8Path": "${env.HOME}/.pyenv/versions/neovim/bin/flake8",
   "python.linting.flake8Args": ["--max-line-length=88"],
   "python.sortImports.path": "${env.HOME}/.pyenv/versions/neovim/bin/isort",
+  "python.venvFolders": [
+    "envs",
+    ".pyenv",
+    ".direnv",
+    ".cache/pypoetry/virtualenvs"
+  ],
   "coc.preferences.formatOnSaveFiletypes": ["python"]
 }
