@@ -12,12 +12,14 @@ function link_dotfile() {
   if [[ -f $filepath ]]; then
     if [[ -L $filepath ]]; then
       echo "$filepath is already a symlink, skipping linking it to $PWD/$dot_filename"
+      return
     else
       mv $filepath{,.bak}
-      ln -s $PWD/$dot_filename $filepath
-      echo "$filepath is now a symlink to $PWD/$dot_filename"
     fi
   fi
+
+  ln -s $PWD/$dot_filename $filepath
+  echo "$filepath is now a symlink to $PWD/$dot_filename"
 }
 
 
