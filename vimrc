@@ -36,9 +36,12 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'elixir-editors/vim-elixir'
 " - Python
 Plug 'Glench/Vim-Jinja2-Syntax'
-" - Javascript
+" - Javascript & Typescript
 Plug 'yuezk/vim-js'
+Plug 'HerringtonDarkholme/yats.vim'
 Plug 'maxmellon/vim-jsx-pretty'
+" - Terraform
+Plug 'hashivim/vim-terraform'
 " - CSS
 Plug 'ap/vim-css-color'
 " - Markdown
@@ -129,7 +132,7 @@ nmap <leader>9 <Plug>AirlineSelectTab9
 " Append asyncrun status to section b
 let g:asyncrun_status = "stopped"
 function! CustomAirline(...)
-  let w:airline_section_b = g:airline_section_b . "\uE0B1 %{g:asyncrun_status}"
+  let w:airline_section_b = g:airline_section_b . ' T:%{g:asyncrun_status}'
 endfunction
 call airline#add_statusline_func('CustomAirline')
 call airline#add_inactive_statusline_func('CustomAirline')
@@ -149,6 +152,11 @@ nmap <silent> <leader>da <Plug>DashSearch
 " sneak
 let g:sneak#label = 1
 let g:sneak#use_ic_scs = 1
+
+" Terraform
+let g:terraform_align=1
+let g:terraform_fold_sections=1
+let g:terraform_fmt_on_save=1
 
 " coc.nvim
 "
