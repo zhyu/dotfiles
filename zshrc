@@ -115,6 +115,12 @@ alias df='df -h'
 # use fd as backend of fzf, it will respect ignore files like .gitignore
 export FZF_DEFAULT_COMMAND='fd --type f'
 
+# enable the nice builtin zmv
+autoload -U zmv
+# noglob: no need to quote wildcards
+# -W: auto convert wildcards to the proper format, e.g., no need to use capture groups
+alias mmv='noglob zmv -W'
+
 # let's try neovim
 alias vim='nvim'
 alias vimdiff='nvim -d '
