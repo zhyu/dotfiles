@@ -20,5 +20,5 @@
     ".direnv",
     ".cache/pypoetry/virtualenvs"
   ],
-  "coc.preferences.formatOnSaveFiletypes": ["python"]
+  "coc.preferences.formatOnSaveFiletypes": ["go", "python"]
 }
