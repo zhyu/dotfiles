@@ -111,6 +111,8 @@ export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
 
 # human-readable sizes
 alias df='df -h'
+# fix LS color on mac OS
+alias ls="ls --color=auto -G"
 
 # use fd as backend of fzf, it will respect ignore files like .gitignore
 export FZF_DEFAULT_COMMAND='fd --type f'
