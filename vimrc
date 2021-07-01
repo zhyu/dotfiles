@@ -63,12 +63,16 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-commentary'
 Plug 'skywind3000/asynctasks.vim'
 Plug 'skywind3000/asyncrun.vim'
+" Browser support!
+Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
 
 " Initialize plugin system
 call plug#end()
 
 colorscheme nord
 
+" Set GUI font, which will be used in browsers
+set guifont=Sarasa_UI_CL:h18
 
 set incsearch
 set backspace=indent,eol,start
