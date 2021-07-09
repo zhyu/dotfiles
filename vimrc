@@ -70,13 +70,9 @@ call plug#end()
 
 colorscheme nord
 
-" Set GUI font, which will be used in browsers
-set guifont=Sarasa_UI_CL:h18
-
 set incsearch
 set backspace=indent,eol,start
 set et sta sw=2 ts=2 sts=2
-set tags=tags;
 
 " Space as Leader
 let mapleader = "\<Space>"
