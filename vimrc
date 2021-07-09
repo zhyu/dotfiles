@@ -106,8 +106,6 @@ if has("autocmd")
   autocmd FileType html setlocal et sta sw=4 ts=4 sts=4
   " Golang
   autocmd FileType go setlocal noet sw=4 ts=4 sts=4
-  " force redraw when activate the new buffer
-  autocmd BufEnter * :redraw!
 endif
 
 set list
