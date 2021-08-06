@@ -1,4 +1,4 @@
-#!/bin/env zsh
+#!/usr/bin/env zsh
 
 echo "============================================================"
 echo "| This script assumes that requirements are all installed! |"
@@ -24,6 +24,7 @@ function link_dotfile() {
 
 
 link_dotfile $HOME/.zshrc zshrc
+link_dotfile $HOME/.zprofile zprofile
 link_dotfile $HOME/.tmux.conf tmux.conf
 link_dotfile $HOME/.vimrc vimrc
 mkdir -p $HOME/.config/nvim
