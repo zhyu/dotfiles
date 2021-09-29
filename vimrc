@@ -64,6 +64,7 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-abolish'
 Plug 'skywind3000/asynctasks.vim'
 Plug 'skywind3000/asyncrun.vim'
+Plug 'kdheepak/lazygit.nvim'
 
 " Initialize plugin system
 call plug#end()
@@ -311,3 +312,6 @@ nnoremap <silent> <leader>l  :<C-u>Clap blines<cr>
 nnoremap <silent> <leader>L  :<C-u>Clap lines<cr>
 " Show tasks of asynctasks.vim
 nnoremap <silent> <leader>t :<C-u>Clap tasks<cr>
+
+" setup mapping to call :LazyGit
+nnoremap <silent> <leader>gg :LazyGit<CR>
