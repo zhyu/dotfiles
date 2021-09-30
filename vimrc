@@ -28,6 +28,7 @@ call plug#begin('~/.vim/plugged')
 
 " UI
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
+Plug 'shaunsingh/nord.nvim'
 Plug 'mhartington/oceanic-next'
 Plug 'bling/vim-airline'
 " complete
@@ -70,12 +71,7 @@ Plug 'kdheepak/lazygit.nvim'
 " Initialize plugin system
 call plug#end()
 
-colorscheme OceanicNext
-hi Normal guibg=NONE ctermbg=NONE
-hi LineNr guibg=NONE ctermbg=NONE
-hi SignColumn guibg=NONE ctermbg=NONE
-hi EndOfBuffer guibg=NONE ctermbg=NONE
-let g:airline_theme='oceanicnext'
+colorscheme nord
 
 set incsearch
 set backspace=indent,eol,start
