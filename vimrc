@@ -4,7 +4,7 @@ scriptencoding utf-8
 
 set nu
 syntax on
-set t_Co=256
+set termguicolors
 
 set ignorecase
 set smartcase
@@ -27,7 +27,8 @@ endif
 call plug#begin('~/.vim/plugged')
 
 " UI
-Plug 'arcticicestudio/nord-vim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
+Plug 'mhartington/oceanic-next'
 Plug 'bling/vim-airline'
 " complete
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -47,7 +48,7 @@ Plug 'ap/vim-css-color'
 " - Markdown
 Plug 'plasticboy/vim-markdown'
 " utils
-Plug 'justinmk/vim-sneak'
+Plug 'ggandor/lightspeed.nvim'
 Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
 Plug 'zhyu/clap-tasks'
 Plug 'vn-ki/coc-clap'
@@ -69,7 +70,12 @@ Plug 'kdheepak/lazygit.nvim'
 " Initialize plugin system
 call plug#end()
 
-colorscheme nord
+colorscheme OceanicNext
+hi Normal guibg=NONE ctermbg=NONE
+hi LineNr guibg=NONE ctermbg=NONE
+hi SignColumn guibg=NONE ctermbg=NONE
+hi EndOfBuffer guibg=NONE ctermbg=NONE
+let g:airline_theme='oceanicnext'
 
 set incsearch
 set backspace=indent,eol,start
@@ -147,10 +153,6 @@ let g:go_highlight_build_constraints = 1
 " for Dash
 nmap <silent> <leader>da <Plug>DashSearch
 
-" sneak
-let g:sneak#label = 1
-let g:sneak#use_ic_scs = 1
-
 " Terraform
 let g:terraform_align=1
 let g:terraform_fold_sections=1
@@ -177,7 +179,7 @@ set shortmess+=c
 
 " Always show the signcolumn, otherwise it would shift the text each time
 " diagnostics appear/become resolved.
-if has("patch-8.1.1564")
+if has("nvim-0.5.0") || has("patch-8.1.1564")
   " Recently vim can merge signcolumn and number column into one
   set signcolumn=number
 else
@@ -201,14 +203,9 @@ endfunction
 " Use <c-space> to trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
 
-" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
-" position. Coc only does snippet and additional edit on confirm.
-" <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
-if exists('*complete_info')
-  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-else
-  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-endif
+" Make <CR> auto-select the first completion item and notify coc.nvim to
+" format on enter, <cr> could be remapped by other vim plugin
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 " Use `[g` and `]g` to navigate diagnostics
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
@@ -226,8 +223,10 @@ nnoremap <silent> K :call <SID>show_documentation()<CR>
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
     execute 'h '.expand('<cword>')
+  elseif (coc#rpc#ready())
+    call CocActionAsync('doHover')
   else
-    call CocAction('doHover')
+    execute '!' . &keywordprg . " " . expand('<cword>')
   endif
 endfunction
 
@@ -265,6 +264,16 @@ xmap ic <Plug>(coc-classobj-i)
 omap ic <Plug>(coc-classobj-i)
 xmap ac <Plug>(coc-classobj-a)
 omap ac <Plug>(coc-classobj-a)
+
+" Remap <C-f> and <C-b> for scroll float windows/popups.
+if has('nvim-0.4.0') || has('patch-8.2.0750')
+  nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+  nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+  inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+  inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+  vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+  vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+endif
 
 " Use CTRL-S for selections ranges.
 " Requires 'textDocument/selectionRange' support of LS, ex: coc-tsserver
