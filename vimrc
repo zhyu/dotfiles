@@ -29,8 +29,7 @@ call plug#begin('~/.vim/plugged')
 " UI
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
 Plug 'shaunsingh/nord.nvim'
-Plug 'mhartington/oceanic-next'
-Plug 'bling/vim-airline'
+Plug 'hoob3rt/lualine.nvim'
 " complete
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " language specific
@@ -73,6 +72,37 @@ call plug#end()
 
 colorscheme nord
 
+lua << EOF
+require('lualine').setup {
+  options = {
+    icons_enabled = false,
+    theme = 'nord'
+  }
+}
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = {
+    "bash",
+    "css",
+    "go",
+    "gomod",
+    "html",
+    "json",
+    "java",
+    "javascript",
+    "python",
+    "typescript",
+    "vim",
+    "yaml"
+  },
+  highlight = {
+    enable = true,
+  },
+  indent = {
+    enable = true
+  }
+}
+EOF
+
 set incsearch
 set backspace=indent,eol,start
 set et sta sw=2 ts=2 sts=2
@@ -109,33 +139,6 @@ endif
 
 set list
 set listchars=tab:\|\ ,eol:¬
-
-"vim-airline config
-set laststatus=2
-let g:airline_powerline_fonts = 1
-let g:airline_detect_paste=1
-let g:airline#extensions#branch#enabled = 1
-let g:airline#extensions#syntastic#enabled = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#buffer_idx_mode = 1
-
-nmap <leader>1 <Plug>AirlineSelectTab1
-nmap <leader>2 <Plug>AirlineSelectTab2
-nmap <leader>3 <Plug>AirlineSelectTab3
-nmap <leader>4 <Plug>AirlineSelectTab4
-nmap <leader>5 <Plug>AirlineSelectTab5
-nmap <leader>6 <Plug>AirlineSelectTab6
-nmap <leader>7 <Plug>AirlineSelectTab7
-nmap <leader>8 <Plug>AirlineSelectTab8
-nmap <leader>9 <Plug>AirlineSelectTab9
-
-" Append asyncrun status to section b
-let g:asyncrun_status = "stopped"
-function! CustomAirline(...)
-  let w:airline_section_b = g:airline_section_b . ' T:%{g:asyncrun_status}'
-endfunction
-call airline#add_statusline_func('CustomAirline')
-call airline#add_inactive_statusline_func('CustomAirline')
 
 let g:go_auto_type_info = 1
 let g:go_highlight_functions = 1
