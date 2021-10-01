@@ -26,7 +26,6 @@ function link_dotfile() {
 link_dotfile $HOME/.zshrc zshrc
 link_dotfile $HOME/.zprofile zprofile
 link_dotfile $HOME/.tmux.conf tmux.conf
-link_dotfile $HOME/.vimrc vimrc
 mkdir -p $HOME/.config/nvim
 link_dotfile $HOME/.config/nvim/init.vim init.vim
 link_dotfile $HOME/.config/nvim/coc-settings.json coc-settings.json
