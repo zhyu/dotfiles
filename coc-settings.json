@@ -6,7 +6,6 @@
     "javascriptreact"
   ],
   "tslint.autoFixOnSave": true,
-  "python.jediEnabled": false,
   "python.formatting.provider": "black",
   "python.formatting.blackPath": "${env.HOME}/.pyenv/versions/neovim/bin/black",
   "python.linting.pylintEnabled": false,
@@ -14,11 +13,5 @@
   "python.linting.flake8Path": "${env.HOME}/.pyenv/versions/neovim/bin/flake8",
   "python.linting.flake8Args": ["--max-line-length=88"],
   "python.sortImports.path": "${env.HOME}/.pyenv/versions/neovim/bin/isort",
-  "python.venvFolders": [
-    "envs",
-    ".pyenv",
-    ".direnv",
-    ".cache/pypoetry/virtualenvs"
-  ],
   "coc.preferences.formatOnSaveFiletypes": ["go", "python"]
 }
