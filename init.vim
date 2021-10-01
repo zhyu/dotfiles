@@ -31,20 +31,20 @@ Plug 'plasticboy/vim-markdown'
 " utils
 Plug 'lewis6991/gitsigns.nvim'
 Plug 'ggandor/lightspeed.nvim'
-Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
-Plug 'zhyu/clap-tasks'
-Plug 'vn-ki/coc-clap'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
+Plug 'fannheyward/telescope-coc.nvim'
 Plug 'windwp/nvim-autopairs'
 Plug 'windwp/nvim-ts-autotag'
 Plug 'p00f/nvim-ts-rainbow'
 Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'ntpeters/vim-better-whitespace'
+Plug 'b3nj5m1n/kommentary'
 Plug 'rizzatti/dash.vim'
 Plug 'mattn/emmet-vim'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-abolish'
 Plug 'skywind3000/asynctasks.vim'
 Plug 'skywind3000/asyncrun.vim'
@@ -237,20 +237,16 @@ nmap <silent> <C-s> <Plug>(coc-range-select)
 xmap <silent> <C-s> <Plug>(coc-range-select)
 " }} coc.nvim
 
-" vim-clap {{
-nnoremap <silent> <leader>ce  :<C-u>Clap coc_extensions<cr>
-nnoremap <silent> <leader>cc  :<C-u>Clap coc_commands<cr>
-nnoremap <silent> <leader>cm  :<C-u>Clap command<cr>
-nnoremap <silent> <leader>b  :<C-u>Clap buffers<cr>
-nnoremap <silent> <leader>f  :<C-u>Clap files<cr>
-nnoremap <silent> <leader>g  :<C-u>Clap grep<cr>
-nnoremap <silent> <leader>gw  :<C-u>Clap grep ++query=<cword><cr>
-vnoremap <silent> <leader>gs  :<C-u>Clap grep ++query=@visual<cr>
-nnoremap <silent> <leader>cl  :<C-u>Clap<cr>
-nnoremap <silent> <leader>l  :<C-u>Clap blines<cr>
-nnoremap <silent> <leader>L  :<C-u>Clap lines<cr>
-nnoremap <silent> <leader>t :<C-u>Clap tasks<cr>
-" }} vim-clap
+" telescope {{
+nnoremap <silent> <leader>F <cmd>Telescope<cr>
+nnoremap <silent> <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <silent> <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <silent> <leader>fw <cmd>Telescope grep_string<cr>
+nnoremap <silent> <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <silent> <leader>fs <cmd>Telescope current_buffer_fuzzy_find<cr>
+nnoremap <silent> <leader>fcm <cmd>Telescope commands<cr>
+nnoremap <silent> <leader>fcc <cmd>Telescope coc commands<cr>
+" }} telescope
 
 " lazygit {{
 nnoremap <silent> <leader>gg :LazyGit<CR>
@@ -264,6 +260,7 @@ require('lualine').setup {
     theme = 'nord'
   }
 }
+
 require'nvim-treesitter.configs'.setup {
   ensure_installed = {
     "bash",
@@ -296,10 +293,27 @@ require'nvim-treesitter.configs'.setup {
     -- termcolors = {} -- table of colour name strings
   }
 }
-require('nvim-autopairs').setup{}
+
+require('nvim-autopairs').setup {}
+
 require("indent_blankline").setup {
   show_end_of_line = true
 }
+
 require('gitsigns').setup()
+
+local actions = require('telescope.actions')
+require('telescope').setup {
+  defaults = {
+    mappings = {
+      i = {
+        ["<C-j>"] = actions.move_selection_next,
+        ["<C-k>"] = actions.move_selection_previous,
+      }
+    }
+  }
+}
+require('telescope').load_extension('fzf')
+require('telescope').load_extension('coc')
 EOF
 " }} lua
