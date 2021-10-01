@@ -5,6 +5,8 @@ if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
 endif
 
 call plug#begin(stdpath('data') . '/plugged')
+" lua lib that other plugins depend on
+Plug 'nvim-lua/plenary.nvim'
 " UI
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'shaunsingh/nord.nvim'
@@ -27,16 +29,18 @@ Plug 'ap/vim-css-color'
 " - Markdown
 Plug 'plasticboy/vim-markdown'
 " utils
+Plug 'lewis6991/gitsigns.nvim'
 Plug 'ggandor/lightspeed.nvim'
 Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
 Plug 'zhyu/clap-tasks'
 Plug 'vn-ki/coc-clap'
-Plug 'jiangmiao/auto-pairs'
-Plug 'Yggdroot/indentLine'
+Plug 'windwp/nvim-autopairs'
+Plug 'windwp/nvim-ts-autotag'
+Plug 'p00f/nvim-ts-rainbow'
+Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'rizzatti/dash.vim'
 Plug 'mattn/emmet-vim'
-Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
@@ -59,7 +63,7 @@ colorscheme nord
 
 set number
 set hidden
-set list listchars=tab:\|\ ,trail:·,eol:¬
+set list listchars=tab:\|\ ,eol:¬
 set cmdheight=2
 set signcolumn=number
 
@@ -280,7 +284,22 @@ require'nvim-treesitter.configs'.setup {
   },
   indent = {
     enable = true
+  },
+  autotag = {
+    enable = true,
+  },
+  rainbow = {
+    enable = true,
+    extended_mode = true, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
+    max_file_lines = nil, -- Do not enable for files with more than n lines, int
+    -- colors = {}, -- table of hex strings
+    -- termcolors = {} -- table of colour name strings
   }
 }
+require('nvim-autopairs').setup{}
+require("indent_blankline").setup {
+  show_end_of_line = true
+}
+require('gitsigns').setup()
 EOF
 " }} lua
