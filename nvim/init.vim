@@ -1,3 +1,48 @@
+" basic {{
+set encoding=utf-8
+setglobal fileencoding=utf-8
+scriptencoding utf-8
+
+set termguicolors
+
+set number
+set hidden
+set list listchars=tab:\|\ ,eol:¬
+set cmdheight=2
+set signcolumn=number
+
+set nobackup
+set nowritebackup
+
+set ignorecase
+set smartcase
+set incsearch
+
+set backspace=indent,eol,start
+set et sta sw=2 ts=2 sts=2
+
+set foldmethod=indent
+set foldlevel=99
+
+set timeout timeoutlen=500 ttimeoutlen=10
+"
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=300
+
+" Don't pass messages to |ins-completion-menu|.
+set shortmess+=c
+
+let g:loaded_node_provider = 0
+let g:loaded_ruby_provider = 0
+let g:loaded_perl_provider = 0
+let g:loaded_python_provider = 0
+let g:loaded_python3_provider = 0
+
+" Space as Leader
+let mapleader = "\<Space>"
+" }} basic
+
 " plug.vim {{
 if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
   silent !curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs
@@ -51,52 +96,11 @@ Plug 'kdheepak/lazygit.nvim'
 
 call plug#end()
 " }} plug.vim
-
-" basic {{
-set encoding=utf-8
-setglobal fileencoding=utf-8
-scriptencoding utf-8
-
-set termguicolors
 colorscheme nord
 
-set number
-set hidden
-set list listchars=tab:\|\ ,eol:¬
-set cmdheight=2
-set signcolumn=number
-
-set nobackup
-set nowritebackup
-
-set ignorecase
-set smartcase
-set incsearch
-
-set backspace=indent,eol,start
-set et sta sw=2 ts=2 sts=2
-
-set foldmethod=indent
-set foldlevel=99
-
-set timeout timeoutlen=500 ttimeoutlen=10
-"
-" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
-" delays and poor user experience.
-set updatetime=300
-
-" Don't pass messages to |ins-completion-menu|.
-set shortmess+=c
-
-let g:loaded_node_provider = 0
-let g:loaded_ruby_provider = 0
-let g:loaded_perl_provider = 0
-let g:loaded_python_provider = 0
-let g:loaded_python3_provider = 0
-
-" Space as Leader
-let mapleader = "\<Space>"
-" }} basic
+" lua {{
+lua require('plugins')
+" }} lua
 
 " autocmd {{
 augroup common
@@ -250,7 +254,3 @@ nnoremap <silent> <leader>fcc <cmd>Telescope coc commands<cr>
 " lazygit {{
 nnoremap <silent> <leader>gg :LazyGit<CR>
 " }}
-
-" lua {{
-lua require('plugins')
-" }} lua
