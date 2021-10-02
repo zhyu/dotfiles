@@ -39,13 +39,15 @@ require'nvim-treesitter.configs'.setup {
   }
 }
 
-require('nvim-autopairs').setup {}
+require('colorizer').setup()
 
 require("indent_blankline").setup {
   show_end_of_line = true
 }
 
 require('gitsigns').setup()
+
+require('nvim-autopairs').setup()
 
 local actions = require('telescope.actions')
 require('telescope').setup {

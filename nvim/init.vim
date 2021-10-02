@@ -11,6 +11,7 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'shaunsingh/nord.nvim'
 Plug 'hoob3rt/lualine.nvim'
+Plug 'norcalli/nvim-colorizer.lua'
 " complete
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " language specific
@@ -24,8 +25,6 @@ Plug 'HerringtonDarkholme/yats.vim'
 Plug 'maxmellon/vim-jsx-pretty'
 " - Terraform
 Plug 'hashivim/vim-terraform'
-" - CSS
-Plug 'ap/vim-css-color'
 " - Markdown
 Plug 'plasticboy/vim-markdown'
 " utils
