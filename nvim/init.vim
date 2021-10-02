@@ -108,7 +108,9 @@ endfunction
 " }} functions
 
 " Dash {{
-nmap <silent> <leader>da <Plug>DashSearch
+if has('mac')
+  nmap <silent> <leader>da <Plug>DashSearch
+endif
 " }} Dash
 
 " Terraform {{

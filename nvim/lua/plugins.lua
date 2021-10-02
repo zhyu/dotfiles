@@ -136,7 +136,10 @@ require('packer').startup(function()
   use 'p00f/nvim-ts-rainbow'
   use 'b3nj5m1n/kommentary'
   use 'ntpeters/vim-better-whitespace'
-  use 'rizzatti/dash.vim'
+  use {
+    'rizzatti/dash.vim',
+    cond = function() return vim.fn.has('mac') == 1 end
+  }
   use 'mattn/emmet-vim'
   use 'tpope/vim-fugitive'
   use 'tpope/vim-surround'
