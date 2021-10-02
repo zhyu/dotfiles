@@ -43,61 +43,6 @@ let g:loaded_python3_provider = 0
 let mapleader = "\<Space>"
 " }} basic
 
-" plug.vim {{
-if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
-  silent !curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs
-        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-endif
-
-call plug#begin(stdpath('data') . '/plugged')
-" lua lib that other plugins depend on
-Plug 'nvim-lua/plenary.nvim'
-" UI
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'shaunsingh/nord.nvim'
-Plug 'hoob3rt/lualine.nvim'
-Plug 'norcalli/nvim-colorizer.lua'
-" complete
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-" language specific
-" - Elixir
-Plug 'elixir-editors/vim-elixir'
-" - Python
-Plug 'Glench/Vim-Jinja2-Syntax'
-" - Javascript & Typescript
-Plug 'yuezk/vim-js'
-Plug 'HerringtonDarkholme/yats.vim'
-Plug 'maxmellon/vim-jsx-pretty'
-" - Terraform
-Plug 'hashivim/vim-terraform'
-" - Markdown
-Plug 'plasticboy/vim-markdown'
-" utils
-Plug 'lewis6991/gitsigns.nvim'
-Plug 'ggandor/lightspeed.nvim'
-Plug 'nvim-telescope/telescope.nvim'
-Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
-Plug 'fannheyward/telescope-coc.nvim'
-Plug 'windwp/nvim-autopairs'
-Plug 'windwp/nvim-ts-autotag'
-Plug 'p00f/nvim-ts-rainbow'
-Plug 'lukas-reineke/indent-blankline.nvim'
-Plug 'ntpeters/vim-better-whitespace'
-Plug 'b3nj5m1n/kommentary'
-Plug 'rizzatti/dash.vim'
-Plug 'mattn/emmet-vim'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-abolish'
-Plug 'skywind3000/asynctasks.vim'
-Plug 'skywind3000/asyncrun.vim'
-Plug 'kdheepak/lazygit.nvim'
-
-call plug#end()
-" }} plug.vim
-colorscheme nord
-
 " lua {{
 lua require('plugins')
 " }} lua
