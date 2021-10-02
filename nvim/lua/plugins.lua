@@ -7,7 +7,7 @@ if fn.empty(fn.glob(install_path)) > 0 then
 end
 
 -- use plugins
-require('packer').startup(function()
+require('packer').startup(function(use)
   -- packer itself
   use 'wbthomason/packer.nvim'
   -- UI
