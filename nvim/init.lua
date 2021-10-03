@@ -8,10 +8,7 @@ require('basic')
 require('plugins')
 
 -- autocmd and commands in vimscript
-cmd('source ' .. config_path .. '/commands.vim')
-
--- functions in vimscript
-cmd('source ' .. config_path .. '/functions.vim')
+cmd('source ' .. config_path .. '/vimscript/commands.vim')
 
 -- key mappings in vimscript
-cmd('source ' .. config_path .. '/keymaps.vim')
+cmd('source ' .. config_path .. '/vimscript/keymaps.vim')

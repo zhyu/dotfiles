@@ -1,25 +1,20 @@
-" mappings {{
-imap fd <Esc>
-imap jk <Esc>
+" functions {{
+function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
 
-" system clipboard
-nmap <Leader>y "+y
-nmap <Leader>d "+d
-vmap <Leader>y "+y
-vmap <Leader>d "+d
-nmap <Leader>p "+p
-nmap <Leader>P "+P
-vmap <Leader>p "+p
-vmap <Leader>P "+P
-" }} mappings
+function! s:show_documentation()
+    if (index(['vim','help'], &filetype) >= 0)
+        execute 'h '.expand('<cword>')
+    elseif (coc#rpc#ready())
+        call CocActionAsync('doHover')
+    else
+        execute '!' . &keywordprg . " " . expand('<cword>')
+    endif
+endfunction
+" }} functions
 
-" Dash {{
-if has('mac')
-    nmap <silent> <leader>da <Plug>DashSearch
-endif
-" }} Dash
-
-" coc.nvim {{
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
@@ -85,19 +80,3 @@ vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(
 " Requires 'textDocument/selectionRange' support of LS, ex: coc-tsserver
 nmap <silent> <C-s> <Plug>(coc-range-select)
 xmap <silent> <C-s> <Plug>(coc-range-select)
-" }} coc.nvim
-
-" telescope {{
-nnoremap <silent> <leader>F <cmd>Telescope<cr>
-nnoremap <silent> <leader>ff <cmd>Telescope find_files<cr>
-nnoremap <silent> <leader>fb <cmd>Telescope buffers<cr>
-nnoremap <silent> <leader>fw <cmd>Telescope grep_string<cr>
-nnoremap <silent> <leader>fg <cmd>Telescope live_grep<cr>
-nnoremap <silent> <leader>fs <cmd>Telescope current_buffer_fuzzy_find<cr>
-nnoremap <silent> <leader>fcm <cmd>Telescope commands<cr>
-nnoremap <silent> <leader>fcc <cmd>Telescope coc commands<cr>
-" }} telescope
-
-" lazygit {{
-nnoremap <silent> <leader>gg :LazyGit<CR>
-" }}

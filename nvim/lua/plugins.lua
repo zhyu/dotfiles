@@ -69,7 +69,10 @@ require('packer').startup(function(use)
     -- completion
     use {
         'neoclide/coc.nvim',
-        branch = 'release'
+        branch = 'release',
+        config = function()
+            vim.cmd('source ' .. vim.fn.stdpath('config') .. '/vimscript/plugins/coc.vim')
+        end
     }
     -- language specific
     -- Elixir
