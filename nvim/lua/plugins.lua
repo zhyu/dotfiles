@@ -143,12 +143,11 @@ require('packer').startup(function(use)
         'rizzatti/dash.vim',
         cond = function() return vim.fn.has('mac') == 1 end
     }
-    use 'mattn/emmet-vim'
     use 'tpope/vim-fugitive'
     use 'tpope/vim-surround'
     use 'tpope/vim-repeat'
     use 'tpope/vim-abolish'
-    use 'skywind3000/asynctasks.vim'
-    use 'skywind3000/asyncrun.vim'
+    -- use 'skywind3000/asynctasks.vim'
+    -- use 'skywind3000/asyncrun.vim'
     use 'kdheepak/lazygit.nvim'
 end)
