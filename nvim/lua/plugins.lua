@@ -77,7 +77,15 @@ require('packer').startup(function(use)
     -- Python
     use 'Glench/Vim-Jinja2-Syntax'
     -- Terraform TODO: highlight is using treesitter, replace this plugin with lsp?
-    use 'hashivim/vim-terraform'
+    use {
+        'hashivim/vim-terraform',
+        ft = {'hcl', 'terraform'},
+        config = function()
+            vim.g.terraform_align=1
+            vim.g.terraform_fold_sections=1
+            vim.g.terraform_fmt_on_save=1
+        end
+    }
     -- utils
     use {
         'norcalli/nvim-colorizer.lua',
