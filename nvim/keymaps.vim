@@ -1,33 +1,3 @@
-" lua {{
-" basic editor options
-lua require('basic')
-
-" plugins management and config
-lua require('plugins')
-" }} lua
-
-" autocmd {{
-augroup common
-    autocmd!
-    " quickfix
-    autocmd QuickFixCmdPost * nested cwindow
-    " Golang
-    autocmd FileType go setlocal noet
-    " Highlight the symbol and its references when holding the cursor.
-    autocmd CursorHold * silent call CocActionAsync('highlight')
-    " Setup formatexpr specified filetype(s).
-    autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-    " Update signature help on jump placeholder.
-    autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
-" }} autocmd
-
-" command {{
-command! -nargs=0 Format :call CocAction('format')
-command! -nargs=? Fold   :call CocAction('fold', <f-args>)
-command! -nargs=0 OR     :call CocAction('runCommand', 'editor.action.organizeImport')
-" }} command
-
 " mappings {{
 imap fd <Esc>
 imap jk <Esc>
@@ -43,34 +13,11 @@ vmap <Leader>p "+p
 vmap <Leader>P "+P
 " }} mappings
 
-" functions {{
-function! s:check_back_space() abort
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-function! s:show_documentation()
-    if (index(['vim','help'], &filetype) >= 0)
-        execute 'h '.expand('<cword>')
-    elseif (coc#rpc#ready())
-        call CocActionAsync('doHover')
-    else
-        execute '!' . &keywordprg . " " . expand('<cword>')
-    endif
-endfunction
-" }} functions
-
 " Dash {{
 if has('mac')
     nmap <silent> <leader>da <Plug>DashSearch
 endif
 " }} Dash
-
-" Terraform {{
-let g:terraform_align=1
-let g:terraform_fold_sections=1
-let g:terraform_fmt_on_save=1
-" }} Terraform
 
 " coc.nvim {{
 " Use tab for trigger completion with characters ahead and navigate.
