@@ -52,16 +52,28 @@ require('packer').startup(function(use)
         end
     }
     use {
-        'shaunsingh/nord.nvim',
-        config = function() require('nord').set() end
+        'EdenEast/nightfox.nvim',
+        config = function()
+            local nightfox = require('nightfox')
+            nightfox.setup {
+                fox = "nordfox",
+                styles = {
+                    comments = "italic",
+                    keywords = "italic",
+                }
+            }
+            nightfox.load()
+        end
     }
     use {
-        'hoob3rt/lualine.nvim',
+        -- 'hoob3rt/lualine.nvim',
+        -- forked version contains many fixes. see https://github.com/hoob3rt/lualine.nvim/pull/311
+        'shadmansaleh/lualine.nvim',
         config = function()
             require('lualine').setup {
                 options = {
                     icons_enabled = false,
-                    theme = 'nord'
+                    theme = 'nightfox'
                 }
             }
         end
