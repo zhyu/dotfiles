@@ -143,6 +143,8 @@ require('packer').startup(function(use)
                         attach_mappings = function(prompt_bufnr)
                             action_set.select:enhance({
                                 post = function()
+                                    -- note: this works well for newly opening a file, however,
+                                    -- it also resets the folds every time the buffer is focused
                                     vim.cmd(":normal! zx")
                                 end
                             })
