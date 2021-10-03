@@ -76,8 +76,6 @@ require('packer').startup(function(use)
     }
     -- language specific
     -- Elixir
-    -- Python
-    use 'Glench/Vim-Jinja2-Syntax'
     use {
         'elixir-editors/vim-elixir',
         ft = {'elixir'}
