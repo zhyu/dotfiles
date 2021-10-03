@@ -76,9 +76,12 @@ require('packer').startup(function(use)
     }
     -- language specific
     -- Elixir
-    use 'elixir-editors/vim-elixir'
     -- Python
     use 'Glench/Vim-Jinja2-Syntax'
+    use {
+        'elixir-editors/vim-elixir',
+        ft = {'elixir'}
+    }
     -- Terraform TODO: highlight is using treesitter, replace this plugin with lsp?
     use {
         'hashivim/vim-terraform',
