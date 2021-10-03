@@ -8,23 +8,17 @@ lua require('plugins')
 
 " autocmd {{
 augroup common
-  autocmd!
-  " quickfix
-  autocmd QuickFixCmdPost * nested cwindow
-  " Python
-  autocmd FileType python setlocal et sta sw=4 ts=4 sts=4
-  " Javascript
-  autocmd FileType javascript,javascriptreact setlocal et sta sw=4 ts=4 sts=4
-  " HTML
-  autocmd FileType html setlocal et sta sw=4 ts=4 sts=4
-  " Golang
-  autocmd FileType go setlocal noet sw=4 ts=4 sts=4
-  " Highlight the symbol and its references when holding the cursor.
-  autocmd CursorHold * silent call CocActionAsync('highlight')
-  " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder.
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+    autocmd!
+    " quickfix
+    autocmd QuickFixCmdPost * nested cwindow
+    " Golang
+    autocmd FileType go setlocal noet
+    " Highlight the symbol and its references when holding the cursor.
+    autocmd CursorHold * silent call CocActionAsync('highlight')
+    " Setup formatexpr specified filetype(s).
+    autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+    " Update signature help on jump placeholder.
+    autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
 " }} autocmd
 
@@ -51,24 +45,24 @@ vmap <Leader>P "+P
 
 " functions {{
 function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
 function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  elseif (coc#rpc#ready())
-    call CocActionAsync('doHover')
-  else
-    execute '!' . &keywordprg . " " . expand('<cword>')
-  endif
+    if (index(['vim','help'], &filetype) >= 0)
+        execute 'h '.expand('<cword>')
+    elseif (coc#rpc#ready())
+        call CocActionAsync('doHover')
+    else
+        execute '!' . &keywordprg . " " . expand('<cword>')
+    endif
 endfunction
 " }} functions
 
 " Dash {{
 if has('mac')
-  nmap <silent> <leader>da <Plug>DashSearch
+    nmap <silent> <leader>da <Plug>DashSearch
 endif
 " }} Dash
 
@@ -83,9 +77,9 @@ let g:terraform_fmt_on_save=1
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
+            \ pumvisible() ? "\<C-n>" :
+            \ <SID>check_back_space() ? "\<TAB>" :
+            \ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 " Use <c-space> to trigger completion.

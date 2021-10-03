@@ -23,9 +23,9 @@ set.incsearch = true               -- incremental search
 set.backspace = 'indent,eol,start' -- allow backspacing over autoindent, line breaks, and the start of insert
 set.expandtab = true               -- use the appropriate number of spaces to insert a <Tab>
 set.smarttab = true                -- respect 'shiftwidth' when inserting/deleting a <Tab>
-set.shiftwidth = 2                 -- number of spaces for a level of indentation
-set.tabstop = 2                    -- number of spaces for a '\t' character
-set.softtabstop = 2                -- number of spaces for a <Tab> keypress or a <BS> keypress
+set.shiftwidth = 4                 -- number of spaces for a level of indentation
+set.tabstop = 4                    -- number of spaces for a '\t' character
+set.softtabstop = 4                -- number of spaces for a <Tab> keypress or a <BS> keypress
 
 set.foldmethod = 'indent'          -- fold based on indent
 set.foldlevel = 99                 -- hide folds with level higher than 99, i.e., expand all folds by default
