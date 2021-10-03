@@ -1,3 +1,1 @@
-if has('mac')
-    nmap <silent> <leader>da <Plug>DashSearch
-endif
+nmap <silent> <leader>da <Plug>DashSearch
