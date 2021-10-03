@@ -124,6 +124,8 @@ require('packer').startup(function(use)
                     }
                 }
             }
+
+            vim.cmd('source ' .. vim.fn.stdpath('config') .. '/vimscript/plugins/telescope.vim')
         end
     }
     use {
@@ -145,7 +147,10 @@ require('packer').startup(function(use)
     use 'ntpeters/vim-better-whitespace'
     use {
         'rizzatti/dash.vim',
-        cond = function() return vim.fn.has('mac') == 1 end
+        cond = function() return vim.fn.has('mac') == 1 end,
+        config = function()
+            vim.cmd('source ' .. vim.fn.stdpath('config') .. '/vimscript/plugins/dash.vim')
+        end
     }
     use 'tpope/vim-fugitive'
     use 'tpope/vim-surround'
@@ -153,5 +158,10 @@ require('packer').startup(function(use)
     use 'tpope/vim-abolish'
     -- use 'skywind3000/asynctasks.vim'
     -- use 'skywind3000/asyncrun.vim'
-    use 'kdheepak/lazygit.nvim'
+    use {
+        'kdheepak/lazygit.nvim',
+        config = function()
+            vim.cmd('source ' .. vim.fn.stdpath('config') .. '/vimscript/plugins/lazygit.vim')
+        end
+    }
 end)
