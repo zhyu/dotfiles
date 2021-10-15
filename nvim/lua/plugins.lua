@@ -36,7 +36,7 @@ require('packer').startup(function(use)
                     enable = true,
                 },
                 indent = {
-                    enable = true
+                    enable = false,
                 },
                 autotag = {
                     enable = true,
