@@ -129,6 +129,10 @@ require('packer').startup(function(use)
             local action_set = require('telescope.actions.set')
             require('telescope').setup {
                 defaults = {
+                    layout_strategy = 'vertical',
+                    layout_config = {
+                        vertical = { width = 0.66 }
+                    },
                     mappings = {
                         i = {
                             ["<C-j>"] = actions.move_selection_next,
