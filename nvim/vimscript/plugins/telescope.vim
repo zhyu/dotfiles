@@ -7,10 +7,9 @@ nnoremap <silent> <leader>fs <cmd>Telescope current_buffer_fuzzy_find<cr>
 nnoremap <silent> <leader>fcm <cmd>Telescope commands<cr>
 nnoremap <silent> <leader>fcc <cmd>Telescope coc commands<cr>
 
-" Use Telescope for coc location jumps, e.g., <coc-references>.
-" See help: CocLocationsChange for details
-augroup CocTelescopeLocation
-  autocmd!
-  let g:coc_enable_locationlist = 0
-  autocmd User CocLocationsChange Telescope coc locations
-augroup END
+
+" GoTo code navigation.
+nmap <silent> gd <cmd>Telescope coc definitions
+nmap <silent> gy <cmd>Telescope coc type_definitions
+nmap <silent> gi <cmd>Telescope coc implementations
+nmap <silent> gr <cmd>Telescope coc references
