@@ -66,9 +66,7 @@ require('packer').startup(function(use)
         end
     }
     use {
-        -- 'hoob3rt/lualine.nvim',
-        -- forked version contains many fixes. see https://github.com/hoob3rt/lualine.nvim/pull/311
-        'shadmansaleh/lualine.nvim',
+        'nvim-lualine/lualine.nvim',
         config = function()
             require('lualine').setup {
                 options = {
