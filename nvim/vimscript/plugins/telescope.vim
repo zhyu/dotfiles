@@ -9,7 +9,7 @@ nnoremap <silent> <leader>fcc <cmd>Telescope coc commands<cr>
 
 
 " GoTo code navigation.
-nmap <silent> gd <cmd>Telescope coc definitions
-nmap <silent> gy <cmd>Telescope coc type_definitions
-nmap <silent> gi <cmd>Telescope coc implementations
-nmap <silent> gr <cmd>Telescope coc references
+nmap <silent> gd <cmd>Telescope coc definitions<cr>
+nmap <silent> gy <cmd>Telescope coc type_definitions<cr>
+nmap <silent> gi <cmd>Telescope coc implementations<cr>
+nmap <silent> gr <cmd>Telescope coc references<cr>
