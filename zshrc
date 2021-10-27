@@ -113,10 +113,14 @@ source $ZSH/oh-my-zsh.sh
 # which makes ~/.ssh/ssh_auth_sock links to a non-functional location.
 # So setting the symlink in ~/.zshrc is easier.
 if [[ -n $SSH_CONNECTION ]]; then
-    if [ ! -S ~/.ssh/ssh_auth_sock ] && [ -S "$SSH_AUTH_SOCK" ]; then
+    # Prevent recursive link, otherwise when opening tmux, ~/.ssh/ssh_auth_sock
+    # will be linked to itself. Since Eternal Terminal won't delete old socket
+    # files, we couldn't check whether ~/.ssh/ssh_auth_sock is a socket file
+    # ([ ! -S ~/.ssh/ssh_auth_sock ]) to achieve the same goal
+    if [ -S "$SSH_AUTH_SOCK" ] && [ ! "$SSH_AUTH_SOCK" -ef ~/.ssh/ssh_auth_sock ]; then
         ln -sf $SSH_AUTH_SOCK ~/.ssh/ssh_auth_sock
+        export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
     fi
-    export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
 fi
 
 # human-readable sizes
