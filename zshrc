@@ -102,12 +102,22 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-# Server only setup, needs to be used in conjunction with ~/.ssh/rc.
-# ~/.ssh/ssh_auth_sock is a symlink created by ssh daemon when a ssh
-# connection is created.
-# Setting SSH_AUTH to a fixed location will help the tmux/screen
+# Server only setup
+# symlink ~/.ssh/ssh_auth_sock to $SSH_AUTH_SOCK, then set the env var
+# to a fixed location. It will help the tmux/screen
 # sessions finding the ssh agent forwarded by differnt ssh sessions.
-export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
+#
+# Creating the symlink in ~/.ssh/rc could do it after the ssh connection
+# being established, however, when using Eternal Terminal (et), et will
+# set the ssh agent to a different location after ~/.ssh/rc executed,
+# which makes ~/.ssh/ssh_auth_sock links to a non-functional location.
+# So setting the symlink in ~/.zshrc is easier.
+if [[ -n $SSH_CONNECTION ]]; then
+    if [ ! -S ~/.ssh/ssh_auth_sock ] && [ -S "$SSH_AUTH_SOCK" ]; then
+        ln -sf $SSH_AUTH_SOCK ~/.ssh/ssh_auth_sock
+    fi
+    export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
+fi
 
 # human-readable sizes
 alias df='df -h'
