@@ -178,7 +178,8 @@ require('packer').startup(function(use)
     }
     use {
         'windwp/nvim-autopairs',
-        config = function() require('nvim-autopairs').setup() end
+        -- skip mapping <cr> to avoid conflict with coc
+        config = function() require('nvim-autopairs').setup({ map_cr = false }) end
     }
     use 'windwp/nvim-ts-autotag'
     use 'p00f/nvim-ts-rainbow'
