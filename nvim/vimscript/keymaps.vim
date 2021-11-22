@@ -10,3 +10,6 @@ nmap <Leader>p "+p
 nmap <Leader>P "+P
 vmap <Leader>p "+p
 vmap <Leader>P "+P
+
+" repeat a command-line command
+noremap <Leader>. @:
