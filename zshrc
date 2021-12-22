@@ -69,6 +69,7 @@ plugins=(vi-mode tmux fzf common-aliases fasd git pyenv nvm)
 
 VI_MODE_SET_CURSOR=true
 VI_MODE_RESET_PROMPT_ON_MODE_CHANGE=true
+MODE_INDICATOR="%F{cyan}<~~%f"
 
 source $ZSH/oh-my-zsh.sh
 
@@ -128,22 +129,36 @@ alias df='df -h'
 # fix LS color on mac OS
 alias ls="ls --color=auto -G"
 
-# use fd as backend of fzf, it will respect ignore files like .gitignore
-export FZF_DEFAULT_COMMAND='fd --type f'
-
 # enable the nice builtin zmv
 autoload -U zmv
 # noglob: no need to quote wildcards
 # -W: auto convert wildcards to the proper format, e.g., no need to use capture groups
 alias mmv='noglob zmv -W'
 
-# let's try neovim
+# neovim :)
 alias vim='nvim'
 alias vimdiff='nvim -d '
 
 # use vim when edit-command-line
 export VISUAL=nvim
 export EDITOR="${VISUAL}"
+
+# fzf settings
+# use fd as backend of fzf, it will respect ignore files like .gitignore
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+# To apply the command to CTRL-T as well
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+# Use fd instead of the default find command for listing path candidates.
+# - The first argument to the function ($1) is the base path to start traversal
+# - See the source code (completion.{bash,zsh}) for the details.
+_fzf_compgen_path() {
+  fd --hidden --follow --exclude ".git" . "$1"
+}
+
+# Use fd to generate the list for directory completion
+_fzf_compgen_dir() {
+  fd --type d --hidden --follow --exclude ".git" . "$1"
+}
 
 # source
 if [[ -f $HOME/.zshrc.post ]]; then
