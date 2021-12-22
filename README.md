@@ -4,7 +4,7 @@ dotfiles
 ## Requirements
 
 * zsh
-* tmux
+* [tmux](https://github.com/tmux/tmux)
     * [tpm](https://github.com/tmux-plugins/tpm)
 * git
 * [Oh My Zsh](https://ohmyz.sh/)
