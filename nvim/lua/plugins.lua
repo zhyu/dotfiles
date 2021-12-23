@@ -184,6 +184,16 @@ require('packer').startup(function(use)
     use 'windwp/nvim-ts-autotag'
     use 'p00f/nvim-ts-rainbow'
     use 'b3nj5m1n/kommentary'
+    use {
+        'monaqa/dial.nvim',
+        config = function ()
+            local dial = require('dial')
+            table.insert(dial.config.searchlist.normal, "date#[%H:%M:%S]")
+            table.insert(dial.config.searchlist.visual, "date#[%H:%M:%S]")
+
+            vim.cmd('source ' .. vim.fn.stdpath('config') .. '/vimscript/plugins/dial.vim')
+        end
+    }
     use 'ntpeters/vim-better-whitespace'
     use {
         'rizzatti/dash.vim',
