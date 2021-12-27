@@ -208,10 +208,4 @@ require('packer').startup(function(use)
     use 'tpope/vim-abolish'
     -- use 'skywind3000/asynctasks.vim'
     -- use 'skywind3000/asyncrun.vim'
-    use {
-        'kdheepak/lazygit.nvim',
-        config = function()
-            vim.cmd('source ' .. vim.fn.stdpath('config') .. '/vimscript/plugins/lazygit.vim')
-        end
-    }
 end)
