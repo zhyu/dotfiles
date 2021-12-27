@@ -6,6 +6,7 @@ nnoremap <silent> <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <silent> <leader>fs <cmd>Telescope current_buffer_fuzzy_find<cr>
 nnoremap <silent> <leader>fcm <cmd>Telescope commands<cr>
 nnoremap <silent> <leader>fcc <cmd>Telescope coc commands<cr>
+nnoremap <silent> <leader>fg <cmd>Telescope git_status<cr>
 
 
 " GoTo code navigation.
