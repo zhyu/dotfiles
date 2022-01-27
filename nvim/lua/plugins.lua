@@ -92,6 +92,7 @@ require('packer').startup(function(use)
             vim.cmd('source ' .. vim.fn.stdpath('config') .. '/vimscript/plugins/coc.vim')
         end
     }
+    use 'github/copilot.vim'
     -- language specific
     -- Elixir
     use {
