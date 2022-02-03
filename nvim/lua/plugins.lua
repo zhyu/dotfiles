@@ -117,7 +117,13 @@ require('packer').startup(function(use)
     use {
         'lewis6991/gitsigns.nvim',
         requires = { 'nvim-lua/plenary.nvim' },
-        config = function() require('gitsigns').setup() end
+        config = function()
+            require('gitsigns').setup {
+                on_attach = function()
+                    vim.cmd('source ' .. vim.fn.stdpath('config') .. '/vimscript/plugins/gitsigns.vim')
+                end
+            }
+        end
     }
     use {
         'lukas-reineke/indent-blankline.nvim',
