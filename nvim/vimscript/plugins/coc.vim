@@ -31,9 +31,9 @@ inoremap <silent><expr> <c-space> coc#refresh()
 " format on enter, <cr> could be remapped by other vim plugin
 inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
-" Use `[g` and `]g` to navigate diagnostics
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
+" Use `<leader>ng` and `<leader>pg` to navigate diagnostics
+nnoremap <silent> <leader>ng <Plug>(coc-diagnostic-next)
+nnoremap <silent> <leader>pg <Plug>(coc-diagnostic-prev)
 
 " GoTo code navigation.
 " Mapped separately in vimscripts/plugins/telescope.vim
