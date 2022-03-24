@@ -54,15 +54,15 @@ require('packer').startup(function(use)
     use {
         'EdenEast/nightfox.nvim',
         config = function()
-            local nightfox = require('nightfox')
-            nightfox.setup {
-                fox = "nordfox",
-                styles = {
-                    comments = "italic",
-                    keywords = "italic",
+            require('nightfox').setup {
+                options = {
+                    styles = {
+                        comments = "italic",
+                        keywords = "italic",
+                    }
                 }
             }
-            nightfox.load()
+            vim.cmd('colorscheme nordfox')
         end
     }
     use {
@@ -70,9 +70,6 @@ require('packer').startup(function(use)
         requires = {'kyazdani42/nvim-web-devicons', opt = true },
         config = function()
             require('lualine').setup {
-                options = {
-                    theme = 'nightfox'
-                },
                 tabline = {
                     lualine_a = { "buffers" },
                     lualine_b = {},
