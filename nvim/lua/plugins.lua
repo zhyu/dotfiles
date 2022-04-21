@@ -91,7 +91,10 @@ require('packer').startup(function(use)
     }
     use { 'github/copilot.vim',
         config = function()
-            vim.cmd('source ' .. vim.fn.stdpath('config') .. '/vimscript/plugins/copilot.vim')
+            vim.g.copilot_filetypes = {
+                markdown = true,
+                yaml = true,
+            }
         end
     }
     -- language specific
