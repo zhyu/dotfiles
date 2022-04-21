@@ -121,13 +121,7 @@ require('packer').startup(function(use)
     use {
         'lewis6991/gitsigns.nvim',
         requires = { 'nvim-lua/plenary.nvim' },
-        config = function()
-            require('gitsigns').setup {
-                on_attach = function()
-                    vim.cmd('source ' .. vim.fn.stdpath('config') .. '/vimscript/plugins/gitsigns.vim')
-                end
-            }
-        end
+        config = function() require('gitsigns').setup() end
     }
     use {
         'lukas-reineke/indent-blankline.nvim',
@@ -174,8 +168,6 @@ require('packer').startup(function(use)
                     },
                 }
             }
-
-            vim.cmd('source ' .. vim.fn.stdpath('config') .. '/vimscript/plugins/telescope.vim')
         end
     }
     use {
@@ -199,9 +191,6 @@ require('packer').startup(function(use)
     use {
         'rizzatti/dash.vim',
         cond = function() return vim.fn.has('mac') == 1 end,
-        config = function()
-            vim.cmd('source ' .. vim.fn.stdpath('config') .. '/vimscript/plugins/dash.vim')
-        end
     }
     use 'tpope/vim-fugitive'
     use 'tpope/vim-surround'
