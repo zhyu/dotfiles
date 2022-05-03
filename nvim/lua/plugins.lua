@@ -137,7 +137,6 @@ require('packer').startup(function(use)
         requires = { {'nvim-lua/plenary.nvim'} },
         config = function()
             local actions = require('telescope.actions')
-            local action_set = require('telescope.actions.set')
             require('telescope').setup {
                 defaults = {
                     layout_strategy = 'vertical',
@@ -150,22 +149,6 @@ require('packer').startup(function(use)
                             ["<C-k>"] = actions.move_selection_previous,
                         }
                     }
-                },
-                -- No Folds Found for files opened with telescope when using treesitter based folding
-                -- https://github.com/nvim-telescope/telescope.nvim/issues/559#issuecomment-886123429
-                pickers = {
-                    find_files = {
-                        attach_mappings = function(prompt_bufnr)
-                            action_set.select:enhance({
-                                post = function()
-                                    -- note: this works well for newly opening a file, however,
-                                    -- it also resets the folds every time the buffer is focused
-                                    vim.cmd(":normal! zx")
-                                end
-                            })
-                            return true
-                        end
-                    },
                 }
             }
         end

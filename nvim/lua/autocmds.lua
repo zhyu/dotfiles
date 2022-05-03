@@ -12,3 +12,11 @@ create_aucmd("FileType", { pattern = "go", command = "setlocal noet", group = co
 create_aucmd("FileType", { pattern = { "typescript", "json" }, command = "setlocal formatexpr=CocAction('formatSelected')", group = common_grp })
 -- Update signature help on jump placeholder.
 create_aucmd("User", { pattern = "CocJumpPlaceholder", command = "silent call CocActionAsync('showSignatureHelp')", group = common_grp })
+-- Fix No Folds Found for files opened with telescope when using treesitter based folding
+-- https://github.com/nvim-telescope/telescope.nvim/issues/559#issuecomment-1074076011
+create_aucmd("BufRead", {
+    callback = function()
+        create_aucmd("BufWinEnter", { command = "normal! zx", once = true })
+    end,
+    group = common_grp
+})
