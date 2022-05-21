@@ -19,6 +19,7 @@ local nmap = {
 
     -- telescope
     ['<leader>F'] = function() require('telescope.builtin').builtin() end,
+    ['<leader>fp'] = function() require('telescope.builtin').resume() end,
     ['<leader>ff'] = function() require('telescope.builtin').find_files() end,
     ['<leader>fb'] = function() require('telescope.builtin').buffers() end,
     ['<leader>fw'] = function() require('telescope.builtin').grep_string() end,
