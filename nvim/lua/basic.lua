@@ -37,7 +37,8 @@ set.ttimeoutlen = 10                        -- wait 10 ms for a key code sequenc
 
 set.updatetime = 300                        -- trigger CursorHold event when no keys are pressed for 300 ms
 
-set.shortmess:append('c')                   -- Don't pass messages to |ins-completion-menu|.
+-- set.shortmess:append('c')                   -- Don't pass messages to |ins-completion-menu|.
+set.completeopt = {'menu', 'menuone', 'noselect'} -- completion menu setup suggested by nvim-cmp
 
 g.loaded_node_provider = 0                  -- disable node provider
 g.loaded_ruby_provider = 0                  -- disable ruby provider
