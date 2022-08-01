@@ -26,12 +26,7 @@ local nmap = {
     ['<leader>fg'] = function() require('telescope.builtin').live_grep() end,
     ['<leader>fs'] = function() require('telescope.builtin').current_buffer_fuzzy_find() end,
     ['<leader>fcm'] = function() require('telescope.builtin').commands() end,
-    ['<leader>fcc'] = function() require('telescope').extensions.coc.commands({}) end,
     ['<leader>g'] = function() require('telescope.builtin').git_status() end,
-    ['gd'] = function() require('telescope').extensions.coc.definitions({}) end,
-    ['gy'] = function() require('telescope').extensions.coc.type_definitions({}) end,
-    ['gi'] = function() require('telescope').extensions.coc.implementations({}) end,
-    ['gr'] = function() require('telescope').extensions.coc.references({}) end,
 }
 local vmap = {
     -- gitsigns
