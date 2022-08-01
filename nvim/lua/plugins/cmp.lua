@@ -1,5 +1,6 @@
 local cmp = require('cmp')
-local select_opts = {behavior = cmp.SelectBehavior.Select}
+-- Insert the completion candidate on select
+local select_opts = { behavior = cmp.SelectBehavior.Insert }
 
 cmp.setup({
     snippet = {
