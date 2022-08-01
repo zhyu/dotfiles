@@ -14,44 +14,48 @@ require('packer').startup(function(use)
     use 'wbthomason/packer.nvim'
     -- UI
     use {
-        'nvim-treesitter/nvim-treesitter',
-        run = ':TSUpdate',
-        config = function()
-            require'nvim-treesitter.configs'.setup {
-                ensure_installed = {
-                    "bash",
-                    "css",
-                    "go",
-                    "gomod",
-                    "hcl",
-                    "html",
-                    "json",
-                    "java",
-                    "javascript",
-                    "lua",
-                    "python",
-                    "typescript",
-                    "vim",
-                    "yaml"
-                },
-                highlight = {
-                    enable = true,
-                },
-                indent = {
-                    enable = false,
-                },
-                autotag = {
-                    enable = true,
-                },
-                rainbow = {
-                    enable = true,
-                    extended_mode = true, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
-                    max_file_lines = nil, -- Do not enable for files with more than n lines, int
-                    -- colors = {}, -- table of hex strings
-                    -- termcolors = {} -- table of colour name strings
+        {
+            'nvim-treesitter/nvim-treesitter',
+            run = ':TSUpdate',
+            config = function()
+                require'nvim-treesitter.configs'.setup {
+                    ensure_installed = {
+                        "bash",
+                        "css",
+                        "go",
+                        "gomod",
+                        "hcl",
+                        "html",
+                        "json",
+                        "java",
+                        "javascript",
+                        "lua",
+                        "python",
+                        "typescript",
+                        "vim",
+                        "yaml"
+                    },
+                    highlight = {
+                        enable = true,
+                    },
+                    indent = {
+                        enable = false,
+                    },
+                    autotag = {
+                        enable = true,
+                    },
+                    rainbow = {
+                        enable = true,
+                        extended_mode = true, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
+                        max_file_lines = nil, -- Do not enable for files with more than n lines, int
+                        -- colors = {}, -- table of hex strings
+                        -- termcolors = {} -- table of colour name strings
+                    }
                 }
-            }
-        end
+            end
+        },
+        { 'windwp/nvim-ts-autotag', after = 'nvim-treesitter' },
+        { 'p00f/nvim-ts-rainbow', after = 'nvim-treesitter' },
     }
     use {
         'EdenEast/nightfox.nvim',
@@ -115,7 +119,8 @@ require('packer').startup(function(use)
         },
         {
             'neovim/nvim-lspconfig',
-            event = 'BufRead',
+            -- lazy loading seems not working correctly, maybe https://github.com/wbthomason/packer.nvim/issues/778
+            -- event = 'BufRead',
             config = function()
                 require('plugins.lsp')
             end,
@@ -191,70 +196,105 @@ require('packer').startup(function(use)
     -- utils
     use {
         'norcalli/nvim-colorizer.lua',
+        event = 'BufRead',
         config = function() require('colorizer').setup() end
     }
     use {
         'lewis6991/gitsigns.nvim',
+        event = 'BufRead',
         requires = { 'nvim-lua/plenary.nvim' },
         config = function() require('gitsigns').setup() end
     }
     use {
         'lukas-reineke/indent-blankline.nvim',
+        event = 'BufRead',
         config = function()
             require("indent_blankline").setup {
                 show_end_of_line = true
             }
         end
     }
-    use 'ggandor/lightspeed.nvim'
     use {
-        'nvim-telescope/telescope.nvim',
-        requires = { {'nvim-lua/plenary.nvim'} },
-        config = function()
-            local actions = require('telescope.actions')
-            require('telescope').setup {
-                defaults = {
-                    layout_strategy = 'vertical',
-                    layout_config = {
-                        vertical = { width = 0.66 }
-                    },
-                    mappings = {
-                        i = {
-                            ["<C-j>"] = actions.move_selection_next,
-                            ["<C-k>"] = actions.move_selection_previous,
+        'ggandor/lightspeed.nvim',
+        event = 'BufRead',
+    }
+    use {
+        {
+            'nvim-telescope/telescope.nvim',
+            event = 'VimEnter',
+            requires = { {'nvim-lua/plenary.nvim'} },
+            config = function()
+                local actions = require('telescope.actions')
+                require('telescope').setup {
+                    defaults = {
+                        layout_strategy = 'vertical',
+                        layout_config = {
+                            vertical = { width = 0.66 }
+                        },
+                        mappings = {
+                            i = {
+                                ["<C-j>"] = actions.move_selection_next,
+                                ["<C-k>"] = actions.move_selection_previous,
+                            }
                         }
                     }
                 }
-            }
-        end
-    }
-    use {
-        'nvim-telescope/telescope-fzf-native.nvim',
-        run = 'make',
-        config = function() require('telescope').load_extension('fzf') end
-    }
-    use {
-        'fannheyward/telescope-coc.nvim',
-        cond = enableCoc,
-        config = function() require('telescope').load_extension('coc') end
+            end
+        },
+        {
+            'nvim-telescope/telescope-fzf-native.nvim',
+            after = 'telescope.nvim',
+            run = 'make',
+            config = function() require('telescope').load_extension('fzf') end
+        },
+        {
+            'fannheyward/telescope-coc.nvim',
+            after = 'telescope.nvim',
+            cond = enableCoc,
+            config = function() require('telescope').load_extension('coc') end
+        },
     }
     use {
         'windwp/nvim-autopairs',
-        -- skip mapping <cr> to avoid conflict with coc
-        config = function() require('nvim-autopairs').setup({ map_cr = false }) end
+        event = 'InsertCharPre',
+        -- load after nvim-cmp to ensure <CR> works correctly
+        after = 'nvim-cmp',
+        config = function()
+            require('nvim-autopairs').setup()
+            -- integration with nvim-cmp
+            require('cmp').event:on('confirm_done', require('nvim-autopairs.completion.cmp').on_confirm_done())
+        end
     }
-    use 'windwp/nvim-ts-autotag'
-    use 'p00f/nvim-ts-rainbow'
-    use 'b3nj5m1n/kommentary'
-    use 'ntpeters/vim-better-whitespace'
+    use {
+        'b3nj5m1n/kommentary',
+        event = 'BufRead',
+    }
+    use {
+        'ntpeters/vim-better-whitespace',
+        event = 'BufRead',
+    }
     use {
         'rizzatti/dash.vim',
         cond = function() return vim.fn.has('mac') == 1 end,
     }
-    use 'tpope/vim-fugitive'
-    use 'tpope/vim-surround'
-    use 'tpope/vim-repeat'
-    use 'tpope/vim-abolish'
+    use {
+        'tpope/vim-fugitive',
+        event = 'BufRead',
+    }
+    use {
+        'tpope/vim-surround',
+        event = 'BufRead',
+        requires = {
+            {
+                'tpope/vim-repeat',
+                event = 'BufRead',
+            },
+        },
+    }
+    use {
+        'tpope/vim-abolish',
+        event = 'BufRead',
+    }
     -- use 'skywind3000/asynctasks.vim'
     -- use 'skywind3000/asyncrun.vim'
 end)
