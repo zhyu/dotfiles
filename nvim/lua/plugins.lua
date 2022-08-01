@@ -94,19 +94,34 @@ require('packer').startup(function(use)
     }
 
     use {
-        'williamboman/mason.nvim',
-        config = function()
-            require('mason').setup()
-        end,
-    }
-    use {
-        'neovim/nvim-lspconfig',
-        event = 'BufRead',
-        config = function()
-            require('plugins.lsp')
-        end,
-        requires = {
-            { 'hrsh7th/cmp-nvim-lsp' },
+        {
+            'williamboman/mason.nvim',
+            config = function()
+                require('mason').setup()
+            end,
+        },
+        {
+            'williamboman/mason-lspconfig.nvim',
+            config = function()
+                require('mason-lspconfig').setup({
+                    ensure_installed = {
+                        'pyright',
+                        'sumneko_lua',
+                    },
+                })
+            end,
+            -- mason-lspconfig requires nvim-lspconfig, so we have to load it first
+            after = 'nvim-lspconfig'
+        },
+        {
+            'neovim/nvim-lspconfig',
+            event = 'BufRead',
+            config = function()
+                require('plugins.lsp')
+            end,
+            requires = {
+                { 'hrsh7th/cmp-nvim-lsp' },
+            },
         },
     }
     use {

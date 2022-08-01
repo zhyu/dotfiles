@@ -67,3 +67,4 @@ lspconfig.sumneko_lua.setup {
         }
     }
 }
+lspconfig.pyright.setup {}
