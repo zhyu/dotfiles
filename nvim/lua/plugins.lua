@@ -133,6 +133,7 @@ require('packer').startup(function(use)
         {
             'hrsh7th/nvim-cmp',
             event = 'InsertEnter',
+            after = 'LuaSnip',
             config = function()
                 require('plugins.cmp')
             end,
@@ -206,7 +207,7 @@ require('packer').startup(function(use)
         'lewis6991/gitsigns.nvim',
         event = 'BufRead',
         requires = { 'nvim-lua/plenary.nvim' },
-        config = function() require('gitsigns').setup() end
+        config = function() require('plugins.gitsigns') end
     }
     use {
         'lukas-reineke/indent-blankline.nvim',
@@ -227,21 +228,7 @@ require('packer').startup(function(use)
             event = 'VimEnter',
             requires = { {'nvim-lua/plenary.nvim'} },
             config = function()
-                local actions = require('telescope.actions')
-                require('telescope').setup {
-                    defaults = {
-                        layout_strategy = 'vertical',
-                        layout_config = {
-                            vertical = { width = 0.66 }
-                        },
-                        mappings = {
-                            i = {
-                                ["<C-j>"] = actions.move_selection_next,
-                                ["<C-k>"] = actions.move_selection_previous,
-                            }
-                        }
-                    }
-                }
+                require('plugins.telescope')
             end
         },
         {
