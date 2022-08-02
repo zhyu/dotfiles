@@ -2,6 +2,41 @@ local cmp = require('cmp')
 -- Insert the completion candidate on select
 local select_opts = { behavior = cmp.SelectBehavior.Insert }
 
+local kind_icon = {
+    Text = '',
+    Method = '',
+    Function = '',
+    Constructor = '',
+    Field = 'ﰠ',
+    Variable = '',
+    Class = 'ﴯ',
+    Interface = '',
+    Module = '',
+    Property = 'ﰠ',
+    Unit = '塞',
+    Value = '',
+    Enum = '',
+    Keyword = '',
+    Snippet = '',
+    Color = '',
+    File = '',
+    Reference = '',
+    Folder = '',
+    EnumMember = '',
+    Constant = '',
+    Struct = 'פּ',
+    Event = '',
+    Operator = '',
+    TypeParameter = '',
+}
+local menu_icon = {
+    nvim_lsp = 'λ',
+    luasnip = '⋗',
+    buffer = '﬘',
+    path = '',
+    copilot = '',
+}
+
 cmp.setup({
     snippet = {
         expand = function(args)
@@ -18,22 +53,9 @@ cmp.setup({
     formatting = {
         fields = {'menu', 'abbr', 'kind'},
         format = function(entry, item)
-            if entry.source.name == 'path' then
-                if item.kind == 'Folder' then
-                    item.menu = ''
-                else
-                    item.menu = ''
-                end
-            else
-                local menu_icon = {
-                    nvim_lsp = 'λ',
-                    luasnip = '⋗',
-                    buffer = '﬘',
-                    copilot = '',
-                }
-
-                item.menu = menu_icon[entry.source.name]
-            end
+            -- Kind icons
+            item.kind = string.format('%s %s', kind_icon[item.kind], item.kind)
+            item.menu = menu_icon[entry.source.name]
             return item
         end,
     },
