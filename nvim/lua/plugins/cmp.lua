@@ -17,15 +17,22 @@ cmp.setup({
     formatting = {
         fields = {'menu', 'abbr', 'kind'},
         format = function(entry, item)
-            local menu_icon = {
-                nvim_lsp = 'λ',
-                luasnip = '⋗',
-                buffer = 'Ω',
-                path = '🖫',
-                copilot = '',
-            }
+            if entry.source.name == 'path' then
+                if item.kind == 'Folder' then
+                    item.menu = ''
+                else
+                    item.menu = ''
+                end
+            else
+                local menu_icon = {
+                    nvim_lsp = 'λ',
+                    luasnip = '⋗',
+                    buffer = '﬘',
+                    copilot = '',
+                }
 
-            item.menu = menu_icon[entry.source.name]
+                item.menu = menu_icon[entry.source.name]
+            end
             return item
         end,
     },
