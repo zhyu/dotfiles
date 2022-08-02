@@ -34,7 +34,7 @@ local menu_icon = {
     luasnip = '⋗',
     buffer = '﬘',
     path = '',
-    copilot = '',
+    copilot = 'ﯙ',
 }
 
 cmp.setup({
