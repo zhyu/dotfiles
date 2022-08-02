@@ -133,7 +133,6 @@ require('packer').startup(function(use)
         {
             'hrsh7th/nvim-cmp',
             event = 'InsertEnter',
-            after = 'LuaSnip',
             config = function()
                 require('plugins.cmp')
             end,

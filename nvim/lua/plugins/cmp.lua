@@ -1,12 +1,11 @@
 local cmp = require('cmp')
-local luasnip = require('luasnip')
 -- Insert the completion candidate on select
 local select_opts = { behavior = cmp.SelectBehavior.Insert }
 
 cmp.setup({
     snippet = {
         expand = function(args)
-            luasnip.lsp_expand(args.body)
+            require('luasnip').lsp_expand(args.body)
         end
     },
     sources = {
@@ -47,6 +46,7 @@ cmp.setup({
         ['<CR>'] = cmp.mapping.confirm({select = true}),
 
         ['<C-j>'] = cmp.mapping(function(fallback)
+            local luasnip = require('luasnip')
             if luasnip.jumpable(1) then
                 luasnip.jump(1)
             else
@@ -55,6 +55,7 @@ cmp.setup({
         end, {'i', 's'}),
 
         ['<C-k>'] = cmp.mapping(function(fallback)
+            local luasnip = require('luasnip')
             if luasnip.jumpable(-1) then
                 luasnip.jump(-1)
             else
