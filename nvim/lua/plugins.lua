@@ -182,11 +182,6 @@ require('packer').startup(function(use)
         end
     }
     -- language specific
-    -- Elixir
-    use {
-        'elixir-editors/vim-elixir',
-        ft = {'elixir'}
-    }
     -- Terraform TODO: highlight is using treesitter, replace this plugin with lsp?
     use {
         'hashivim/vim-terraform',
@@ -264,14 +259,6 @@ require('packer').startup(function(use)
         event = 'BufRead',
     }
     use {
-        'rizzatti/dash.vim',
-        cond = function() return vim.fn.has('mac') == 1 end,
-    }
-    use {
-        'tpope/vim-fugitive',
-        event = 'BufRead',
-    }
-    use {
         'tpope/vim-surround',
         event = 'BufRead',
         requires = {
@@ -285,6 +272,4 @@ require('packer').startup(function(use)
         'tpope/vim-abolish',
         event = 'BufRead',
     }
-    -- use 'skywind3000/asynctasks.vim'
-    -- use 'skywind3000/asyncrun.vim'
 end)
