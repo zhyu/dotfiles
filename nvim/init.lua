@@ -1,11 +1,11 @@
 -- basic editor options
-require('basic')
+require("basic")
 
 -- plugins management and config
-require('plugins')
+require("plugins")
 
 -- automatic commands
-require('autocmds')
+require("autocmds")
 
 -- custom keybindings
-require('keymaps')
+require("keymaps")

@@ -2,9 +2,9 @@ local set = vim.opt
 local g = vim.g
 
 -- string encoding used internally and for RPC communication
-set.encoding = 'utf-8'
+set.encoding = "utf-8"
 -- file-content encoding
-set.fileencoding = 'utf-8'
+set.fileencoding = "utf-8"
 
 -- true color
 set.termguicolors = true
@@ -16,9 +16,9 @@ set.hidden = true
 -- display tab, eol as defined in `listchars`
 set.list = true
 -- set characters to be displayed for invisible characters
-set.listchars = 'tab:| ,eol:↴'
+set.listchars = "tab:| ,eol:↴"
 -- display signs in the number column, avoid shifting line numbers
-set.signcolumn = 'number'
+set.signcolumn = "number"
 
 -- don't keep backup files
 set.backup = false
@@ -33,7 +33,7 @@ set.smartcase = true
 set.incsearch = true
 
 -- allow backspacing over autoindent, line breaks, and the start of insert
-set.backspace = 'indent,eol,start'
+set.backspace = "indent,eol,start"
 -- use the appropriate number of spaces to insert a <Tab>
 set.expandtab = true
 -- respect 'shiftwidth' when inserting/deleting a <Tab>
@@ -46,9 +46,9 @@ set.tabstop = 4
 set.softtabstop = 4
 
 -- folding based on 'foldexpr'
-set.foldmethod = 'expr'
+set.foldmethod = "expr"
 -- treesitter based folding
-set.foldexpr = 'nvim_treesitter#foldexpr()'
+set.foldexpr = "nvim_treesitter#foldexpr()"
 -- hide folds with level higher than 99, i.e., expand all folds by default
 set.foldlevel = 99
 
@@ -63,7 +63,7 @@ set.ttimeoutlen = 10
 set.updatetime = 300
 
 -- completion menu setup suggested by nvim-cmp
-set.completeopt = {'menu', 'menuone', 'noselect'}
+set.completeopt = { "menu", "menuone", "noselect" }
 
 -- disable node provider
 g.loaded_node_provider = 0
