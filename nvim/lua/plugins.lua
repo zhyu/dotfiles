@@ -133,6 +133,13 @@ require('packer').startup(function(use)
         },
     }
     use {
+        'jose-elias-alvarez/null-ls.nvim',
+        event = 'BufRead',
+        config = function()
+            require('plugins.null-ls')
+        end,
+    }
+    use {
         {
             'hrsh7th/nvim-cmp',
             event = 'InsertEnter',
