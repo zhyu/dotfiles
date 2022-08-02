@@ -140,10 +140,13 @@ require('packer').startup(function(use)
                 {
                     'L3MON4D3/LuaSnip',
                     event = 'InsertEnter',
+                    config = function()
+                        require('luasnip.loaders.from_vscode').lazy_load()
+                    end,
                     requires = {
                         {
                             'rafamadriz/friendly-snippets',
-                            event = 'CursorHold',
+                            event = 'InsertEnter',
                         }
                     }
                 }
