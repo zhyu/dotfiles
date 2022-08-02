@@ -109,8 +109,11 @@ require('packer').startup(function(use)
             config = function()
                 require('mason-lspconfig').setup({
                     ensure_installed = {
+                        -- 'gopls',
                         'pyright',
                         'sumneko_lua',
+                        -- 'terraformls',
+                        'tsserver',
                     },
                 })
             end,
@@ -178,17 +181,6 @@ require('packer').startup(function(use)
                 markdown = true,
                 yaml = true,
             }
-        end
-    }
-    -- language specific
-    -- Terraform TODO: highlight is using treesitter, replace this plugin with lsp?
-    use {
-        'hashivim/vim-terraform',
-        ft = {'hcl', 'terraform'},
-        config = function()
-            vim.g.terraform_align=1
-            vim.g.terraform_fold_sections=1
-            vim.g.terraform_fmt_on_save=1
         end
     }
     -- utils

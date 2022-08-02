@@ -67,4 +67,7 @@ lspconfig.sumneko_lua.setup {
         }
     }
 }
+lspconfig.gopls.setup {}
 lspconfig.pyright.setup {}
+lspconfig.terraformls.setup {}
+lspconfig.tsserver.setup {}
