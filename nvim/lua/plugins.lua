@@ -165,6 +165,7 @@ require("packer").startup(function(use)
 				},
 			},
 		},
+		{ "tzachar/cmp-tabnine", after = "nvim-cmp", run = "./install.sh" },
 		{ "saadparwaiz1/cmp_luasnip", after = "nvim-cmp" },
 		{ "hrsh7th/cmp-path", after = "nvim-cmp" },
 		{ "hrsh7th/cmp-buffer", after = "nvim-cmp" },

@@ -35,6 +35,7 @@ local menu_icon = {
 	buffer = "﬘",
 	path = "",
 	copilot = "ﯙ",
+	cmp_tabnine = "",
 }
 
 cmp.setup({
@@ -45,6 +46,7 @@ cmp.setup({
 	},
 	sources = {
 		{ name = "copilot" },
+		{ name = "cmp_tabnine" },
 		{ name = "nvim_lsp", max_item_count = 10 },
 		{ name = "luasnip", max_item_count = 10, keyword_length = 2 },
 		{ name = "path", max_item_count = 10 },
