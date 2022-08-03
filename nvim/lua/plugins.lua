@@ -173,6 +173,7 @@ require("packer").startup(function(use)
 
 	use({
 		"github/copilot.vim",
+		-- copilot.lua needs it for the authentication, at least for now
 		cond = false,
 		config = function()
 			vim.g.copilot_filetypes = {
