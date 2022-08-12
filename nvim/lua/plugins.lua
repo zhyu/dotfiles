@@ -124,7 +124,9 @@ require("packer").startup(function(use)
 			"glepnir/lspsaga.nvim",
 			branch = "main",
 			config = function()
-				require("lspsaga").init_lsp_saga({})
+				require("lspsaga").init_lsp_saga({
+					code_action_icon = "",
+				})
 			end,
 			after = "nvim-lspconfig",
 		},
