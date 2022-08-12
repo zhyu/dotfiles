@@ -120,6 +120,14 @@ require("packer").startup(function(use)
 				{ "hrsh7th/cmp-nvim-lsp" },
 			},
 		},
+		{
+			"glepnir/lspsaga.nvim",
+			branch = "main",
+			config = function()
+				require("lspsaga").init_lsp_saga({})
+			end,
+			after = "nvim-lspconfig",
+		},
 	})
 	use({
 		"jose-elias-alvarez/null-ls.nvim",
@@ -225,6 +233,7 @@ require("packer").startup(function(use)
 			after = "telescope.nvim",
 			run = "make",
 			config = function()
+				---@diagnostic disable-next-line: different-requires
 				require("telescope").load_extension("fzf")
 			end,
 		},
@@ -237,6 +246,7 @@ require("packer").startup(function(use)
 		config = function()
 			require("nvim-autopairs").setup()
 			-- integration with nvim-cmp
+			---@diagnostic disable-next-line: different-requires
 			require("cmp").event:on("confirm_done", require("nvim-autopairs.completion.cmp").on_confirm_done())
 		end,
 	})

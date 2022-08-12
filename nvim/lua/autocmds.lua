@@ -24,46 +24,99 @@ create_aucmd("User", {
 		end
 
 		-- Displays hover information about the symbol under the cursor
-		bufmap("n", "K", "<cmd>lua vim.lsp.buf.hover()<cr>")
+		-- bufmap("n", "K", function() vim.lsp.buf.hover() end)
+		bufmap("n", "K", function()
+			require("lspsaga.hover").render_hover_doc()
+		end)
 
 		-- Jump to the definition
-		bufmap("n", "gd", '<cmd>lua require("telescope.builtin").lsp_definitions()<cr>')
+		bufmap("n", "gd", function()
+			require("telescope.builtin").lsp_definitions()
+		end)
+
+		-- Preview definition
+		bufmap("n", "gD", function()
+			require("lspsaga.definition").preview_definition()
+		end)
 
 		-- Jump to declaration
-		bufmap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<cr>")
+		-- bufmap("n", "gD", function() vim.lsp.buf.declaration() end)
 
 		-- Lists all the implementations for the symbol under the cursor
-		bufmap("n", "gi", '<cmd>lua require("telescope.builtin").lsp_implementations()<cr>')
+		bufmap("n", "gi", function()
+			require("telescope.builtin").lsp_implementations()
+		end)
 
 		-- Jumps to the definition of the type symbol
-		bufmap("n", "gy", '<cmd>lua require("telescope.builtin").lsp_type_definitions()<cr>')
+		bufmap("n", "gy", function()
+			require("telescope.builtin").lsp_type_definitions()
+		end)
 
 		-- Lists all the references
-		bufmap("n", "gr", '<cmd>lua require("telescope.builtin").lsp_references()<cr>')
+		bufmap("n", "gr", function()
+			require("telescope.builtin").lsp_references()
+		end)
 
 		-- Displays a function's signature information
-		bufmap("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<cr>")
+		-- bufmap("n", "<C-k>", function() vim.lsp.buf.signature_help() end)
+		bufmap("n", "<C-k>", function()
+			require("lspsaga.signaturehelp").signature_help()
+		end)
 
 		-- Renames all references to the symbol under the cursor
-		bufmap("n", "<Leader>rn", "<cmd>lua vim.lsp.buf.rename()<cr>")
+		bufmap("n", "<Leader>rn", function()
+			require("lspsaga.rename").lsp_rename()
+		end)
 
 		-- Selects a code action available at the current cursor position
-		bufmap("n", "<Leader>ac", "<cmd>lua vim.lsp.buf.code_action()<cr>")
-		bufmap("x", "<Leader>ac", "<cmd>lua vim.lsp.buf.range_code_action()<cr>")
+		-- bufmap("n", "<Leader>ac", function() vim.lsp.buf.code_action() end)
+		-- bufmap("x", "<Leader>ac", function() vim.lsp.buf.range_code_action() end)
+		bufmap("n", "<Leader>ac", function()
+			require("lspsaga.codeaction").code_action()
+		end)
+		bufmap("x", "<Leader>ac", function()
+			require("lspsaga.codeaction").range_code_action()
+		end)
 
 		-- Show diagnostics in a floating window
-		bufmap("n", "gl", "<cmd>lua vim.diagnostic.open_float()<cr>")
+		-- bufmap("n", "gl", function() vim.diagnostic.open_float() end)
+		bufmap("n", "gl", function()
+			require("lspsaga.diagnostic").show_line_diagnostics()
+		end)
+		bufmap("n", "gc", function()
+			require("lspsaga.diagnostic").show_cursor_diagnostics()
+		end)
 
 		-- List all diagnostics for the current buffer
-		bufmap("n", "<Leader>fd", '<cmd>lua require("telescope.builtin").diagnostics({ bufnr = 0 })<cr>')
+		bufmap("n", "<Leader>fd", function()
+			require("telescope.builtin").diagnostics({ bufnr = 0 })
+		end)
 
 		-- List all diagnostics for all open buffers
-		bufmap("n", "<Leader>fD", '<cmd>lua require("telescope.builtin").diagnostics()<cr>')
+		bufmap("n", "<Leader>fD", function()
+			require("telescope.builtin").diagnostics()
+		end)
 
 		-- Move to the previous diagnostic
-		bufmap("n", "<Leader>pd", "<cmd>lua vim.diagnostic.goto_prev()<cr>")
+		-- bufmap("n", "<Leader>pd", function() vim.diagnostic.goto_prev() end)
+		bufmap("n", "<Leader>pd", function()
+			require("lspsaga.diagnostic").goto_prev()
+		end)
 
 		-- Move to the next diagnostic
-		bufmap("n", "<Leader>nd", "<cmd>lua vim.diagnostic.goto_next()<cr>")
+		-- bufmap("n", "<Leader>nd", function() vim.diagnostic.goto_next() end)
+		bufmap("n", "<Leader>nd", function()
+			require("lspsaga.diagnostic").goto_next()
+		end)
+
+		-- Scroll down hover doc or scroll in definition preview
+		bufmap("n", "<C-f>", function()
+			require("lspsaga.action").smart_scroll_with_saga(1)
+		end)
+
+		-- Scroll up hover doc or scroll in definition preview
+		bufmap("n", "<C-b>", function()
+			require("lspsaga.action").smart_scroll_with_saga(-1)
+		end)
 	end,
 })
