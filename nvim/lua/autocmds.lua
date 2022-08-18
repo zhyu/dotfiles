@@ -24,7 +24,6 @@ create_aucmd("User", {
 		end
 
 		-- Displays hover information about the symbol under the cursor
-		-- bufmap("n", "K", function() vim.lsp.buf.hover() end)
 		bufmap("n", "K", function()
 			require("lspsaga.hover").render_hover_doc()
 		end)
@@ -34,13 +33,10 @@ create_aucmd("User", {
 			require("telescope.builtin").lsp_definitions()
 		end)
 
-		-- Preview definition
-		bufmap("n", "gD", function()
-			require("lspsaga.definition").preview_definition()
+		-- Find definition, implement, reference
+		bufmap("n", "gf", function()
+			require("lspsaga.finder"):lsp_finder()
 		end)
-
-		-- Jump to declaration
-		-- bufmap("n", "gD", function() vim.lsp.buf.declaration() end)
 
 		-- Lists all the implementations for the symbol under the cursor
 		bufmap("n", "gi", function()
@@ -58,28 +54,24 @@ create_aucmd("User", {
 		end)
 
 		-- Displays a function's signature information
-		-- bufmap("n", "<C-k>", function() vim.lsp.buf.signature_help() end)
-		bufmap("n", "<C-k>", function()
+		bufmap("n", "gs", function()
 			require("lspsaga.signaturehelp").signature_help()
 		end)
 
 		-- Renames all references to the symbol under the cursor
 		bufmap("n", "<Leader>rn", function()
-			require("lspsaga.rename").lsp_rename()
+			require("lspsaga.rename"):lsp_rename()
 		end)
 
 		-- Selects a code action available at the current cursor position
-		-- bufmap("n", "<Leader>ac", function() vim.lsp.buf.code_action() end)
-		-- bufmap("x", "<Leader>ac", function() vim.lsp.buf.range_code_action() end)
 		bufmap("n", "<Leader>ac", function()
-			require("lspsaga.codeaction").code_action()
+			require("lspsaga.codeaction"):code_action()
 		end)
 		bufmap("x", "<Leader>ac", function()
-			require("lspsaga.codeaction").range_code_action()
+			require("lspsaga.codeaction"):range_code_action()
 		end)
 
 		-- Show diagnostics in a floating window
-		-- bufmap("n", "gl", function() vim.diagnostic.open_float() end)
 		bufmap("n", "gl", function()
 			require("lspsaga.diagnostic").show_line_diagnostics()
 		end)
@@ -98,13 +90,11 @@ create_aucmd("User", {
 		end)
 
 		-- Move to the previous diagnostic
-		-- bufmap("n", "<Leader>pd", function() vim.diagnostic.goto_prev() end)
 		bufmap("n", "<Leader>pd", function()
 			require("lspsaga.diagnostic").goto_prev()
 		end)
 
 		-- Move to the next diagnostic
-		-- bufmap("n", "<Leader>nd", function() vim.diagnostic.goto_next() end)
 		bufmap("n", "<Leader>nd", function()
 			require("lspsaga.diagnostic").goto_next()
 		end)
