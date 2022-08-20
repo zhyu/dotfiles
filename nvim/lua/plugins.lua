@@ -10,6 +10,9 @@ end
 require("packer").startup(function(use)
 	-- packer itself
 	use("wbthomason/packer.nvim")
+	-- Load only when require
+	use({ "nvim-lua/plenary.nvim", module = "plenary" })
+	use({ "kyazdani42/nvim-web-devicons", module = "nvim-web-devicons" })
 	-- UI
 	use({
 		{
