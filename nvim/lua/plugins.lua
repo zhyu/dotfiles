@@ -14,6 +14,7 @@ require("packer").startup(function(use)
 	use({
 		{
 			"nvim-treesitter/nvim-treesitter",
+			event = "BufReadPre",
 			run = ":TSUpdate",
 			config = function()
 				require("nvim-treesitter.configs").setup({
@@ -71,6 +72,7 @@ require("packer").startup(function(use)
 	})
 	use({
 		"nvim-lualine/lualine.nvim",
+		event = "VimEnter",
 		requires = { "kyazdani42/nvim-web-devicons", opt = true },
 		config = function()
 			require("lualine").setup({
@@ -89,6 +91,7 @@ require("packer").startup(function(use)
 	use({
 		{
 			"williamboman/mason.nvim",
+			event = "VimEnter",
 			config = function()
 				require("mason").setup()
 			end,
@@ -111,14 +114,10 @@ require("packer").startup(function(use)
 		},
 		{
 			"neovim/nvim-lspconfig",
-			-- lazy loading seems not working correctly, maybe https://github.com/wbthomason/packer.nvim/issues/778
-			-- event = 'BufRead',
+			event = "BufReadPre",
 			config = function()
 				require("plugins.lsp")
 			end,
-			requires = {
-				{ "hrsh7th/cmp-nvim-lsp" },
-			},
 		},
 		{
 			"glepnir/lspsaga.nvim",
@@ -163,6 +162,7 @@ require("packer").startup(function(use)
 		},
 		{
 			"zbirenbaum/copilot-cmp",
+			event = "VimEnter",
 			requires = {
 				{
 					"zbirenbaum/copilot.lua",
@@ -179,6 +179,7 @@ require("packer").startup(function(use)
 		{ "saadparwaiz1/cmp_luasnip", after = "nvim-cmp" },
 		{ "hrsh7th/cmp-path", after = "nvim-cmp" },
 		{ "hrsh7th/cmp-buffer", after = "nvim-cmp" },
+		{ "hrsh7th/cmp-nvim-lsp", after = "nvim-cmp" },
 	})
 
 	use({
