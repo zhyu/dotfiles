@@ -7,9 +7,11 @@ if fn.empty(fn.glob(install_path)) > 0 then
 end
 
 -- use plugins
-require("packer").startup(function(use)
+local function plugins(use)
 	-- packer itself
 	use("wbthomason/packer.nvim")
+	-- Speed up loading Lua modules with cache, loaded before packer.startup()
+	use({ "lewis6991/impatient.nvim" })
 	-- Load only when require
 	use({ "nvim-lua/plenary.nvim", module = "plenary" })
 	use({ "kyazdani42/nvim-web-devicons", module = "nvim-web-devicons" })
@@ -281,4 +283,10 @@ require("packer").startup(function(use)
 		"tpope/vim-abolish",
 		event = "BufRead",
 	})
-end)
+end
+
+local packer = require("packer")
+
+pcall(require, "impatient")
+
+packer.startup(plugins)
