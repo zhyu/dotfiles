@@ -113,7 +113,7 @@ require("packer").startup(function(use)
 				})
 			end,
 			-- mason-lspconfig requires nvim-lspconfig, so we have to load it first
-			after = "nvim-lspconfig",
+			after = { "nvim-lspconfig", "mason.nvim" },
 		},
 		{
 			"neovim/nvim-lspconfig",
@@ -121,6 +121,10 @@ require("packer").startup(function(use)
 			config = function()
 				require("plugins.lsp")
 			end,
+			requires = {
+				-- cmp-nvim-lsp is needed to update lsp client capabilities
+				{ "hrsh7th/cmp-nvim-lsp", module = "cmp_nvim_lsp" },
+			},
 		},
 		{
 			"glepnir/lspsaga.nvim",
@@ -182,7 +186,6 @@ require("packer").startup(function(use)
 		{ "saadparwaiz1/cmp_luasnip", after = "nvim-cmp" },
 		{ "hrsh7th/cmp-path", after = "nvim-cmp" },
 		{ "hrsh7th/cmp-buffer", after = "nvim-cmp" },
-		{ "hrsh7th/cmp-nvim-lsp", after = "nvim-cmp" },
 	})
 
 	use({
