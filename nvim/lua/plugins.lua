@@ -96,7 +96,16 @@ local function plugins(use)
 	use({
 		{
 			"williamboman/mason.nvim",
-			event = "VimEnter",
+			-- mason updates the PATH for installed LSP servers, so we need to load it
+			-- on BufReadPre, which is the time we load lspconfig as well, to ensure LSP
+			-- servers could be started when we open a file from CLI.
+			-- We also need to load mason on VimEnter to setup user commands to manage
+			-- LSP servers without opening a file.
+			-- Open a file from CLI:
+			--   BufReadPre (load mason and lspconfig) -> VimEnter
+			-- Start nvim and open files later:
+			--   VimEnter (load mason and lspconfig) -> open files -> BufReadPre
+			event = { "BufReadPre", "VimEnter" },
 			config = function()
 				require("mason").setup()
 			end,
