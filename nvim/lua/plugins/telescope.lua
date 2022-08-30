@@ -1,10 +1,22 @@
 local actions = require("telescope.actions")
 require("telescope").setup({
 	defaults = {
+		-- Build a custom dropdown theme with the `vertical` layout strategy.
+		-- Unlike the builtin dropdown theme, which is based on the `center` layout strategy,
+		-- using the `vertical` layout strategy allows showing more lines in the preview window.
+		results_title = false,
+		sorting_strategy = "ascending",
 		layout_strategy = "vertical",
 		layout_config = {
-			vertical = { width = 0.66 },
+			vertical = { width = 0.85, height = 0.9, preview_cutoff = 1, prompt_position = "top" },
 		},
+		border = true,
+		borderchars = {
+			prompt = { "─", "│", " ", "│", "╭", "╮", "│", "│" },
+			results = { "─", "│", "─", "│", "├", "┤", "╯", "╰" },
+			preview = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+		},
+		--- end of custom theme
 		mappings = {
 			i = {
 				["<C-j>"] = actions.move_selection_next,
