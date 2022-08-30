@@ -19,7 +19,13 @@ local function plugins(use)
 	use({
 		{
 			"nvim-treesitter/nvim-treesitter",
-			event = "BufReadPre",
+			-- Similar to the mason + lspconfig case, treesitter could be required by
+			-- telescope for previewing.
+			-- Open a file from CLI:
+			--   BufReadPre (load treesitter) -> VimEnter
+			-- Start nvim and open files later:
+			--   VimEnter (load treesitter and telescope) -> open files -> BufReadPre
+			event = { "BufReadPre", "VimEnter" },
 			run = ":TSUpdate",
 			config = function()
 				require("nvim-treesitter.configs").setup({
