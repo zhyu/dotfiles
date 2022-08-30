@@ -4,6 +4,14 @@ local create_aucmd = vim.api.nvim_create_autocmd
 local common_grp = create_augrp("common", { clear = true })
 -- tab indentation for Golang
 create_aucmd("FileType", { pattern = "go", command = "setlocal noet", group = common_grp })
+-- setup jdtls for Java
+create_aucmd("FileType", {
+	pattern = "java",
+	callback = function()
+		require("plugins.jdtls").setup()
+	end,
+	group = common_grp,
+})
 -- Fix No Folds Found for files opened with telescope when using treesitter based folding
 -- https://github.com/nvim-telescope/telescope.nvim/issues/559#issuecomment-1074076011
 create_aucmd("BufRead", {

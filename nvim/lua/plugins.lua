@@ -149,9 +149,18 @@ local function plugins(use)
 			config = function()
 				require("lspsaga").init_lsp_saga({
 					code_action_icon = "",
+					-- jdtls is pretty slow
+					finder_request_timeout = 5000,
 				})
 			end,
 			after = "nvim-lspconfig",
+		},
+		{
+			"mfussenegger/nvim-jdtls",
+			-- need to run the setup every time we only a java file to attach the server.
+			-- load the plugin with ft = "java" will only load it once,
+			-- so the setup is called in autocmds.lua instead
+			cond = false,
 		},
 	})
 	use({
