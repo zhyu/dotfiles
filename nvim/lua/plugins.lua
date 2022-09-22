@@ -213,18 +213,6 @@ local function plugins(use)
 		{ "hrsh7th/cmp-path", after = "nvim-cmp" },
 		{ "hrsh7th/cmp-buffer", after = "nvim-cmp" },
 	})
-
-	use({
-		"github/copilot.vim",
-		-- copilot.lua needs it for the authentication, at least for now
-		cond = false,
-		config = function()
-			vim.g.copilot_filetypes = {
-				markdown = true,
-				yaml = true,
-			}
-		end,
-	})
 	-- utils
 	use({
 		"norcalli/nvim-colorizer.lua",
