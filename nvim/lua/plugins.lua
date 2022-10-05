@@ -196,6 +196,9 @@ local function plugins(use)
 		{
 			"zbirenbaum/copilot-cmp",
 			event = "VimEnter",
+			config = function()
+				require("copilot_cmp").setup()
+			end,
 			requires = {
 				{
 					"zbirenbaum/copilot.lua",
