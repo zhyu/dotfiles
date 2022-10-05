@@ -12,18 +12,13 @@ local function fmt_on_save(client, bufnr)
 			group = fmt_group,
 			buffer = bufnr,
 			callback = function()
-				-- TODO: switch to vim.lsp.buf.format() after upgrading to neovim 0.8
-				-- https://github.com/jose-elias-alvarez/null-ls.nvim/wiki/Avoiding-LSP-formatting-conflicts#neovim-08
-				--[[ vim.lsp.buf.format({
-                    timeout_ms = 3000,
-                    buffer = bufnr,
-                    filter = function(client)
-                        return client.name == "null-ls"
-                    end,
-                }) ]]
-				-- client is null-ls here, so we are only using it for formatting
-				local params = require("vim.lsp.util").make_formatting_params({})
-				client.request("textDocument/formatting", params, nil, bufnr)
+				vim.lsp.buf.format({
+					timeout_ms = 3000,
+					buffer = bufnr,
+					filter = function(client)
+						return client.name == "null-ls"
+					end,
+				})
 			end,
 		})
 	end
