@@ -26,96 +26,80 @@ create_aucmd("User", {
 	pattern = "LspAttached",
 	desc = "Set keybindings on LspAttached",
 	callback = function()
-		local bufmap = function(mode, lhs, rhs)
-			local opts = { buffer = true }
+		local bufmap = function(mode, lhs, rhs, desc)
+			local opts = { buffer = true, desc = desc }
 			vim.keymap.set(mode, lhs, rhs, opts)
 		end
 
-		-- Displays hover information about the symbol under the cursor
 		bufmap("n", "K", function()
 			require("lspsaga.hover").render_hover_doc()
-		end)
+		end, "Display hover information about the symbol under the cursor")
 
-		-- Jump to the definition
 		bufmap("n", "gd", function()
 			require("telescope.builtin").lsp_definitions()
-		end)
+		end, "Jump to the definition")
 
-		-- Find definition, implement, reference
 		bufmap("n", "gf", function()
 			require("lspsaga.finder"):lsp_finder()
-		end)
+		end, "Find definitions, implementations, and references")
 
-		-- Lists all the implementations for the symbol under the cursor
 		bufmap("n", "gi", function()
 			require("telescope.builtin").lsp_implementations()
-		end)
+		end, "List all the implementations")
 
-		-- Jumps to the definition of the type symbol
 		bufmap("n", "gy", function()
 			require("telescope.builtin").lsp_type_definitions()
-		end)
+		end, "Jump to the definition of the type symbol")
 
-		-- Lists all the references
 		bufmap("n", "gr", function()
 			require("telescope.builtin").lsp_references()
-		end)
+		end, "List all the references")
 
-		-- Displays a function's signature information
 		bufmap("n", "gs", function()
 			require("lspsaga.signaturehelp").signature_help()
-		end)
+		end, "Display a function's signature information")
 
-		-- Renames all references to the symbol under the cursor
 		bufmap("n", "<Leader>rn", function()
 			require("lspsaga.rename"):lsp_rename()
-		end)
+		end, "Rename all references to the symbol under the cursor")
 
-		-- Selects a code action available at the current cursor position
 		bufmap("n", "<Leader>ac", function()
 			require("lspsaga.codeaction"):code_action()
-		end)
+		end, "Select a code action available at the current cursor position")
 		bufmap("x", "<Leader>ac", function()
 			require("lspsaga.codeaction"):range_code_action()
-		end)
+		end, "Select a code action available at the current cursor position")
 
-		-- Show diagnostics in a floating window
 		bufmap("n", "gl", function()
 			require("lspsaga.diagnostic").show_line_diagnostics()
-		end)
-		-- gc is used to toggle comments, so use gp (point) instead
+		end, "Show diagnostics of the current line in a floating window")
+		-- gc is used to toggle comments, so use gp (point/position) instead
 		bufmap("n", "gp", function()
 			require("lspsaga.diagnostic").show_cursor_diagnostics()
-		end)
+		end, "Show diagnostics of the current cursor position in a floating window")
 
-		-- List all diagnostics for the current buffer
 		bufmap("n", "<Leader>fd", function()
 			require("telescope.builtin").diagnostics({ bufnr = 0 })
-		end)
+		end, "List all diagnostics for the current buffer")
 
-		-- List all diagnostics for all open buffers
 		bufmap("n", "<Leader>fD", function()
 			require("telescope.builtin").diagnostics()
-		end)
+		end, "List all diagnostics for all open buffers")
 
-		-- Move to the previous diagnostic
 		bufmap("n", "<Leader>pd", function()
 			require("lspsaga.diagnostic").goto_prev()
-		end)
+		end, "Move to the previous diagnostic")
 
-		-- Move to the next diagnostic
 		bufmap("n", "<Leader>nd", function()
 			require("lspsaga.diagnostic").goto_next()
-		end)
+		end, "Move to the next diagnostic")
 
-		-- Scroll down hover doc or scroll in definition preview
 		bufmap("n", "<C-f>", function()
 			require("lspsaga.action").smart_scroll_with_saga(1)
-		end)
+		end, "Scroll down hover doc or scroll in definition preview")
 
-		-- Scroll up hover doc or scroll in definition preview
 		bufmap("n", "<C-b>", function()
 			require("lspsaga.action").smart_scroll_with_saga(-1)
-		end)
+		end, "Scroll up hover doc or scroll in definition preview")
 	end,
 })

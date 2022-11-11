@@ -1,16 +1,21 @@
 -- Loading any vscode style snippets from plugins
 require("luasnip.loaders.from_vscode").lazy_load()
 
+local set_map = function(mode, lhs, rhs, desc)
+	local opts = { desc = desc }
+	vim.keymap.set(mode, lhs, rhs, opts)
+end
+
 -- Mappings to move around inside snippets
-vim.keymap.set("i", "<C-j>", function()
+set_map("i", "<C-j>", function()
 	require("luasnip").jump(1)
-end)
-vim.keymap.set("i", "<C-k>", function()
+end, "Jump to next position inside the snippet")
+set_map("i", "<C-k>", function()
 	require("luasnip").jump(-1)
-end)
-vim.keymap.set("s", "<C-j>", function()
+end, "Jump to previous position inside the snippet")
+set_map("s", "<C-j>", function()
 	require("luasnip").jump(1)
-end)
-vim.keymap.set("s", "<C-k>", function()
+end, "Jump to next position inside the snippet")
+set_map("s", "<C-k>", function()
 	require("luasnip").jump(-1)
-end)
+end, "Jump to previous position inside the snippet")
