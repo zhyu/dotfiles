@@ -218,6 +218,13 @@ local function plugins(use)
 	})
 	-- utils
 	use({
+		"folke/which-key.nvim",
+		event = "VimEnter",
+		config = function()
+			require("which-key").setup()
+		end,
+	})
+	use({
 		"norcalli/nvim-colorizer.lua",
 		event = "BufRead",
 		config = function()
