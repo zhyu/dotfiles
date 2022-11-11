@@ -11,14 +11,16 @@ set.termguicolors = true
 
 -- display line number
 set.number = true
+-- display relative line number
+set.relativenumber = true
 -- allow keeping modified buffers in background
 set.hidden = true
 -- display tab, eol as defined in `listchars`
 set.list = true
 -- set characters to be displayed for invisible characters
 set.listchars = "tab:| ,eol:↴"
--- display signs in the number column, avoid shifting line numbers
-set.signcolumn = "number"
+-- alway draw the signcolumn to display signs, avoid shifting the number column
+set.signcolumn = "yes"
 
 -- don't keep backup files
 set.backup = false
