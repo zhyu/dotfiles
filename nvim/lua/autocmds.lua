@@ -83,7 +83,8 @@ create_aucmd("User", {
 		bufmap("n", "gl", function()
 			require("lspsaga.diagnostic").show_line_diagnostics()
 		end)
-		bufmap("n", "gc", function()
+		-- gc is used to toggle comments, so use gp (point) instead
+		bufmap("n", "gp", function()
 			require("lspsaga.diagnostic").show_cursor_diagnostics()
 		end)
 

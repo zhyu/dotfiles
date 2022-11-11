@@ -277,8 +277,11 @@ local function plugins(use)
 		end,
 	})
 	use({
-		"b3nj5m1n/kommentary",
+		"numToStr/Comment.nvim",
 		event = "BufRead",
+		config = function()
+			require("Comment").setup()
+		end,
 	})
 	use({
 		"ntpeters/vim-better-whitespace",
