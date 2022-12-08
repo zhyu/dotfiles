@@ -46,8 +46,8 @@ cmp.setup({
 	},
 	sources = {
 		{ name = "copilot" },
-		{ name = "cmp_tabnine" },
 		{ name = "nvim_lsp", max_item_count = 10 },
+		{ name = "cmp_tabnine" },
 		{ name = "luasnip", max_item_count = 10, keyword_length = 2 },
 		{ name = "path", max_item_count = 10 },
 		{ name = "buffer", max_item_count = 10 },
