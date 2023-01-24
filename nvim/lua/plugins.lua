@@ -147,10 +147,12 @@ local function plugins(use)
 			"glepnir/lspsaga.nvim",
 			branch = "main",
 			config = function()
-				require("lspsaga").init_lsp_saga({
-					code_action_icon = "",
+				require("lspsaga").setup({
+					ui = {
+						code_action_icon = "",
+					},
 					-- jdtls is pretty slow
-					finder_request_timeout = 5000,
+					request_timeout = 5000,
 				})
 			end,
 			after = "nvim-lspconfig",
