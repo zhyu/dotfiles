@@ -71,11 +71,11 @@ create_aucmd("User", {
 		end, "Select a code action available at the current cursor position")
 
 		bufmap("n", "gl", function()
-			require("lspsaga.diagnostic").show_line_diagnostics()
+			require("lspsaga.diagnostic"):show_diagnostics("", "line")
 		end, "Show diagnostics of the current line in a floating window")
 		-- gc is used to toggle comments, so use gp (point/position) instead
 		bufmap("n", "gp", function()
-			require("lspsaga.diagnostic").show_cursor_diagnostics()
+			require("lspsaga.diagnostic"):show_diagnostics("", "cursor")
 		end, "Show diagnostics of the current cursor position in a floating window")
 
 		bufmap("n", "<Leader>fd", function()
@@ -87,19 +87,11 @@ create_aucmd("User", {
 		end, "List all diagnostics for all open buffers")
 
 		bufmap("n", "<Leader>pd", function()
-			require("lspsaga.diagnostic").goto_prev()
+			require("lspsaga.diagnostic"):goto_prev()
 		end, "Move to the previous diagnostic")
 
 		bufmap("n", "<Leader>nd", function()
-			require("lspsaga.diagnostic").goto_next()
+			require("lspsaga.diagnostic"):goto_next()
 		end, "Move to the next diagnostic")
-
-		bufmap("n", "<C-f>", function()
-			require("lspsaga.action").smart_scroll_with_saga(1)
-		end, "Scroll down hover doc or scroll in definition preview")
-
-		bufmap("n", "<C-b>", function()
-			require("lspsaga.action").smart_scroll_with_saga(-1)
-		end, "Scroll up hover doc or scroll in definition preview")
 	end,
 })
