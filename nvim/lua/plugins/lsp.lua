@@ -34,34 +34,3 @@ sign({ name = "DiagnosticSignInfo", text = "" })
 vim.diagnostic.config({
 	severity_sort = true,
 })
-
----
--- LSP Servers
----
-
-lspconfig.lua_ls.setup({
-	settings = {
-		Lua = {
-			runtime = {
-				-- Tell the language server we are using LuaJIT in the case of Neovim
-				version = "LuaJIT",
-			},
-			diagnostics = {
-				-- Make the language server recognize the `vim` global
-				globals = { "vim" },
-			},
-			workspace = {
-				-- Make the server aware of Neovim runtime files
-				library = { os.getenv("VIMRUNTIME") },
-			},
-			-- Do not send telemetry data containing a randomized but unique identifier
-			telemetry = {
-				enable = false,
-			},
-		},
-	},
-})
-lspconfig.gopls.setup({})
-lspconfig.pyright.setup({})
-lspconfig.terraformls.setup({})
-lspconfig.tsserver.setup({})

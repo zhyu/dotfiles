@@ -119,15 +119,7 @@ local function plugins(use)
 		{
 			"williamboman/mason-lspconfig.nvim",
 			config = function()
-				require("mason-lspconfig").setup({
-					ensure_installed = {
-						-- 'gopls',
-						-- "pyright",
-						"lua_ls",
-						-- 'terraformls',
-						-- "tsserver",
-					},
-				})
+				require("plugins.mason-lspconfig")
 			end,
 			-- mason-lspconfig requires nvim-lspconfig, so we have to load it first
 			after = { "nvim-lspconfig", "mason.nvim" },
