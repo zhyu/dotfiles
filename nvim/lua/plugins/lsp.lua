@@ -39,7 +39,7 @@ vim.diagnostic.config({
 -- LSP Servers
 ---
 
-lspconfig.sumneko_lua.setup({
+lspconfig.lua_ls.setup({
 	settings = {
 		Lua = {
 			runtime = {

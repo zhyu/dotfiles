@@ -123,7 +123,7 @@ local function plugins(use)
 					ensure_installed = {
 						-- 'gopls',
 						"pyright",
-						"sumneko_lua",
+						"lua_ls",
 						-- 'terraformls',
 						"tsserver",
 					},
