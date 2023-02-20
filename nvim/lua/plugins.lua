@@ -122,10 +122,10 @@ local function plugins(use)
 				require("mason-lspconfig").setup({
 					ensure_installed = {
 						-- 'gopls',
-						"pyright",
+						-- "pyright",
 						"lua_ls",
 						-- 'terraformls',
-						"tsserver",
+						-- "tsserver",
 					},
 				})
 			end,
