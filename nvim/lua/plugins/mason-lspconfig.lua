@@ -44,4 +44,10 @@ require("mason-lspconfig").setup_handlers({
 			},
 		})
 	end,
+	["jdtls"] = function()
+		-- Skip auto configuration for jdtls,
+		-- it should be configured via nvim-jdtls instead of lspconfig
+		-- https://github.com/mfussenegger/nvim-jdtls#nvim-lspconfig-and-nvim-jdtls-differences
+		-- Also, we need to setup jdtls via autocmd so it can be attached to new buffers correctly
+	end,
 })

@@ -55,14 +55,16 @@ function M.setup()
 		-- for a list of options
 		settings = {
 			java = {
-				runtimes = {
-					{
-						name = "JaveSE-1.8",
-						path = jvm_dir .. "/java-8/bin/java",
-					},
-					{
-						name = "JavaSE-11",
-						path = jvm_dir .. "/java-11/bin/java",
+				configuration = {
+					runtimes = {
+						-- {
+						-- 	name = "JaveSE-1.8",
+						-- 	path = jvm_dir .. "/java-8",
+						-- },
+						{
+							name = "JavaSE-11",
+							path = jvm_dir .. "/java-11",
+						},
 					},
 				},
 			},
@@ -80,6 +82,7 @@ function M.setup()
 		},
 		on_attach = function(client, bufnr)
 			vim.api.nvim_exec_autocmds("User", { pattern = "LspAttached" })
+			require("jdtls.setup").add_commands()
 		end,
 	}
 	-- This starts a new client & server,
