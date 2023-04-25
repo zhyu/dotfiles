@@ -18,6 +18,7 @@ function link_dotfile() {
     fi
   fi
 
+  mkdir -p $(dirname $filepath)
   ln -s $PWD/$dot_filename $filepath
   echo "$filepath is now a symlink to $PWD/$dot_filename"
 }
