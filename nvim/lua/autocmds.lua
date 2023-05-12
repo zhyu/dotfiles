@@ -97,3 +97,27 @@ create_aucmd("LspAttach", {
 		end, "Move to the next diagnostic")
 	end,
 })
+
+-- Lsp autoformat on save
+create_aucmd("LspAttach", {
+	desc = "Lsp autoformat on save",
+	group = user_lsp_config_grp,
+	callback = function(args)
+		local client = vim.lsp.get_client_by_id(args.data.client_id)
+		if client.name == "terraformls" then
+			local bufnr = args.buf
+			vim.api.nvim_create_autocmd("BufWritePre", {
+				buffer = bufnr,
+				callback = function()
+					vim.lsp.buf.format({
+						timeout_ms = 3000,
+						buffer = bufnr,
+						filter = function(c)
+							return c.name == "terraformls"
+						end,
+					})
+				end,
+			})
+		end
+	end,
+})
