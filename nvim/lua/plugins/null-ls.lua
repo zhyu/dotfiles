@@ -9,6 +9,7 @@ local fmt_group = vim.api.nvim_create_augroup("FORMATTING", { clear = true })
 local function fmt_on_save(client, bufnr)
 	if client.supports_method("textDocument/formatting") then
 		vim.api.nvim_create_autocmd("BufWritePre", {
+			desc = "null-ls autoformat on save",
 			group = fmt_group,
 			buffer = bufnr,
 			callback = function()
