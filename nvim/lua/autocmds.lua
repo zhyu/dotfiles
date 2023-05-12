@@ -21,10 +21,12 @@ create_aucmd("BufRead", {
 	group = common_grp,
 })
 
--- Set keybindings on LspAttached
-create_aucmd("User", {
-	pattern = "LspAttached",
-	desc = "Set keybindings on LspAttached",
+local user_lsp_config_grp = create_augrp("user_lsp_config", { clear = true })
+
+-- Set keybindings on LspAttach
+create_aucmd("LspAttach", {
+	desc = "Set keybindings on LspAttach",
+	group = user_lsp_config_grp,
 	callback = function()
 		local bufmap = function(mode, lhs, rhs, desc)
 			local opts = { buffer = true, desc = desc }

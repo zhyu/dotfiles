@@ -81,7 +81,6 @@ function M.setup()
 			bundles = {},
 		},
 		on_attach = function(client, bufnr)
-			vim.api.nvim_exec_autocmds("User", { pattern = "LspAttached" })
 			require("jdtls.setup").add_commands()
 		end,
 	}

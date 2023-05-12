@@ -8,9 +8,7 @@ local lsp_defaults = {
 		debounce_text_changes = 150,
 	},
 	capabilities = require("cmp_nvim_lsp").default_capabilities(),
-	on_attach = function(client, bufnr)
-		vim.api.nvim_exec_autocmds("User", { pattern = "LspAttached" })
-	end,
+	on_attach = function(client, bufnr) end,
 }
 
 lspconfig.util.default_config = vim.tbl_deep_extend("force", lspconfig.util.default_config, lsp_defaults)
