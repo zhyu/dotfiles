@@ -39,6 +39,8 @@ local function plugins(use)
 						"java",
 						"javascript",
 						"lua",
+						"markdown",
+						"markdown_inline",
 						"python",
 						"terraform",
 						"typescript",
