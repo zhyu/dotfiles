@@ -280,10 +280,11 @@ local function plugins(use)
 					chat = {
 						keymaps = {
 							draft_message = "<C-w>",
+							toggle_settings = "<C-p>",
 						},
 					},
 					openai_params = {
-						max_tokens = 4096,
+						max_tokens = 2048,
 					},
 				})
 			end,
