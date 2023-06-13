@@ -57,10 +57,10 @@ function M.setup()
 			java = {
 				configuration = {
 					runtimes = {
-						-- {
-						-- 	name = "JaveSE-1.8",
-						-- 	path = jvm_dir .. "/java-8",
-						-- },
+						{
+							name = "JaveSE-1.8",
+							path = jvm_dir .. "/java-8",
+						},
 						{
 							name = "JavaSE-11",
 							path = jvm_dir .. "/java-11",

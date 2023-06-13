@@ -153,10 +153,12 @@ local function plugins(use)
 		},
 		{
 			"mfussenegger/nvim-jdtls",
-			-- need to run the setup every time we only a java file to attach the server.
-			-- load the plugin with ft = "java" will only load it once,
-			-- so the setup is called in autocmds.lua instead
-			cond = false,
+			-- We need to run the setup every time when a java file is opened
+			-- to make sure the jdtls server is attached.
+			-- However, load the plugin with ft = "java" will only load it once,
+			-- so the setup is called in autocmds.lua with FileType event.
+			-- Declaring the module is needed to ensure it can be loaded correctly.
+			module = "jdtls",
 		},
 	})
 	use({
