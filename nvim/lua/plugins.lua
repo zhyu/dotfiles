@@ -268,29 +268,6 @@ local function plugins(use)
 				require("telescope").load_extension("fzf")
 			end,
 		},
-		use({
-			"jackMort/ChatGPT.nvim",
-			after = "telescope.nvim",
-			requires = {
-				"MunifTanjim/nui.nvim",
-				"nvim-lua/plenary.nvim",
-				"nvim-telescope/telescope.nvim",
-			},
-			config = function()
-				require("chatgpt").setup({
-					api_key_cmd = "cat ~/gpt.k | base64 -d",
-					chat = {
-						keymaps = {
-							draft_message = "<C-w>",
-							toggle_settings = "<C-p>",
-						},
-					},
-					openai_params = {
-						max_tokens = 2048,
-					},
-				})
-			end,
-		}),
 	})
 	use({
 		"windwp/nvim-autopairs",
