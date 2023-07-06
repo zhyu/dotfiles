@@ -25,6 +25,5 @@ function link_dotfile() {
 
 
 link_dotfile $HOME/.zshrc zshrc
-link_dotfile $HOME/.zprofile zprofile
 link_dotfile $HOME/.tmux.conf tmux.conf
 link_dotfile $HOME/.config/nvim nvim
