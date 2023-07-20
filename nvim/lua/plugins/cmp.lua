@@ -45,14 +45,19 @@ cmp.setup({
 			require("luasnip").lsp_expand(args.body)
 		end,
 	},
-	sources = {
+	sources = cmp.config.sources({
 		{ name = "copilot" },
-		{ name = "nvim_lsp", max_item_count = 10 },
+		{ name = "nvim_lsp", max_item_count = 5 },
 		{ name = "cmp_tabnine" },
-		{ name = "luasnip", max_item_count = 10, keyword_length = 2 },
-		{ name = "path", max_item_count = 10 },
-		{ name = "buffer", max_item_count = 10 },
-	},
+		{ name = "luasnip", max_item_count = 5, keyword_length = 2 },
+	}, {
+		{ name = "path", max_item_count = 5 },
+		{ name = "buffer", max_item_count = 5 },
+	}),
+	-- Sometimes, lsp would suggest an item to be preselected. The item could be
+	-- in the middle of the list, which makes it harder to navigate to the first
+	-- item and makes the sources order useless.
+	preselect = cmp.PreselectMode.None,
 	formatting = {
 		fields = { "menu", "abbr", "kind" },
 		format = function(entry, item)
