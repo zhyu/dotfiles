@@ -10,8 +10,6 @@ end
 local function plugins(use)
 	-- packer itself
 	use("wbthomason/packer.nvim")
-	-- Speed up loading Lua modules with cache, loaded before packer.startup()
-	use({ "lewis6991/impatient.nvim" })
 	-- Load only when require
 	use({ "nvim-lua/plenary.nvim", module = "plenary" })
 	use({ "kyazdani42/nvim-web-devicons", module = "nvim-web-devicons" })
@@ -213,7 +211,7 @@ local function plugins(use)
 		},
 		{
 			"zbirenbaum/copilot-cmp",
-			event = "VimEnter",
+			after = "nvim-cmp",
 			config = function()
 				require("copilot_cmp").setup()
 			end,
@@ -329,7 +327,5 @@ local function plugins(use)
 end
 
 local packer = require("packer")
-
-pcall(require, "impatient")
 
 packer.startup(plugins)

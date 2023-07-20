@@ -1,3 +1,5 @@
+vim.loader.enable()
+
 -- basic editor options
 require("basic")
 
