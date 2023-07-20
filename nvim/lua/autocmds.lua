@@ -8,7 +8,7 @@ create_aucmd("FileType", { pattern = "go", command = "setlocal noet", group = co
 create_aucmd("FileType", {
 	pattern = "java",
 	callback = function()
-		require("plugins.jdtls").setup()
+		require("plugins.lsp.jdtls").setup()
 	end,
 	group = common_grp,
 })

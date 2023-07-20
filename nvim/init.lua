@@ -4,7 +4,7 @@ vim.loader.enable()
 require("basic")
 
 -- plugins management and config
-require("plugins")
+require("lazyvim")
 
 -- automatic commands
 require("autocmds")
