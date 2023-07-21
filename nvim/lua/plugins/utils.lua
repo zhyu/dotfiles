@@ -12,14 +12,10 @@ return {
 		config = true,
 	},
 	{
-		"tpope/vim-surround",
-		event = "BufRead",
-		dependencies = {
-			{
-				"tpope/vim-repeat",
-				event = "BufRead",
-			},
-		},
+		"kylechui/nvim-surround",
+		version = "*", -- Use for stability; omit to use `main` branch for the latest features
+		event = { "BufReadPost", "BufNewFile" },
+		config = true,
 	},
 	{
 		"tpope/vim-abolish",
