@@ -1,7 +1,7 @@
 return {
 	{
 		"ggandor/leap.nvim",
-		event = "BufRead",
+		event = { "BufReadPost", "BufNewFile" },
 		config = function()
 			local leap = require("leap")
 
@@ -18,7 +18,7 @@ return {
 	},
 	{
 		"numToStr/Comment.nvim",
-		event = "BufRead",
+		event = { "BufReadPost", "BufNewFile" },
 		config = true,
 	},
 	{

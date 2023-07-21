@@ -22,19 +22,19 @@ return {
 	},
 	{
 		"norcalli/nvim-colorizer.lua",
-		event = "BufRead",
+		event = { "BufReadPost", "BufNewFile" },
 		config = true,
 	},
 	{
 		"lukas-reineke/indent-blankline.nvim",
-		event = "BufRead",
+		event = { "BufReadPost", "BufNewFile" },
 		opts = {
 			show_end_of_line = true,
 		},
 	},
 	{
 		"ntpeters/vim-better-whitespace",
-		event = "BufRead",
+		event = { "BufReadPost", "BufNewFile" },
 	},
 	-- icons
 	{ "kyazdani42/nvim-web-devicons", lazy = true },
