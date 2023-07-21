@@ -33,6 +33,11 @@ return {
 		},
 	},
 	{
+		"echasnovski/mini.indentscope",
+		event = { "BufReadPost", "BufNewFile" },
+		config = true,
+	},
+	{
 		"ntpeters/vim-better-whitespace",
 		event = { "BufReadPost", "BufNewFile" },
 	},
