@@ -65,7 +65,7 @@ ENABLE_CORRECTION="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(vi-mode tmux fzf common-aliases fasd git python nvm fzf-tab)
+plugins=(vi-mode tmux fzf common-aliases fasd git python nvm fzf-tab zsh-autosuggestions)
 # do not use the user input as the query string when using fzf-tab, since it won't work with fasd word completion, e.g., ,dirname,<TAB>
 zstyle ':fzf-tab:*' query-string prefix first
 
