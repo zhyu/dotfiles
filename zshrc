@@ -66,6 +66,8 @@ ENABLE_CORRECTION="true"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(vi-mode tmux fzf common-aliases fasd git python nvm fzf-tab)
+# do not use the user input as the query string when using fzf-tab, since it won't work with fasd word completion, e.g., ,dirname,<TAB>
+zstyle ':fzf-tab:*' query-string prefix first
 
 VI_MODE_SET_CURSOR=true
 VI_MODE_RESET_PROMPT_ON_MODE_CHANGE=true
