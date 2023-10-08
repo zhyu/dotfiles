@@ -28,9 +28,8 @@ return {
 	{
 		"lukas-reineke/indent-blankline.nvim",
 		event = { "BufReadPost", "BufNewFile" },
-		opts = {
-			show_end_of_line = true,
-		},
+		main = "ibl",
+		opts = {},
 	},
 	{
 		"echasnovski/mini.indentscope",
