@@ -81,7 +81,8 @@ source $ZSH/oh-my-zsh.sh
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
-# export LANG=en_US.UTF-8
+# This is very important for nerdfont glyphs to work inside tmux: https://gitlab.com/gnachman/iterm2/-/issues/10879#note_1433417922
+export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then
