@@ -38,10 +38,10 @@ return {
 			local menu_icon = {
 				nvim_lsp = "λ",
 				luasnip = "⋗",
-				buffer = "﬘",
+				buffer = "",
 				path = "",
 				copilot = "",
-				cmp_tabnine = "",
+				cmp_tabnine = "󰌒",
 			}
 
 			return {
