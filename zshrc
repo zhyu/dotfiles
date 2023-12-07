@@ -163,6 +163,18 @@ _fzf_compgen_dir() {
   fd --type d --hidden --follow --exclude ".git" . "$1"
 }
 
+# Disable unwanted aliases defined by fasd
+unalias j # interactive directory jump, use `z` defined below instead
+unalias o # open file with default application, useless on server
+
+# fasd & fzf change directory - jump using `fasd` if given argument, filter output of `fasd` using `fzf` else
+unalias z
+z() {
+    [ $# -gt 0 ] && fasd_cd -d "$*" && return
+    local dir
+    dir="$(fasd -Rdl "$1" | fzf -1 -0 --no-sort +m)" && cd "${dir}" || return 1
+}
+
 # source
 if [[ -f $HOME/.zshrc.post ]]; then
   source $HOME/.zshrc.post
