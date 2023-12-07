@@ -164,15 +164,19 @@ _fzf_compgen_dir() {
 }
 
 # Disable unwanted aliases defined by fasd
-unalias j # interactive directory jump, use `z` defined below instead
-unalias o # open file with default application, useless on server
+unalias j o z v
 
 # fasd & fzf change directory - jump using `fasd` if given argument, filter output of `fasd` using `fzf` else
-unalias z
 z() {
     [ $# -gt 0 ] && fasd_cd -d "$*" && return
     local dir
     dir="$(fasd -Rdl "$1" | fzf -1 -0 --no-sort +m)" && cd "${dir}" || return 1
+}
+# fasd & fzf change directory - open best matched file using `fasd` if given argument, filter output of `fasd` using `fzf` else
+v() {
+    [ $# -gt 0 ] && fasd -f -e ${EDITOR} "$*" && return
+    local file
+    file="$(fasd -Rfl "$1" | fzf -1 -0 --no-sort +m)" && ${EDITOR} "${file}" || return 1
 }
 
 # source
