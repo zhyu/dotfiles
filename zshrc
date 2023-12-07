@@ -129,8 +129,10 @@ fi
 
 # human-readable sizes
 alias df='df -h'
-# fix LS color on mac OS
-alias ls="ls --color=auto -G"
+
+# Disable unwanted aliases defined in common-aliases plugin
+unalias 'P' 'G'
+alias -g G='| rg'
 
 # enable the nice builtin zmv
 autoload -U zmv
