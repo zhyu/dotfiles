@@ -5,13 +5,13 @@ echo "| This script assumes that requirements are all installed! |"
 echo "============================================================"
 
 function link_dotfile() {
-  # back up $filepath, and link it to $dot_filename
+  # back up $filepath, and link it to $dot_filepath
   readonly filepath=${1:?"The filepath must be specified."}
-  readonly dot_filename=${2:?"The dot_filename must be specified."}
+  readonly dot_filepath=${2:?"The dot_filepath must be specified."}
 
   if [[ -f $filepath || -d $filepath ]]; then
     if [[ -L $filepath ]]; then
-      echo "$filepath is already a symlink, skipping linking it to $PWD/$dot_filename"
+      echo "$filepath is already a symlink, skipping linking it to $PWD/$dot_filepath"
       return
     else
       mv $filepath{,.bak}
@@ -19,11 +19,11 @@ function link_dotfile() {
   fi
 
   mkdir -p $(dirname $filepath)
-  ln -s $PWD/$dot_filename $filepath
-  echo "$filepath is now a symlink to $PWD/$dot_filename"
+  ln -s $PWD/$dot_filepath $filepath
+  echo "$filepath is now a symlink to $PWD/$dot_filepath"
 }
 
 
-link_dotfile $HOME/.zshrc zshrc
+link_dotfile $HOME/.zshrc zsh/zshrc
 link_dotfile $HOME/.tmux.conf tmux.conf
 link_dotfile $HOME/.config/nvim nvim
