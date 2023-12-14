@@ -29,5 +29,6 @@ link_dotfile $HOME/.zshrc zsh/zshrc
 link_dotfile $HOME/.oh-my-zsh zsh/ohmyzsh
 # tmux
 link_dotfile $HOME/.tmux.conf tmux/tmux.conf
+link_dotfile $HOME/.tmux/plugins/tpm tmux/tpm
 # nvim
 link_dotfile $HOME/.config/nvim nvim
