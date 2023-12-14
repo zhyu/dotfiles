@@ -24,7 +24,7 @@ zstyle ':omz:update' mode disabled
 ZSH_THEME="powerlevel10k/powerlevel10k"
 VI_MODE_SET_CURSOR=true
 
-plugins=(vi-mode tmux fzf common-aliases fasd git python nvm brew fzf-tab zsh-autosuggestions fast-syntax-highlighting)
+plugins=(vi-mode tmux aliases fzf fasd git python nvm brew fzf-tab zsh-autosuggestions fast-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -50,23 +50,6 @@ if [[ -n $SSH_CONNECTION ]]; then
         export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
     fi
 fi
-
-# human-readable sizes
-alias df='df -h'
-
-# Disable unwanted aliases defined in common-aliases plugin
-unalias 'P' 'G'
-alias -g G='| rg'
-
-# enable the nice builtin zmv
-autoload -U zmv
-# noglob: no need to quote wildcards
-# -W: auto convert wildcards to the proper format, e.g., no need to use capture groups
-alias mmv='noglob zmv -W'
-
-# neovim :)
-alias vim='nvim'
-alias vimdiff='nvim -d '
 
 # use vim when edit-command-line
 export VISUAL=nvim
