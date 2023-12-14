@@ -1,9 +1,15 @@
 # If not in tmux nor executing zsh script, start tmux
-# Note: `tmux attach` should not be wrapped, otherwise the connection will be closed
-# when connecting to a server via ssh and there are no tmux sessions to attach to.
+#
+# Although the tmux plugin of omz could achieve the same, it doesn't play well with
+# p10k instant prompt, especially connecting to a server via ssh.
+# Ref: https://github.com/romkatv/powerlevel10k/issues/1203#issuecomment-754805535
+#
+# Note: `tmux attach` should not be wrapped with `exec`, otherwise the connection will
+# be closed when connecting to a server via ssh and there are no tmux sessions to attach to.
 # The `exit` part would exit ssh and terminate the connection when detach or exit tmux.
 if [[ -z ${TMUX+X}${ZSH_SCRIPT+X}${ZSH_EXECUTION_STRING+X} ]]; then
-  # This is very important for nerdfont glyphs to work inside tmux: https://gitlab.com/gnachman/iterm2/-/issues/10879#note_1433417922
+  # This is very important for nerdfont glyphs to work inside tmux
+  # Ref: https://gitlab.com/gnachman/iterm2/-/issues/10879#note_1433417922
   export LANG=en_US.UTF-8
   tmux attach || exec tmux new && exit;
 fi
