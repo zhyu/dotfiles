@@ -1,4 +1,3 @@
-
 # If not in tmux nor executing zsh script, start tmux
 # Note: `tmux attach` should not be wrapped, otherwise the connection will be closed
 # when connecting to a server via ssh and there are no tmux sessions to attach to.
@@ -24,7 +23,7 @@ zstyle ':omz:update' mode disabled
 ZSH_THEME="powerlevel10k/powerlevel10k"
 VI_MODE_SET_CURSOR=true
 
-plugins=(vi-mode tmux aliases fzf fasd git python nvm brew fzf-tab zsh-autosuggestions fast-syntax-highlighting)
+plugins=(vi-mode aliases fzf fasd git python nvm brew fzf-tab zsh-autosuggestions fast-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
