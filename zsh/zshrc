@@ -29,7 +29,30 @@ zstyle ':omz:update' mode disabled
 ZSH_THEME="powerlevel10k/powerlevel10k"
 VI_MODE_SET_CURSOR=true
 
-plugins=(vi-mode aliases fzf fasd git python nvm brew fzf-tab zsh-autosuggestions fast-syntax-highlighting)
+# posix-alias is dropped from the default opts to avoid defining unnecessary aliases
+_FASD_INIT_OPTS=(
+  zsh-hook
+  zsh-ccomp
+  zsh-ccomp-install
+  zsh-wcomp
+  zsh-wcomp-install
+)
+
+plugins=(
+  vi-mode
+  aliases
+  fzf
+  fzf-conf
+  fasd
+  fasd-conf
+  git
+  python
+  nvm
+  brew
+  fzf-tab
+  zsh-autosuggestions
+  fast-syntax-highlighting
+)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -59,39 +82,6 @@ fi
 # use vim when edit-command-line
 export VISUAL=nvim
 export EDITOR="${VISUAL}"
-
-# fzf settings
-# use fd as backend of fzf, it will respect ignore files like .gitignore
-export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
-# use Ctrl-T to fuzzy search recent accessed files and directories
-export FZF_CTRL_T_COMMAND='fasd -Rl'
-# Use fd instead of the default find command for listing path candidates.
-# - The first argument to the function ($1) is the base path to start traversal
-# - See the source code (completion.{bash,zsh}) for the details.
-_fzf_compgen_path() {
-  fd --hidden --follow --exclude ".git" . "$1"
-}
-
-# Use fd to generate the list for directory completion
-_fzf_compgen_dir() {
-  fd --type d --hidden --follow --exclude ".git" . "$1"
-}
-
-# Disable unwanted aliases defined by fasd
-unalias j o z v
-
-# fasd & fzf change directory - jump using `fasd` if given argument, filter output of `fasd` using `fzf` else
-z() {
-    [ $# -gt 0 ] && fasd_cd -d "$*" && return
-    local dir
-    dir="$(fasd -Rdl "$1" | fzf -1 -0 --no-sort +m)" && cd "${dir}" || return 1
-}
-# fasd & fzf change directory - open best matched file using `fasd` if given argument, filter output of `fasd` using `fzf` else
-v() {
-    [ $# -gt 0 ] && fasd -f -e ${EDITOR} "$*" && return
-    local file
-    file="$(fasd -Rfl "$1" | fzf -1 -0 --no-sort +m)" && ${EDITOR} "${file}" || return 1
-}
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
