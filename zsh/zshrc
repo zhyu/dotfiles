@@ -1,8 +1,11 @@
+
 # If not in tmux nor executing zsh script, start tmux
 # Note: `tmux attach` should not be wrapped, otherwise the connection will be closed
 # when connecting to a server via ssh and there are no tmux sessions to attach to.
 # The `exit` part would exit ssh and terminate the connection when detach or exit tmux.
 if [[ -z ${TMUX+X}${ZSH_SCRIPT+X}${ZSH_EXECUTION_STRING+X} ]]; then
+  # This is very important for nerdfont glyphs to work inside tmux: https://gitlab.com/gnachman/iterm2/-/issues/10879#note_1433417922
+  export LANG=en_US.UTF-8
   tmux attach || exec tmux new && exit;
 fi
 
@@ -29,9 +32,6 @@ MODE_INDICATOR="%F{cyan}<~~%f"
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
-
-# This is very important for nerdfont glyphs to work inside tmux: https://gitlab.com/gnachman/iterm2/-/issues/10879#note_1433417922
-export LANG=en_US.UTF-8
 
 # Server only setup
 # symlink ~/.ssh/ssh_auth_sock to $SSH_AUTH_SOCK, then set the env var
