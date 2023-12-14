@@ -25,5 +25,6 @@ function link_dotfile() {
 
 
 link_dotfile $HOME/.zshrc zsh/zshrc
+link_dotfile $HOME/.oh-my-zsh zsh/ohmyzsh
 link_dotfile $HOME/.tmux.conf tmux.conf
 link_dotfile $HOME/.config/nvim nvim
