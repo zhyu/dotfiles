@@ -27,6 +27,7 @@ function link_dotfile() {
 # zsh
 link_dotfile $HOME/.zshrc zsh/zshrc
 link_dotfile $HOME/.oh-my-zsh zsh/ohmyzsh
+link_dotfile $HOME/.p10k.zsh zsh/p10k.zsh
 # tmux
 link_dotfile $HOME/.tmux.conf tmux/tmux.conf
 link_dotfile $HOME/.tmux/plugins/tpm tmux/tpm
