@@ -4,9 +4,9 @@ echo "============================================================"
 echo "| This script assumes that requirements are all installed! |"
 echo "============================================================"
 
-echo "=============================="
-echo "| Updating configurations... |"
-echo "=============================="
+echo "==========================="
+echo "| Pulling remote repos... |"
+echo "==========================="
 
 function pull_remote() {
   readonly remote_url=${1:?"The remote_url must be specified."}
