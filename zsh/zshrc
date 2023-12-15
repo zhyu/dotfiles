@@ -46,6 +46,7 @@ plugins=(
   fasd
   fasd-conf
   git
+  git-jira
   python
   nvm
   brew
