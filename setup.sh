@@ -51,5 +51,22 @@ echo "=============================="
 echo "| Updating configurations... |"
 echo "=============================="
 
+function configure_git_remote() {
+  readonly remote_name=${1:?"The remote_name must be specified."}
+  readonly remote_url=${2:?"The remote_url must be specified."}
+
+  git remote | rg "^${remote_name}$" > /dev/null && git remote remove $remote_name
+  git remote add $remote_name $remote_url
+}
+
+configure_git_remote fzf https://github.com/junegunn/fzf.git
+configure_git_remote tpm https://github.com/tmux-plugins/tpm.git
+configure_git_remote ohmyzsh https://github.com/ohmyzsh/ohmyzsh.git
+configure_git_remote fasd https://github.com/whjvenyl/fasd.git
+configure_git_remote fast-syntax-highlighting https://github.com/zdharma-continuum/fast-syntax-highlighting.git
+configure_git_remote fzf-tab https://github.com/Aloxaf/fzf-tab.git
+configure_git_remote zsh-autosuggestions https://github.com/zsh-users/zsh-autosuggestions.git
+configure_git_remote powerlevel10k https://github.com/romkatv/powerlevel10k.git
+
 # store the git credential (for the access key)
 git config --global credential.helper store
