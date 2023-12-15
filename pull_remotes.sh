@@ -24,6 +24,6 @@ function pull_remote() {
   git subtree pull --prefix=$subtree_dir $remote_name $remote_ref --squash
 }
 
-cat remote_repos.json | fx  '.map(x => [x.repo, x.gitSubtreeDir, x.ref].join(" "))' '.join("\n")' | while read line; do
+yq -oj remote_repos.yml | fx  '.map(x => [x.repo, x.gitSubtreeDir, x.ref].join(" "))' '.join("\n")' | while read line; do
   pull_remote $(echo $line | awk '{print $1, $2, $3}')
 done

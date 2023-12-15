@@ -44,6 +44,7 @@ sudo apt install -y et bat-musl fd-musl ripgrep xh eza
 sudo apt upgrade -y
 sudo apt autoremove -y
 
-# app images
+# app images and other binaries
 setup_executable_from_github neovim neovim 'nvim.appimage$' nvim
 setup_executable_from_github nelsonenzo tmux-appimage 'tmux.appimage$' tmux
+setup_executable_from_github mikefarah yq 'yq_linux_amd64$' yq

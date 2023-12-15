@@ -1,0 +1,16 @@
+- repo: https://github.com/junegunn/fzf.git
+  gitSubtreeDir: fzf
+- repo: https://github.com/tmux-plugins/tpm.git
+  gitSubtreeDir: tmux/tpm
+- repo: https://github.com/ohmyzsh/ohmyzsh.git
+  gitSubtreeDir: zsh/ohmyzsh
+- repo: https://github.com/whjvenyl/fasd.git
+  gitSubtreeDir: zsh/ohmyzsh/custom/plugins/fasd
+- repo: https://github.com/zdharma-continuum/fast-syntax-highlighting.git
+  gitSubtreeDir: zsh/ohmyzsh/custom/plugins/fast-syntax-highlighting
+- repo: https://github.com/Aloxaf/fzf-tab.git
+  gitSubtreeDir: zsh/ohmyzsh/custom/plugins/fzf-tab
+- repo: https://github.com/zsh-users/zsh-autosuggestions.git
+  gitSubtreeDir: zsh/ohmyzsh/custom/plugins/zsh-autosuggestions
+- repo: https://github.com/romkatv/powerlevel10k.git
+  gitSubtreeDir: zsh/ohmyzsh/custom/themes/powerlevel10k
