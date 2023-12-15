@@ -24,11 +24,6 @@ function pull_remote() {
   git subtree pull --prefix=$subtree_dir $remote_name $remote_ref --squash
 }
 
-pull_remote https://github.com/junegunn/fzf.git fzf
-pull_remote https://github.com/tmux-plugins/tpm.git tmux/tpm
-pull_remote https://github.com/ohmyzsh/ohmyzsh.git zsh/ohmyzsh
-pull_remote https://github.com/whjvenyl/fasd.git zsh/ohmyzsh/custom/plugins/fasd
-pull_remote https://github.com/zdharma-continuum/fast-syntax-highlighting.git zsh/ohmyzsh/custom/plugins/fast-syntax-highlighting
-pull_remote https://github.com/Aloxaf/fzf-tab.git zsh/ohmyzsh/custom/plugins/fzf-tab
-pull_remote https://github.com/zsh-users/zsh-autosuggestions.git zsh/ohmyzsh/custom/plugins/zsh-autosuggestions
-pull_remote https://github.com/romkatv/powerlevel10k.git zsh/ohmyzsh/custom/themes/powerlevel10k
+cat remote_repos.json | fx  '.map(x => [x.repo, x.gitSubtreeDir, x.ref].join(" "))' '.join("\n")' | while read line; do
+  pull_remote $(echo $line | awk '{print $1, $2, $3}')
+done
