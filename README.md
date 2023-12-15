@@ -3,15 +3,19 @@
 ## Requirements
 
 - zsh
-- [tmux](https://github.com/tmux/tmux)
-  - [tpm](https://github.com/tmux-plugins/tpm)
 - git
-- [Oh My Zsh](https://ohmyz.sh/)
-- [fzf](https://github.com/junegunn/fzf)
-- [fasd](https://github.com/clvv/fasd)
-- [fd](https://github.com/sharkdp/fd)
-- [ripgrep](https://github.com/BurntSushi/ripgrep)
-- [bat](https://github.com/sharkdp/bat)
-- [neovim](https://neovim.io/)
-- [nvm](https://github.com/nvm-sh/nvm)
-  - Node.js should be installed for installing various Language Servers
+- [Homebrew](https://brew.sh/) (macOS only)
+
+## External dependencies managed with git subtree
+
+```sh
+❯ git log | rg 'git-subtree-dir:\s*(.+)$' -r '$1' | sort -u
+    fzf
+    tmux/tpm
+    zsh/ohmyzsh
+    zsh/ohmyzsh/custom/plugins/fasd
+    zsh/ohmyzsh/custom/plugins/fast-syntax-highlighting
+    zsh/ohmyzsh/custom/plugins/fzf-tab
+    zsh/ohmyzsh/custom/plugins/zsh-autosuggestions
+    zsh/ohmyzsh/custom/themes/powerlevel10k
+```
