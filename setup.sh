@@ -4,6 +4,17 @@ echo "============================================================"
 echo "| This script assumes that requirements are all installed! |"
 echo "============================================================"
 
+echo "=========================="
+echo "| Installing packages... |"
+echo "=========================="
+
+[[ $(uname) == "Darwin" ]] && ./scripts/install_pkgs_macos.sh
+[[ $(uname) == "Linux" ]] && ./scripts/install_pkgs_ubuntu.sh
+
+echo "======================="
+echo "| Linking dotfiles... |"
+echo "======================="
+
 function link_dotfile() {
   # back up $filepath, and link it to $dot_filepath
   readonly filepath=${1:?"The filepath must be specified."}
@@ -23,7 +34,6 @@ function link_dotfile() {
   echo "$filepath is now a symlink to $PWD/$dot_filepath"
 }
 
-
 # zsh
 link_dotfile $HOME/.zshrc zsh/zshrc
 link_dotfile $HOME/.oh-my-zsh zsh/ohmyzsh
@@ -36,3 +46,10 @@ link_dotfile $HOME/.config/nvim nvim
 # fzf
 link_dotfile $HOME/.fzf fzf
 $HOME/.fzf/install --bin # download the binary only
+
+echo "=============================="
+echo "| Updating configurations... |"
+echo "=============================="
+
+# store the git credential (for the access key)
+git config --global credential.helper store

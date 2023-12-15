@@ -47,6 +47,3 @@ sudo apt autoremove -y
 # app images
 setup_executable_from_github neovim neovim 'nvim.appimage$' nvim
 setup_executable_from_github nelsonenzo tmux-appimage 'tmux.appimage$' tmux
-
-# store the git credential (for the access key)
-git config --global credential.helper store
