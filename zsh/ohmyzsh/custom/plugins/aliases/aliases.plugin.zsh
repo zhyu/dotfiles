@@ -8,12 +8,12 @@ alias lt='eza -l --tree'
 alias df='df -h'
 alias du='du -h'
 
-alias -g H='| head'
-alias -g T='| tail'
-alias -g G='| rg'
-alias -g B="| bat"
-alias -g S="| sort"
-alias -g U="| uniq"
+alias -g pph='| head'
+alias -g ppt='| tail'
+alias -g ppg='| rg'
+alias -g ppb="| bat"
+alias -g pps="| sort"
+alias -g ppu="| uniq"
 
 alias rm='rm -i'
 alias cp='cp -i'
