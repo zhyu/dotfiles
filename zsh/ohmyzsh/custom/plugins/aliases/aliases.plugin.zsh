@@ -12,6 +12,8 @@ alias -g H='| head'
 alias -g T='| tail'
 alias -g G='| rg'
 alias -g B="| bat"
+alias -g S="| sort"
+alias -g U="| uniq"
 
 alias rm='rm -i'
 alias cp='cp -i'
