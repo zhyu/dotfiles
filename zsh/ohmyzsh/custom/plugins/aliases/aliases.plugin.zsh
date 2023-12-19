@@ -6,6 +6,7 @@ alias lt='eza -l --tree'
 
 # human-readable sizes
 alias df='df -h'
+alias du='du -h'
 
 alias -g H='| head'
 alias -g T='| tail'
