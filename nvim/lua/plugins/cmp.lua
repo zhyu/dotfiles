@@ -51,13 +51,13 @@ return {
 					end,
 				},
 				sources = cmp.config.sources({
-					{ name = "copilot" },
-					{ name = "nvim_lsp", max_item_count = 5 },
-					{ name = "cmp_tabnine" },
+					{ name = "copilot", priority = 100 },
+					{ name = "nvim_lsp", max_item_count = 5, priority = 100 },
+					{ name = "cmp_tabnine", max_item_count = 2 },
 					{ name = "luasnip", max_item_count = 5, keyword_length = 2 },
 				}, {
-					{ name = "path", max_item_count = 5 },
-					{ name = "buffer", max_item_count = 5 },
+					{ name = "path", max_item_count = 3 },
+					{ name = "buffer", max_item_count = 3 },
 				}),
 				-- Sometimes, lsp would suggest an item to be preselected. The item could be
 				-- in the middle of the list, which makes it harder to navigate to the first
