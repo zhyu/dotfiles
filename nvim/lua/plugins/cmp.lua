@@ -41,6 +41,7 @@ return {
 				buffer = "",
 				path = "",
 				copilot = "",
+				cody = "󰱹",
 			}
 
 			return {
@@ -51,6 +52,7 @@ return {
 				},
 				sources = cmp.config.sources({
 					{ name = "copilot" },
+					{ name = "cody" },
 					{ name = "nvim_lsp", max_item_count = 3 },
 					{ name = "luasnip", max_item_count = 3, keyword_length = 2 },
 				}, {
