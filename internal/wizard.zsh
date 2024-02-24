@@ -1132,7 +1132,14 @@ function os_icon_name() {
         fi
         case $os_release_id in
           *arch*)                  echo LINUX_ARCH_ICON;;
-          *debian*)                echo LINUX_DEBIAN_ICON;;
+          *raspbian*)              echo LINUX_RASPBIAN_ICON;;
+          *debian*)
+            if [[ -f /etc/apt/sources.list.d/raspi.list ]]; then
+              echo LINUX_RASPBIAN_ICON
+            else
+              echo LINUX_DEBIAN_ICON
+            fi
+          ;;
           *raspbian*)              echo LINUX_RASPBIAN_ICON;;
           *ubuntu*)                echo LINUX_UBUNTU_ICON;;
           *elementary*)            echo LINUX_ELEMENTARY_ICON;;
@@ -1158,6 +1165,7 @@ function os_icon_name() {
           endeavouros)             echo LINUX_ENDEAVOUROS_ICON;;
           rocky)                   echo LINUX_ROCKY_ICON;;
           guix)                    echo LINUX_GUIX_ICON;;
+          neon)                    echo LINUX_NEON_ICON;;
           *)                       echo LINUX_ICON;;
         esac
         ;;
@@ -1742,6 +1750,8 @@ function generate_config() {
       sub NORDVPN_VISUAL_IDENTIFIER_EXPANSION "'nord'"
       uncomment 'typeset -g POWERLEVEL9K_RANGER_VISUAL_IDENTIFIER_EXPANSION'
       sub RANGER_VISUAL_IDENTIFIER_EXPANSION "'▲'"
+      uncomment 'typeset -g POWERLEVEL9K_YAZI_VISUAL_IDENTIFIER_EXPANSION'
+      sub YAZI_VISUAL_IDENTIFIER_EXPANSION "'▲'"
       uncomment 'typeset -g POWERLEVEL9K_KUBECONTEXT_DEFAULT_VISUAL_IDENTIFIER_EXPANSION'
       sub KUBECONTEXT_DEFAULT_VISUAL_IDENTIFIER_EXPANSION "'○'"
       uncomment 'typeset -g POWERLEVEL9K_AZURE_VISUAL_IDENTIFIER_EXPANSION'

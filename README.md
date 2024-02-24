@@ -347,6 +347,7 @@ You can enable as many segments as you like. It won't slow down your prompt or Z
 | `nvm` | node.js environment from [nvm](https://github.com/nvm-sh/nvm) |
 | `os_icon` | your OS logo (apple for macOS, swirl for debian, etc.) |
 | `package` | `name@version` from [package.json](https://docs.npmjs.com/files/package.json) |
+| `per_directory_history` | Oh My Zsh [per-directory-history](https://github.com/jimhester/per-directory-history) local/global indicator |
 | `perlbrew` | perl version from [perlbrew](https://github.com/gugod/App-perlbrew) |
 | `phpenv` | php environment from [phpenv](https://github.com/phpenv/phpenv) |
 | `php_version` | [php](https://www.php.net/) version |
@@ -357,6 +358,7 @@ You can enable as many segments as you like. It won't slow down your prompt or Z
 | `pyenv` | python environment from [pyenv](https://github.com/pyenv/pyenv) |
 | `ram` | free RAM |
 | `ranger` | [ranger](https://github.com/ranger/ranger) shell |
+| `yazi` | [yazi](https://github.com/sxyazi/yazi)) shell |
 | `rbenv` | ruby environment from [rbenv](https://github.com/rbenv/rbenv) |
 | `rust_version` | [rustc](https://www.rust-lang.org) version |
 | `rvm` | ruby environment from [rvm](https://rvm.io) |
@@ -530,7 +532,7 @@ echo 'source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme' >>~/.zs
 referenced above is the official Powerlevel10k package.
 
 There is also [zsh-theme-powerlevel10k](
-  https://www.archlinux.org/packages/community/x86_64/zsh-theme-powerlevel10k/) community package.
+  https://www.archlinux.org/packages/extra/x86_64/zsh-theme-powerlevel10k/) package.
 Historically, [it has been breaking often and for extended periods of time](
   https://github.com/romkatv/powerlevel10k/pull/786). **Do not use it.**
 
@@ -693,14 +695,17 @@ If you are using a different terminal, proceed with manual font installation. �
    - **Yakuake**: Click *≡* → *Manage Profiles* → *New* → *Appearance*. Click *Choose* next to the
      *Font* dropdown, select `MesloLGS NF` and click *OK*. Click *OK* to save the profile. Select the
      new profile and click *Set as Default*.
-   - **Alacritty**: Create or open `~/.config/alacritty/alacritty.yml` and add the following section
-     to it:
-     ```yaml
-     font:
-       normal:
-         family: "MesloLGS NF"
+   - **Alacritty**: Create or open `~/.config/alacritty/alacritty.toml` and add the following
+     section to it:
+     ```toml
+     [font.normal]
+     family = "MesloLGS NF"
      ```
-    - **kitty**: Create or open `~/.config/kitty/kitty.conf` and add the following line to it:
+   - **foot**: Create or open `~/.config/foot/foot.ini` and add the following section to it:
+     ```ini
+     font=MesloLGS NF:size=12
+     ```
+   - **kitty**: Create or open `~/.config/kitty/kitty.conf` and add the following line to it:
       ```text
       font_family MesloLGS NF
       ```
@@ -1319,10 +1324,17 @@ terminals. Many terminals also support customization of these colors through col
 
 Type `source ~/.p10k.zsh` to apply your changes to the current Zsh session.
 
-To see how different colors look in your terminal, run the following command:
+To see how different numbered colors look in your terminal, run the following command:
 
 ```zsh
 for i in {0..255}; do print -Pn "%K{$i}  %k%F{$i}${(l:3::0:)i}%f " ${${(M)$((i%6)):#3}:+$'\n'}; done
+```
+
+If your terminal supports truecolor, you can use 24-bit colors in the `#RRGGBB` format in addition
+to the numbered colors.
+
+```zsh
+typeset -g POWERLEVEL9K_TIME_FOREGROUND='#FF0000'
 ```
 
 *Related:*
@@ -1499,6 +1511,7 @@ Powerlevel10k are released. This may change in the future but not soon.
 
 ## Troubleshooting
 
+- [`[oh-my-zsh] theme 'powerlevel10k/powerlevel10k' not found`](#oh-my-zsh-theme-powerlevel10kpowerlevel10k-not-found)
 - [Question mark in prompt](#question-mark-in-prompt)
 - [Icons, glyphs or powerline symbols don't render](#icons-glyphs-or-powerline-symbols-dont-render)
 - [Sub-pixel imperfections around powerline symbols](#sub-pixel-imperfections-around-powerline-symbols)
@@ -1520,6 +1533,27 @@ Powerlevel10k are released. This may change in the future but not soon.
 - [Icons cut off in Konsole](#icons-cut-off-in-konsole)
 - [Arch Linux logo has a dot in the bottom right corner](#arch-linux-logo-has-a-dot-in-the-bottom-right-corner)
 - [Incorrect git status in prompt](#incorrect-git-status-in-prompt)
+
+### `[oh-my-zsh] theme 'powerlevel10k/powerlevel10k' not found`
+
+When opening a terminal, or starting zsh manually, you may encounter this error message:
+
+```text
+[oh-my-zsh] theme 'powerlevel10k/powerlevel10k' not found
+```
+
+1. First, run `typeset -p P9K_VERSION` to check whether Powerlevel10k has been loaded.
+   - If `typeset -p P9K_VERSION` succeeds and prints something like `typeset P9K_VERSION=1.19.14`
+     (the version could be different), remove the following line from `~/.zshrc`:
+     ```zsh
+     ZSH_THEME="powerlevel10k/powerlevel10k"
+     ```
+   - If `typeset -p P9K_VERSION` fails with the error `typeset: no such variable: P9K_VERSION`, run
+     the following command:
+     ```zsh
+     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+     ```
+2. Restart Zsh with `exec zsh`.
 
 ### Question mark in prompt
 
