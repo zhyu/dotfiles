@@ -5,6 +5,10 @@
 [[ ! -o 'no_brace_expand' ]] || _ftb_opts+=('no_brace_expand')
 'builtin' 'setopt' 'no_aliases' 'no_sh_glob' 'brace_expand'
 
+# disable aliases
+typeset _ftb_aliases="$(builtin alias -Lm '[^+]*')"
+builtin unalias -m '[^+]*'
+
 # thanks Valodim/zsh-capture-completion
 -ftb-compadd() {
   # parse all options
@@ -198,14 +202,14 @@ fzf-tab-debug() {
     exec {debug_fd}>&2 2>| $tmp
     local -a debug_indent; debug_indent=( '%'{3..20}'(e. .)' )
     local PROMPT4 PS4="${(j::)debug_indent}+%N:%i> "
-    setopt xtrace
-    : $ZSH_NAME $ZSH_VERSION
+    functions -t -- -ftb-complete
+    echo $ZSH_NAME $ZSH_VERSION >&2
     zle .fzf-tab-orig-$_ftb_orig_widget
-    unsetopt xtrace
     if (( debug_fd != -1 )); then
       zle -M "fzf-tab-debug: Trace output left in $tmp"
     fi
   } always {
+    functions -T -- -ftb-complete
     (( debug_fd != -1 )) && exec 2>&$debug_fd {debug_fd}>&-
   }
 }
@@ -339,24 +343,7 @@ toggle-fzf-tab() {
 }
 
 build-fzf-tab-module() {
-  local use_bundle
-  local NPROC
-  if [[ ${OSTYPE} == darwin* ]]; then
-    [[ -n ${module_path[1]}/**/*.bundle(#qN) ]] && use_bundle=true
-    NPROC=$(sysctl -n hw.logicalcpu)
-  else
-    NPROC=$(nproc)
-  fi
-  pushd $FZF_TAB_HOME/modules
-  CPPFLAGS=-I/usr/local/include CFLAGS="-g -Wall -O2 -std=c99" LDFLAGS=-L/usr/local/lib ./configure --disable-gdbm --without-tcsetpgrp ${use_bundle:+DL_EXT=bundle}
-  make -j${NPROC}
-  local ret=$?
-  popd
-  if (( ${ret} != 0 )); then
-    print -P "%F{red}%BThe module building has failed. See the output above for details.%f%b" >&2
-  else
-    print -P "%F{green}%BThe module has been built successfully.%f%b"
-  fi
+  -ftb-build-module $@
 }
 
 zmodload zsh/zutil
@@ -411,6 +398,10 @@ typeset -ga _ftb_group_colors=(
 
 enable-fzf-tab
 zle -N toggle-fzf-tab
+
+# restore aliases
+eval "$_ftb_aliases"
+builtin unset _ftb_aliases
 
 # restore options
 (( ${#_ftb_opts} )) && setopt ${_ftb_opts[@]}
