@@ -89,8 +89,11 @@ bench:
 
 install: bin/fzf
 
+generate:
+	PATH=$(PATH):$(GOPATH)/bin $(GO) generate ./...
+
 build:
-	goreleaser build --rm-dist --snapshot --skip-post-hooks
+	goreleaser build --clean --snapshot --skip=post-hooks
 
 release:
 	# Make sure that the tests pass and the build works
@@ -123,7 +126,7 @@ endif
 	git push origin temp --follow-tags --force
 
 	# Make a GitHub release
-	goreleaser --rm-dist --release-notes tmp/release-note
+	goreleaser --clean --release-notes tmp/release-note
 
 	# Push to master
 	git checkout master
@@ -181,4 +184,4 @@ update:
 	$(GO) get -u
 	$(GO) mod tidy
 
-.PHONY: all build release test bench install clean docker docker-test update
+.PHONY: all generate build release test bench install clean docker docker-test update
