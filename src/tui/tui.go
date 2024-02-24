@@ -5,6 +5,8 @@ import (
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/rivo/uniseg"
 )
 
 // Types of user action
@@ -105,6 +107,7 @@ const (
 	Focus
 	One
 	Zero
+	Result
 
 	AltBS
 
@@ -491,6 +494,7 @@ type Renderer interface {
 	Close()
 	PassThrough(string)
 	NeedScrollbarRedraw() bool
+	ShouldEmitResizeEvent() bool
 
 	GetChar() Event
 
@@ -810,4 +814,8 @@ func initPalette(theme *ColorTheme) {
 	ColPreviewBorder = pair(theme.PreviewBorder, theme.PreviewBg)
 	ColPreviewScrollbar = pair(theme.PreviewScrollbar, theme.PreviewBg)
 	ColPreviewSpinner = pair(theme.Spinner, theme.PreviewBg)
+}
+
+func runeWidth(r rune) int {
+	return uniseg.StringWidth(string(r))
 }
