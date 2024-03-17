@@ -8,8 +8,14 @@ echo "=========================="
 echo "| Installing packages... |"
 echo "=========================="
 
-[[ $(uname) == "Darwin" ]] && ./scripts/install_pkgs_macos.sh
-[[ $(uname) == "Linux" ]] && ./scripts/install_pkgs_ubuntu.sh
+if type brew &> /dev/null; then
+  ./scripts/install_pkgs_homebrew.sh
+elif type apt &> /dev/null; then
+  ./scripts/install_pkgs_apt.sh
+else
+  echo "No supported package manager {homebrew, apt} found. Exiting..."
+  exit 1;
+fi
 
 echo "======================="
 echo "| Linking dotfiles... |"

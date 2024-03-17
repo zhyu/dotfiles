@@ -54,6 +54,10 @@ plugins=(
   fast-syntax-highlighting
 )
 
+# init linuxbrew
+test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
+test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
 # brew completion needs to be set before source oh-my-zsh.sh
 if type brew &>/dev/null
 then
