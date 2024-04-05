@@ -168,18 +168,17 @@ return {
 					-- 1. both needs to be enabled to so prettier can apply eslint fixes
 					-- 2. prettierd should come first to prevent occassional race condition
 					fmt.prettierd,
-					fmt.eslint_d,
 					fmt.stylua,
 					fmt.isort,
 					fmt.black,
 					-----------------
 					-- DIAGNOSTICS --
 					-----------------
-					diag.eslint_d,
+                    --
 					------------------
 					-- CODE ACTIONS --
 					------------------
-					act.eslint_d,
+                    --
 				},
 				on_attach = function(client, bufnr)
 					fmt_on_save(client, bufnr)
