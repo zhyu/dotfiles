@@ -131,12 +131,6 @@ return {
 		event = { "BufReadPre", "BufNewFile" },
 		dependencies = { "mason.nvim" },
 		opts = function()
-			local nls = require("null-ls")
-
-			local fmt = nls.builtins.formatting
-			local diag = nls.builtins.diagnostics
-			local act = nls.builtins.code_actions
-
 			local fmt_group = vim.api.nvim_create_augroup("FORMATTING", { clear = true })
 
 			local function fmt_on_save(client, bufnr)
@@ -161,29 +155,32 @@ return {
 			-- Configuring null-ls
 			return {
 				sources = {
-					----------------
-					-- FORMATTING --
-					----------------
-					-- NOTE:
-					-- 1. both needs to be enabled to so prettier can apply eslint fixes
-					-- 2. prettierd should come first to prevent occassional race condition
-					fmt.prettierd,
-					fmt.stylua,
-					fmt.isort,
-					fmt.black,
-					-----------------
-					-- DIAGNOSTICS --
-					-----------------
-                    --
-					------------------
-					-- CODE ACTIONS --
-					------------------
-                    --
+					-- Anything not supported by mason.
 				},
 				on_attach = function(client, bufnr)
 					fmt_on_save(client, bufnr)
 				end,
 			}
+		end,
+	},
+	{
+		"jay-babu/mason-null-ls.nvim",
+		event = { "BufReadPre", "BufNewFile" },
+		dependencies = {
+			"mason.nvim",
+			"none-ls.nvim",
+		},
+		config = function()
+			require("mason-null-ls").setup({
+				ensure_installed = { "black", "isort", "prettierd", "stylua" },
+				handlers = {},
+				-- This is for auto installing sources listed in the null-ls confs,
+				-- which is an alternative way to configure sources.
+				-- Probably better if most needed sources are not supported by mason.
+				-- Not needed since all sources we need are supported by mason,
+				-- so it's better to let mason-null-ls handle the installation (ensure_installed above)
+				automatic_installation = false,
+			})
 		end,
 	},
 }
