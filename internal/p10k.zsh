@@ -4264,8 +4264,8 @@ function _p9k_parse_virtualenv_cfg() {
   cfg=$(<$1) || return
 
   local -a match mbegin mend
-  [[ $'\n'$cfg$'\n' == (#b)*$'\n'prompt[$' \t']#=[$' \t']#([^$' \t']#)[$' \t']#$'\n'* ]] || return
-  local res=$match[1]
+  [[ $'\n'$cfg$'\n' == (#b)*$'\n'prompt[$' \t']#=([^$'\n']#)$'\n'* ]] || return
+  local res=${${match[1]##[$' \t']#}%%[$' \t']#}
   if [[ $res == (\"*\"|\'*\') ]]; then
     # The string is quoted in python style, which isn't the same as quoting in zsh.
     # For example, the literal 'foo"\'bar' denotes foo"'bar in python but in zsh
@@ -5234,7 +5234,10 @@ function _p9k_taskwarrior_check_data() {
 }
 
 function _p9k_taskwarrior_init_data() {
-  local -a stat files=($_p9k_taskwarrior_data_dir/{pending,completed}.data)
+  local -a stat files=(
+    $_p9k_taskwarrior_data_dir/{pending,completed}.data
+    $_p9k_taskwarrior_data_dir/taskchampion.sqlite3
+  )
   _p9k_taskwarrior_data_files=($^files(N))
   _p9k_taskwarrior_data_non_files=(${files:|_p9k_taskwarrior_data_files})
   if (( $#_p9k_taskwarrior_data_files )); then
@@ -9478,7 +9481,7 @@ if [[ $__p9k_dump_file != $__p9k_instant_prompt_dump_file && -n $__p9k_instant_p
   zf_rm -f -- $__p9k_instant_prompt_dump_file{,.zwc} 2>/dev/null
 fi
 
-typeset -g P9K_VERSION=1.20.5
+typeset -g P9K_VERSION=1.20.8
 unset VSCODE_SHELL_INTEGRATION
 
 _p9k_init_ssh
