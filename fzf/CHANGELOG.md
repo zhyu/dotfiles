@@ -1,21 +1,156 @@
 CHANGELOG
 =========
 
+0.50.0
+------
+- Search performance optimization. You can observe 50%+ improvement in some scenarios.
+  ```
+  $ rg --line-number --no-heading --smart-case . > $DATA
+
+  $ wc < $DATA
+   5520118 26862362 897487793
+
+  $ hyperfine -w 1 -L bin fzf-0.49.0,fzf-7ce6452,fzf-a5447b8,fzf '{bin} --filter "///" < $DATA | head -30'
+  Summary
+    fzf --filter "///" < $DATA | head -30 ran
+      1.16 ± 0.03 times faster than fzf-a5447b8 --filter "///" < $DATA | head -30
+      1.23 ± 0.03 times faster than fzf-7ce6452 --filter "///" < $DATA | head -30
+      1.52 ± 0.03 times faster than fzf-0.49.0 --filter "///" < $DATA | head -30
+  ```
+- Added `jump` and `jump-cancel` events that are triggered when leaving `jump` mode
+  ```sh
+  # Default behavior
+  fzf --bind space:jump
+
+  # Same as jump-accept action
+  fzf --bind space:jump,jump:accept
+
+  # Accept on jump, abort on cancel
+  fzf --bind space:jump,jump:accept,jump-cancel:abort
+
+  # Change header on jump-cancel
+  fzf --bind 'space:change-header(Type jump label)+jump,jump-cancel:change-header:Jump cancelled'
+  ```
+- Added a new environment variable `$FZF_KEY` exported to the child processes. It's the name of the last key pressed.
+  ```sh
+  fzf --bind 'space:jump,jump:accept,jump-cancel:transform:[[ $FZF_KEY =~ ctrl-c ]] && echo abort'
+  ```
+- fzf can be built with profiling options. See [BUILD.md](BUILD.md) for more information.
+- Bug fixes
+
+0.49.0
+------
+- Ingestion performance improved by around 40% (more or less depending on options)
+- `--info=hidden` and `--info=inline-right` will no longer hide the horizontal separator by default. This gives you more flexibility in customizing the layout.
+    ```sh
+    fzf --border --info=inline-right
+    fzf --border --info=inline-right --separator ═
+    fzf --border --info=inline-right --no-separator
+    fzf --border --info=hidden
+    fzf --border --info=hidden --separator ━
+    fzf --border --info=hidden --no-separator
+    ```
+- Added two environment variables exported to the child processes
+    - `FZF_PREVIEW_LABEL`
+    - `FZF_BORDER_LABEL`
+    ```sh
+    # Use the current value of $FZF_PREVIEW_LABEL to determine which actions to perform
+    git ls-files |
+      fzf --header 'Press CTRL-P to change preview mode' \
+          --bind='ctrl-p:transform:[[ $FZF_PREVIEW_LABEL =~ cat ]] \
+          && echo "change-preview(git log --color=always \{})+change-preview-label([[ log ]])" \
+          || echo "change-preview(bat --color=always \{})+change-preview-label([[ cat ]])"'
+    ```
+- Renamed `track` action to `track-current` to highlight the difference between the global tracking state set by `--track` and a one-off tracking action
+    - `track` is still available as an alias
+- Added `untrack-current` and `toggle-track-current` actions
+    - `*-current` actions are no-op when the global tracking state is set
+- Bug fixes and minor improvements
+
+0.48.1
+------
+- CTRL-T and ALT-C bindings can be disabled by setting `FZF_CTRL_T_COMMAND` and `FZF_ALT_C_COMMAND` to empty strings respectively when sourcing the script
+    ```sh
+    # bash
+    FZF_CTRL_T_COMMAND= FZF_ALT_C_COMMAND= eval "$(fzf --bash)"
+
+    # zsh
+    FZF_CTRL_T_COMMAND= FZF_ALT_C_COMMAND= eval "$(fzf --zsh)"
+
+    # fish
+    fzf --fish | FZF_CTRL_T_COMMAND= FZF_ALT_C_COMMAND= source
+    ```
+    - Setting the variables after sourcing the script will have no effect
+- Bug fixes
+
+0.48.0
+------
+- Shell integration scripts are now embedded in the fzf binary. This simplifies the distribution, and the users are less likely to have problems caused by using incompatible scripts and binaries.
+    - bash
+      ```sh
+      # Set up fzf key bindings and fuzzy completion
+      eval "$(fzf --bash)"
+      ```
+    - zsh
+      ```sh
+      # Set up fzf key bindings and fuzzy completion
+      eval "$(fzf --zsh)"
+      ```
+    - fish
+      ```fish
+      # Set up fzf key bindings
+      fzf --fish | source
+      ```
+- Added options for customizing the behavior of the built-in walker
+    | Option               | Description                                       | Default              |
+    | ---                  | ---                                               | ---                  |
+    | `--walker=OPTS`      | Walker options (`[file][,dir][,follow][,hidden]`) | `file,follow,hidden` |
+    | `--walker-root=DIR`  | Root directory from which to start walker         | `.`                  |
+    | `--walker-skip=DIRS` | Comma-separated list of directory names to skip   | `.git,node_modules`  |
+    - Examples
+        ```sh
+        # Built-in walker is only used by standalone fzf when $FZF_DEFAULT_COMMAND is not set
+        unset FZF_DEFAULT_COMMAND
+
+        fzf # default: --walker=file,follow,hidden --walker-root=. --walker-skip=.git,node_modules
+        fzf --walker=file,dir,hidden,follow --walker-skip=.git,node_modules,target
+
+        # Walker options in $FZF_DEFAULT_OPTS
+        export FZF_DEFAULT_OPTS="--walker=file,dir,hidden,follow --walker-skip=.git,node_modules,target"
+        fzf
+
+        # Reading from STDIN; --walker is ignored
+        seq 100 | fzf --walker=dir
+
+        # Reading from $FZF_DEFAULT_COMMAND; --walker is ignored
+        export FZF_DEFAULT_COMMAND='seq 100'
+        fzf --walker=dir
+        ```
+- Shell integration scripts have been updated to use the built-in walker with these new options and they are now much faster out of the box.
+
 0.47.0
 ------
-- Replaced ["the default find command"][find] with a built-in directory traversal to simplify the code and to achieve better performance and consistent behavior across platforms.
+- Replaced ["the default find command"][find] with a built-in directory walker to simplify the code and to achieve better performance and consistent behavior across platforms.
   This doesn't affect you if you have `$FZF_DEFAULT_COMMAND` set.
     - Breaking changes:
         - Unlike [the previous "find" command][find], the new traversal code will list hidden files, but hidden directories will still be ignored
         - No filtering of `devtmpfs` or `proc` types
         - Traversal is parallelized, so the order of the entries will be different each time
-    - You would wonder why fzf implements directory traversal anyway when it's a filter program following the Unix philosophy.
-      But fzf has had [the traversal code for years][walker] to tackle the performance problem on Windows. And I decided to use the same approach on different platforms as well for the benefits listed above.
-    - Built-in traversal is now done using the excellent [charlievieth/fastwalk][fastwalk] library, which easily outperforms its competitors and supports safely following symlinks.
+    - You may wonder why fzf implements directory walker anyway when it's a filter program following the [Unix philosophy][unix].
+      But fzf has had [the walker code for years][walker] to tackle the performance problem on Windows. And I decided to use the same approach on different platforms as well for the benefits listed above.
+    - Built-in walker is using the excellent [charlievieth/fastwalk][fastwalk] library, which easily outperforms its competitors and supports safely following symlinks.
+- Added `$FZF_DEFAULT_OPTS_FILE` to allow managing default options in a file
+    - See [#3618](https://github.com/junegunn/fzf/pull/3618)
+    - Option precedence from lower to higher
+        1. Options read from `$FZF_DEFAULT_OPTS_FILE`
+        1. Options from `$FZF_DEFAULT_OPTS`
+        1. Options from command-line arguments
+- Bug fixes and improvements
 
 [find]: https://github.com/junegunn/fzf/blob/0.46.1/src/constants.go#L60-L64
 [walker]: https://github.com/junegunn/fzf/pull/1847
 [fastwalk]: https://github.com/charlievieth/fastwalk
+[unix]: https://en.wikipedia.org/wiki/Unix_philosophy
 
 0.46.1
 ------

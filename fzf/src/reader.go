@@ -1,7 +1,7 @@
 package fzf
 
 import (
-	"bufio"
+	"bytes"
 	"context"
 	"io"
 	"os"
@@ -93,13 +93,13 @@ func (r *Reader) restart(command string, environ []string) {
 }
 
 // ReadSource reads data from the default command or from standard input
-func (r *Reader) ReadSource() {
+func (r *Reader) ReadSource(root string, opts walkerOpts, ignores []string) {
 	r.startEventPoller()
 	var success bool
 	if util.IsTty() {
 		cmd := os.Getenv("FZF_DEFAULT_COMMAND")
 		if len(cmd) == 0 {
-			success = r.readFiles()
+			success = r.readFiles(root, opts, ignores)
 		} else {
 			// We can't export FZF_* environment variables to the default command
 			success = r.readFromCommand(cmd, nil)
@@ -111,32 +111,90 @@ func (r *Reader) ReadSource() {
 }
 
 func (r *Reader) feed(src io.Reader) {
+	/*
+		readerSlabSize, ae := strconv.Atoi(os.Getenv("SLAB_KB"))
+		if ae != nil {
+			readerSlabSize = 128 * 1024
+		} else {
+			readerSlabSize *= 1024
+		}
+		readerBufferSize, be := strconv.Atoi(os.Getenv("BUF_KB"))
+		if be != nil {
+			readerBufferSize = 64 * 1024
+		} else {
+			readerBufferSize *= 1024
+		}
+	*/
+
 	delim := byte('\n')
+	trimCR := util.IsWindows()
 	if r.delimNil {
 		delim = '\000'
+		trimCR = false
 	}
-	reader := bufio.NewReaderSize(src, readerBufferSize)
+
+	slab := make([]byte, readerSlabSize)
+	leftover := []byte{}
+	var err error
 	for {
-		// ReadBytes returns err != nil if and only if the returned data does not
-		// end in delim.
-		bytea, err := reader.ReadBytes(delim)
-		byteaLen := len(bytea)
-		if byteaLen > 0 {
-			if err == nil {
-				// get rid of carriage return if under Windows:
-				if util.IsWindows() && byteaLen >= 2 && bytea[byteaLen-2] == byte('\r') {
-					bytea = bytea[:byteaLen-2]
-				} else {
-					bytea = bytea[:byteaLen-1]
-				}
-			}
-			if r.pusher(bytea) {
-				atomic.StoreInt32(&r.event, int32(EvtReadNew))
+		n := 0
+		scope := slab[:util.Min(len(slab), readerBufferSize)]
+		for i := 0; i < 100; i++ {
+			n, err = src.Read(scope)
+			if n > 0 || err != nil {
+				break
 			}
 		}
-		if err != nil {
+
+		// We're not making any progress after 100 tries. Stop.
+		if n == 0 && err == nil {
 			break
 		}
+
+		buf := slab[:n]
+		slab = slab[n:]
+
+		for len(buf) > 0 {
+			if i := bytes.IndexByte(buf, delim); i >= 0 {
+				// Found the delimiter
+				slice := buf[:i+1]
+				buf = buf[i+1:]
+				if trimCR && len(slice) >= 2 && slice[len(slice)-2] == byte('\r') {
+					slice = slice[:len(slice)-2]
+				} else {
+					slice = slice[:len(slice)-1]
+				}
+				if len(leftover) > 0 {
+					slice = append(leftover, slice...)
+					leftover = []byte{}
+				}
+				if (err == nil || len(slice) > 0) && r.pusher(slice) {
+					atomic.StoreInt32(&r.event, int32(EvtReadNew))
+				}
+			} else {
+				// Could not find the delimiter in the buffer
+				//   NOTE: We can further optimize this by keeping track of the cursor
+				//   position in the slab so that a straddling item that doesn't go
+				//   beyond the boundary of a slab doesn't need to be copied to
+				//   another buffer. However, the performance gain is negligible in
+				//   practice (< 0.1%) and is not
+				//   worth the added complexity.
+				leftover = append(leftover, buf...)
+				break
+			}
+		}
+
+		if err == io.EOF {
+			leftover = append(leftover, buf...)
+			break
+		}
+
+		if len(slab) == 0 {
+			slab = make([]byte, readerSlabSize)
+		}
+	}
+	if len(leftover) > 0 && r.pusher(leftover) {
+		atomic.StoreInt32(&r.event, int32(EvtReadNew))
 	}
 }
 
@@ -145,9 +203,9 @@ func (r *Reader) readFromStdin() bool {
 	return true
 }
 
-func (r *Reader) readFiles() bool {
+func (r *Reader) readFiles(root string, opts walkerOpts, ignores []string) bool {
 	r.killed = false
-	conf := fastwalk.Config{Follow: true}
+	conf := fastwalk.Config{Follow: opts.follow}
 	fn := func(path string, de os.DirEntry, err error) error {
 		if err != nil {
 			return nil
@@ -155,10 +213,18 @@ func (r *Reader) readFiles() bool {
 		path = filepath.Clean(path)
 		if path != "." {
 			isDir := de.IsDir()
-			if isDir && filepath.Base(path)[0] == '.' {
-				return filepath.SkipDir
+			if isDir {
+				base := filepath.Base(path)
+				if !opts.hidden && base[0] == '.' {
+					return filepath.SkipDir
+				}
+				for _, ignore := range ignores {
+					if ignore == base {
+						return filepath.SkipDir
+					}
+				}
 			}
-			if !isDir && r.pusher([]byte(path)) {
+			if ((opts.file && !isDir) || (opts.dir && isDir)) && r.pusher([]byte(path)) {
 				atomic.StoreInt32(&r.event, int32(EvtReadNew))
 			}
 		}
@@ -169,7 +235,7 @@ func (r *Reader) readFiles() bool {
 		}
 		return nil
 	}
-	return fastwalk.Walk(&conf, ".", fn) == nil
+	return fastwalk.Walk(&conf, root, fn) == nil
 }
 
 func (r *Reader) readFromCommand(command string, environ []string) bool {
