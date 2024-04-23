@@ -2,6 +2,6 @@
 
 brew update
 brew upgrade
-brew install fx yq bat fd ripgrep xh eza neovim tmux unar
+brew install fx yq bat fd ripgrep xh eza neovim tmux unar bottom procs
 [[ $MACOS_CLIENT == "1" ]] && brew install MisterTea/et/et 1password-cli
 brew cleanup
