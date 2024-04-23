@@ -3,8 +3,9 @@ package fzf
 
 import (
 	"fmt"
-	"os"
+	"sync"
 	"time"
+	"unsafe"
 
 	"github.com/junegunn/fzf/src/util"
 )
@@ -18,8 +19,18 @@ Matcher  -> EvtSearchFin      -> Terminal (update list)
 Matcher  -> EvtHeader         -> Terminal (update header)
 */
 
+func ustring(data []byte) string {
+	return unsafe.String(unsafe.SliceData(data), len(data))
+}
+
+func sbytes(data string) []byte {
+	return unsafe.Slice(unsafe.StringData(data), len(data))
+}
+
 // Run starts fzf
 func Run(opts *Options, version string, revision string) {
+	defer util.RunAtExitFuncs()
+
 	sort := opts.Sort > 0
 	sortCriteria = opts.Criteria
 
@@ -29,7 +40,7 @@ func Run(opts *Options, version string, revision string) {
 		} else {
 			fmt.Println(version)
 		}
-		os.Exit(exitOk)
+		util.Exit(exitOk)
 	}
 
 	// Event channel
@@ -45,16 +56,16 @@ func Run(opts *Options, version string, revision string) {
 		if opts.Theme.Colored {
 			ansiProcessor = func(data []byte) (util.Chars, *[]ansiOffset) {
 				prevLineAnsiState = lineAnsiState
-				trimmed, offsets, newState := extractColor(string(data), lineAnsiState, nil)
+				trimmed, offsets, newState := extractColor(ustring(data), lineAnsiState, nil)
 				lineAnsiState = newState
-				return util.ToChars([]byte(trimmed)), offsets
+				return util.ToChars(sbytes(trimmed)), offsets
 			}
 		} else {
 			// When color is disabled but ansi option is given,
 			// we simply strip out ANSI codes from the input
 			ansiProcessor = func(data []byte) (util.Chars, *[]ansiOffset) {
-				trimmed, _, _ := extractColor(string(data), nil, nil)
-				return util.ToChars([]byte(trimmed)), nil
+				trimmed, _, _ := extractColor(ustring(data), nil, nil)
+				return util.ToChars(sbytes(trimmed)), nil
 			}
 		}
 	}
@@ -66,7 +77,7 @@ func Run(opts *Options, version string, revision string) {
 	if len(opts.WithNth) == 0 {
 		chunkList = NewChunkList(func(item *Item, data []byte) bool {
 			if len(header) < opts.HeaderLines {
-				header = append(header, string(data))
+				header = append(header, ustring(data))
 				eventBox.Set(EvtHeader, header)
 				return false
 			}
@@ -77,7 +88,7 @@ func Run(opts *Options, version string, revision string) {
 		})
 	} else {
 		chunkList = NewChunkList(func(item *Item, data []byte) bool {
-			tokens := Tokenize(string(data), opts.Delimiter)
+			tokens := Tokenize(ustring(data), opts.Delimiter)
 			if opts.Ansi && opts.Theme.Colored && len(tokens) > 1 {
 				var ansiState *ansiState
 				if prevLineAnsiState != nil {
@@ -101,7 +112,7 @@ func Run(opts *Options, version string, revision string) {
 				eventBox.Set(EvtHeader, header)
 				return false
 			}
-			item.text, item.colors = ansiProcessor([]byte(transformed))
+			item.text, item.colors = ansiProcessor(sbytes(transformed))
 			item.text.TrimTrailingWhitespaces()
 			item.text.Index = itemIndex
 			item.origText = &data
@@ -117,7 +128,7 @@ func Run(opts *Options, version string, revision string) {
 		reader = NewReader(func(data []byte) bool {
 			return chunkList.Push(data)
 		}, eventBox, opts.ReadZero, opts.Filter == nil)
-		go reader.ReadSource()
+		go reader.ReadSource(opts.WalkerRoot, opts.WalkerOpts, opts.WalkerSkip)
 	}
 
 	// Matcher
@@ -154,18 +165,21 @@ func Run(opts *Options, version string, revision string) {
 		found := false
 		if streamingFilter {
 			slab := util.MakeSlab(slab16Size, slab32Size)
+			mutex := sync.Mutex{}
 			reader := NewReader(
 				func(runes []byte) bool {
 					item := Item{}
 					if chunkList.trans(&item, runes) {
+						mutex.Lock()
 						if result, _, _ := pattern.MatchItem(&item, false, slab); result != nil {
 							opts.Printer(item.text.ToString())
 							found = true
 						}
+						mutex.Unlock()
 					}
 					return false
 				}, eventBox, opts.ReadZero, false)
-			reader.ReadSource()
+			reader.ReadSource(opts.WalkerRoot, opts.WalkerOpts, opts.WalkerSkip)
 		} else {
 			eventBox.Unwatch(EvtReadNew)
 			eventBox.WaitFor(EvtReadFin)
@@ -180,9 +194,9 @@ func Run(opts *Options, version string, revision string) {
 			}
 		}
 		if found {
-			os.Exit(exitOk)
+			util.Exit(exitOk)
 		}
-		os.Exit(exitNoMatch)
+		util.Exit(exitNoMatch)
 	}
 
 	// Synchronous search
@@ -245,11 +259,8 @@ func Run(opts *Options, version string, revision string) {
 		delay := true
 		ticks++
 		input := func() []rune {
-			reloaded := snapshotRevision != inputRevision
 			paused, input := terminal.Input()
-			if reloaded && paused {
-				query = []rune{}
-			} else if !paused {
+			if !paused {
 				query = input
 			}
 			return query
@@ -264,7 +275,7 @@ func Run(opts *Options, version string, revision string) {
 					if reading {
 						reader.terminate()
 					}
-					os.Exit(value.(int))
+					util.Exit(value.(int))
 				case EvtReadNew, EvtReadFin:
 					if evt == EvtReadFin && nextCommand != nil {
 						restart(*nextCommand, nextEnviron)
@@ -278,14 +289,16 @@ func Run(opts *Options, version string, revision string) {
 						useSnapshot = false
 					}
 					if !useSnapshot {
+						if snapshotRevision != inputRevision {
+							query = []rune{}
+						}
 						snapshot, count = chunkList.Snapshot()
 						snapshotRevision = inputRevision
 					}
 					total = count
 					terminal.UpdateCount(total, !reading, value.(*string))
 					if opts.Sync {
-						opts.Sync = false
-						terminal.UpdateList(PassMerger(&snapshot, opts.Tac, snapshotRevision))
+						terminal.UpdateList(PassMerger(&snapshot, opts.Tac, snapshotRevision), false)
 					}
 					if heightUnknown && !deferred {
 						determine(!reading)
@@ -319,10 +332,13 @@ func Run(opts *Options, version string, revision string) {
 						break
 					}
 					if !useSnapshot {
-						newSnapshot, _ := chunkList.Snapshot()
+						newSnapshot, newCount := chunkList.Snapshot()
 						// We want to avoid showing empty list when reload is triggered
 						// and the query string is changed at the same time i.e. command != nil && changed
-						if command == nil || len(newSnapshot) > 0 {
+						if command == nil || newCount > 0 {
+							if snapshotRevision != inputRevision {
+								query = []rune{}
+							}
 							snapshot = newSnapshot
 							snapshotRevision = inputRevision
 						}
@@ -360,14 +376,14 @@ func Run(opts *Options, version string, revision string) {
 										opts.Printer(val.Get(i).item.AsString(opts.Ansi))
 									}
 									if count > 0 {
-										os.Exit(exitOk)
+										util.Exit(exitOk)
 									}
-									os.Exit(exitNoMatch)
+									util.Exit(exitNoMatch)
 								}
 								determine(val.final)
 							}
 						}
-						terminal.UpdateList(val)
+						terminal.UpdateList(val, true)
 					}
 				}
 			}
