@@ -41,7 +41,7 @@ echo "deb [signed-by=/usr/share/keyrings/gierens.asc] http://deb.gierens.de stab
 sudo apt update
 # bat-musl and fd-musl are statically-linked binaries
 # libfuse2 is required to run appimages
-sudo apt install -y et bat-musl fd-musl ripgrep xh eza libfuse2
+sudo apt install -y et bat-musl fd-musl ripgrep xh eza libfuse2 unar
 sudo apt upgrade -y
 sudo apt autoremove -y
 
