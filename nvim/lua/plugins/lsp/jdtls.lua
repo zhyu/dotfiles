@@ -62,10 +62,6 @@ function M.setup()
 							path = jvm_dir .. "/java-8",
 						},
 						{
-							name = "JavaSE-11",
-							path = jvm_dir .. "/java-11",
-						},
-						{
 							name = "JavaSE-17",
 							path = jvm_dir .. "/java-17",
 						},
