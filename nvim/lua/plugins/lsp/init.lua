@@ -101,6 +101,17 @@ return {
 							-- https://github.com/mfussenegger/nvim-jdtls#nvim-lspconfig-and-nvim-jdtls-differences
 							-- Also, we need to setup jdtls via autocmd so it can be attached to new buffers correctly
 						end,
+						["eslint"] = function()
+							require("lspconfig").eslint.setup({
+								on_attach = function(client, bufnr)
+									-- fix all on save
+									vim.api.nvim_create_autocmd("BufWritePre", {
+										buffer = bufnr,
+										command = "EslintFixAll",
+									})
+								end,
+							})
+						end,
 					})
 				end,
 			},
@@ -131,7 +142,7 @@ return {
 		event = { "BufReadPre", "BufNewFile" },
 		dependencies = { "mason.nvim" },
 		opts = function()
-			local fmt_group = vim.api.nvim_create_augroup("FORMATTING", { clear = true })
+			local fmt_group = vim.api.nvim_create_augroup("null-ls fmt_on_save", { clear = true })
 
 			local function fmt_on_save(client, bufnr)
 				if client.supports_method("textDocument/formatting") then
