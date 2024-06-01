@@ -1,6 +1,6 @@
 SHELL          := bash
 GO             ?= go
-GOOS           ?= $(word 1, $(subst /, " ", $(word 4, $(shell go version))))
+GOOS           ?= $(shell $(GO) env GOOS)
 
 MAKEFILE       := $(realpath $(lastword $(MAKEFILE_LIST)))
 ROOT_DIR       := $(shell dirname $(MAKEFILE))
@@ -25,7 +25,7 @@ endif
 ifeq ($(REVISION),)
 $(error Not on git repository; cannot determine $$FZF_REVISION)
 endif
-BUILD_FLAGS    := -a -ldflags "-s -w -X main.version=$(VERSION) -X main.revision=$(REVISION)" -tags "$(TAGS)"
+BUILD_FLAGS    := -a -ldflags "-s -w -X main.version=$(VERSION) -X main.revision=$(REVISION)" -tags "$(TAGS)" -trimpath
 
 BINARY32       := fzf-$(GOOS)_386
 BINARY64       := fzf-$(GOOS)_amd64
@@ -79,7 +79,6 @@ all: target/$(BINARY)
 test: $(SOURCES)
 	[ -z "$$(gofmt -s -d src)" ] || (gofmt -s -d src; exit 1)
 	SHELL=/bin/sh GOOS= $(GO) test -v -tags "$(TAGS)" \
-				github.com/junegunn/fzf \
 				github.com/junegunn/fzf/src \
 				github.com/junegunn/fzf/src/algo \
 				github.com/junegunn/fzf/src/tui \
@@ -174,12 +173,12 @@ bin/fzf: target/$(BINARY) | bin
 	cp -f target/$(BINARY) bin/fzf
 
 docker:
-	docker build -t fzf-arch .
-	docker run -it fzf-arch tmux
+	docker build -t fzf-ubuntu .
+	docker run -it fzf-ubuntu tmux
 
 docker-test:
-	docker build -t fzf-arch .
-	docker run -it fzf-arch
+	docker build -t fzf-ubuntu .
+	docker run -it fzf-ubuntu
 
 update:
 	$(GO) get -u
