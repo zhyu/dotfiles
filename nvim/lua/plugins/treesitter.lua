@@ -18,6 +18,7 @@ return {
 					"markdown",
 					"markdown_inline",
 					"python",
+					"regex",
 					"terraform",
 					"typescript",
 					"vim",
@@ -63,6 +64,22 @@ return {
 					}
 				end,
 			},
+		},
+	},
+	{
+		"bennypowers/nvim-regexplainer",
+		config = true,
+		keys = {
+			-- the default keybinding
+			"gR",
+		},
+		cmd = {
+			-- in case the popup doesn't have enough space
+			"RegexplainerShowSplit",
+		},
+		dependencies = {
+			"nvim-treesitter",
+			"MunifTanjim/nui.nvim",
 		},
 	},
 }
