@@ -49,6 +49,7 @@ plugins=(
   git-jira
   python
   nvm
+  kubectl
   fzf-tab
   zsh-autosuggestions
   fast-syntax-highlighting
