@@ -1,7 +1,5 @@
 # Note: FZF_DEFAULT_COMMAND should have been set to use fd by fzf plugin of omz
 
-# use Ctrl-T to fuzzy search recent accessed files and directories
-export FZF_CTRL_T_COMMAND='fasd -Rl'
 # Use fd instead of the default find command for listing path candidates.
 # - The first argument to the function ($1) is the base path to start traversal
 # - See the source code (completion.{bash,zsh}) for the details.

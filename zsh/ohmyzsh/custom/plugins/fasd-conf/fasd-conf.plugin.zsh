@@ -5,7 +5,7 @@ z() {
     local dir
     dir="$(fasd -Rdl "$1" | fzf -1 -0 --no-sort +m)" && cd "${dir}" || return 1
 }
-# fasd & fzf change directory - open best matched file using `fasd` if given argument,
+# fasd & fzf edit file - open best matched file using `fasd` if given argument,
 # filter output of `fasd` using `fzf` else
 v() {
     [ $# -gt 0 ] && fasd -f -e ${EDITOR} "$*" && return
