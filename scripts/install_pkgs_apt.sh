@@ -26,16 +26,16 @@ function setup_executable_from_github () {
 function setup_compressed_executable_from_github () {
   readonly repo_owner=${1:?"The repository owner must be specified."}
   readonly repo_name=${2:?"The repository name must be specified."}
-  readonly file_name=${3:?"The file name must be specified."}
-  readonly executable_name=${4:?"The executable name must be specified."}
+  readonly file_name_regex=${3:?"The file name regex must be specified."}
+  readonly compressed_file_name=${4:?"The compressed file name must be specified."}
+  readonly executable_name=${5:?"The executable name must be specified."}
 
   mkdir -p ~/bin && pushd $_
 
   rm -f ${executable_name}
   sudo rm -f /usr/local/bin/${executable_name}
 
-  # the output file name must be the same as the file name, so `unar` could extract it correctly, e.g., tar.gz file could be extracted recursively
-  download_github_asset ${repo_owner} ${repo_name} ${file_name} ${file_name} && unar ${file_name}
+  download_github_asset ${repo_owner} ${repo_name} ${file_name_regex} ${compressed_file_name} && unar ${compressed_file_name}
   # if the executable is in a subdirectory, we need to find it
   if [[ ! -f ${executable_name} ]]; then
     fd -t f "^${executable_name}$" -x mv {} .
@@ -72,5 +72,5 @@ sudo apt autoremove -y
 setup_executable_from_github neovim neovim 'nvim.appimage$' nvim
 setup_executable_from_github nelsonenzo tmux-appimage 'tmux.appimage$' tmux
 setup_executable_from_github mikefarah yq 'yq_linux_amd64$' yq
-setup_compressed_executable_from_github ClementTsang bottom bottom_x86_64-unknown-linux-musl.tar.gz btm
-setup_compressed_executable_from_github dalance procs procs-v0.14.5-x86_64-linux.zip procs
+setup_compressed_executable_from_github ClementTsang bottom bottom_x86_64-unknown-linux-musl.tar.gz btm.tar.gz btm
+setup_compressed_executable_from_github dalance procs '-x86_64-linux.zip$' procs.zip procs
