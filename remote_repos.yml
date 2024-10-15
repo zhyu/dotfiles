@@ -1,5 +1,6 @@
 - repo: https://github.com/junegunn/fzf.git
   gitSubtreeDir: fzf
+  callback: "$HOME/.fzf/install --bin"
 - repo: https://github.com/tmux-plugins/tpm.git
   gitSubtreeDir: tmux/tpm
 - repo: https://github.com/ohmyzsh/ohmyzsh.git
