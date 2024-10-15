@@ -127,11 +127,7 @@ type LightWindow struct {
 	bg       Color
 }
 
-func NewLightRenderer(theme *ColorTheme, forceBlack bool, mouse bool, tabstop int, clearOnExit bool, fullscreen bool, maxHeightFunc func(int) int) (Renderer, error) {
-	in, err := openTtyIn()
-	if err != nil {
-		return nil, err
-	}
+func NewLightRenderer(ttyin *os.File, theme *ColorTheme, forceBlack bool, mouse bool, tabstop int, clearOnExit bool, fullscreen bool, maxHeightFunc func(int) int) (Renderer, error) {
 	out, err := openTtyOut()
 	if err != nil {
 		out = os.Stderr
@@ -142,7 +138,7 @@ func NewLightRenderer(theme *ColorTheme, forceBlack bool, mouse bool, tabstop in
 		forceBlack:    forceBlack,
 		mouse:         mouse,
 		clearOnExit:   clearOnExit,
-		ttyin:         in,
+		ttyin:         ttyin,
 		ttyout:        out,
 		yoffset:       0,
 		tabstop:       tabstop,
@@ -798,6 +794,9 @@ func (r *LightRenderer) NewWindow(top int, left int, width int, height int, prev
 		w.fg = r.theme.Fg.Color
 		w.bg = r.theme.Bg.Color
 	}
+	if !w.bg.IsDefault() && w.border.shape != BorderNone {
+		w.Erase()
+	}
 	w.drawBorder(false)
 	return w
 }
@@ -1031,13 +1030,13 @@ func cleanse(str string) string {
 func (w *LightWindow) CPrint(pair ColorPair, text string) {
 	_, code := w.csiColor(pair.Fg(), pair.Bg(), pair.Attr())
 	w.stderrInternal(cleanse(text), false, code)
-	w.csi("m")
+	w.csi("0m")
 }
 
 func (w *LightWindow) cprint2(fg Color, bg Color, attr Attr, text string) {
 	hasColors, code := w.csiColor(fg, bg, attr)
 	if hasColors {
-		defer w.csi("m")
+		defer w.csi("0m")
 	}
 	w.stderrInternal(cleanse(text), false, code)
 }
@@ -1119,6 +1118,14 @@ func (w *LightWindow) setBg() string {
 	return "\x1b[m"
 }
 
+func (w *LightWindow) LinkBegin(uri string, params string) {
+	w.renderer.queued.WriteString("\x1b]8;" + params + ";" + uri + "\x1b\\")
+}
+
+func (w *LightWindow) LinkEnd() {
+	w.renderer.queued.WriteString("\x1b]8;;\x1b\\")
+}
+
 func (w *LightWindow) Fill(text string) FillReturn {
 	w.Move(w.posy, w.posx)
 	code := w.setBg()
@@ -1134,7 +1141,7 @@ func (w *LightWindow) CFill(fg Color, bg Color, attr Attr, text string) FillRetu
 		bg = w.bg
 	}
 	if hasColors, resetCode := w.csiColor(fg, bg, attr); hasColors {
-		defer w.csi("m")
+		defer w.csi("0m")
 		return w.fill(text, resetCode)
 	}
 	return w.fill(text, w.setBg())
