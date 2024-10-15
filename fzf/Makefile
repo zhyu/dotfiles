@@ -4,17 +4,17 @@ GOOS           ?= $(shell $(GO) env GOOS)
 
 MAKEFILE       := $(realpath $(lastword $(MAKEFILE_LIST)))
 ROOT_DIR       := $(shell dirname $(MAKEFILE))
-SOURCES        := $(wildcard *.go src/*.go src/*/*.go shell/*sh) $(MAKEFILE)
+SOURCES        := $(wildcard *.go src/*.go src/*/*.go shell/*sh man/man1/*.1) $(MAKEFILE)
 
 ifdef FZF_VERSION
 VERSION        := $(FZF_VERSION)
 else
-VERSION        := $(shell git describe --abbrev=0 2> /dev/null)
+VERSION        := $(shell git describe --abbrev=0 2> /dev/null | sed "s/^v//")
 endif
 ifeq ($(VERSION),)
 $(error Not on git repository; cannot determine $$FZF_VERSION)
 endif
-VERSION_TRIM   := $(shell sed "s/-.*//" <<< $(VERSION))
+VERSION_TRIM   := $(shell sed "s/^v//; s/-.*//" <<< $(VERSION))
 VERSION_REGEX  := $(subst .,\.,$(VERSION_TRIM))
 
 ifdef FZF_REVISION
@@ -77,7 +77,6 @@ endif
 all: target/$(BINARY)
 
 test: $(SOURCES)
-	[ -z "$$(gofmt -s -d src)" ] || (gofmt -s -d src; exit 1)
 	SHELL=/bin/sh GOOS= $(GO) test -v -tags "$(TAGS)" \
 				github.com/junegunn/fzf/src \
 				github.com/junegunn/fzf/src/algo \
@@ -86,6 +85,10 @@ test: $(SOURCES)
 
 bench:
 	cd src && SHELL=/bin/sh GOOS= $(GO) test -v -tags "$(TAGS)" -run=Bench -bench=. -benchmem
+
+lint: $(SOURCES) test/test_go.rb
+	[ -z "$$(gofmt -s -d src)" ] || (gofmt -s -d src; exit 1)
+	rubocop --require rubocop-minitest --require rubocop-performance
 
 install: bin/fzf
 
@@ -184,4 +187,4 @@ update:
 	$(GO) get -u
 	$(GO) mod tidy
 
-.PHONY: all generate build release test bench install clean docker docker-test update
+.PHONY: all generate build release test bench lint install clean docker docker-test update

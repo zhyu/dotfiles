@@ -334,15 +334,6 @@ type Event struct {
 	MouseEvent *MouseEvent
 }
 
-func (e Event) Is(types ...EventType) bool {
-	for _, t := range types {
-		if e.Type == t {
-			return true
-		}
-	}
-	return false
-}
-
 type MouseEvent struct {
 	Y      int
 	X      int
@@ -356,7 +347,8 @@ type MouseEvent struct {
 type BorderShape int
 
 const (
-	BorderNone BorderShape = iota
+	BorderUndefined BorderShape = iota
+	BorderNone
 	BorderRounded
 	BorderSharp
 	BorderBold
@@ -572,6 +564,8 @@ type Window interface {
 	CPrint(color ColorPair, text string)
 	Fill(text string) FillReturn
 	CFill(fg Color, bg Color, attr Attr, text string) FillReturn
+	LinkBegin(uri string, params string)
+	LinkEnd()
 	Erase()
 	EraseMaybe() bool
 }
@@ -701,9 +695,9 @@ func init() {
 		Input:            ColorAttr{colDefault, AttrUndefined},
 		Fg:               ColorAttr{colDefault, AttrUndefined},
 		Bg:               ColorAttr{colDefault, AttrUndefined},
-		SelectedFg:       ColorAttr{colDefault, AttrUndefined},
-		SelectedBg:       ColorAttr{colDefault, AttrUndefined},
-		SelectedMatch:    ColorAttr{colDefault, AttrUndefined},
+		SelectedFg:       ColorAttr{colUndefined, AttrUndefined},
+		SelectedBg:       ColorAttr{colUndefined, AttrUndefined},
+		SelectedMatch:    ColorAttr{colUndefined, AttrUndefined},
 		DarkBg:           ColorAttr{colBlack, AttrUndefined},
 		Prompt:           ColorAttr{colBlue, AttrUndefined},
 		Match:            ColorAttr{colGreen, AttrUndefined},
@@ -731,9 +725,9 @@ func init() {
 		Input:            ColorAttr{colDefault, AttrUndefined},
 		Fg:               ColorAttr{colDefault, AttrUndefined},
 		Bg:               ColorAttr{colDefault, AttrUndefined},
-		SelectedFg:       ColorAttr{colDefault, AttrUndefined},
-		SelectedBg:       ColorAttr{colDefault, AttrUndefined},
-		SelectedMatch:    ColorAttr{colDefault, AttrUndefined},
+		SelectedFg:       ColorAttr{colUndefined, AttrUndefined},
+		SelectedBg:       ColorAttr{colUndefined, AttrUndefined},
+		SelectedMatch:    ColorAttr{colUndefined, AttrUndefined},
 		DarkBg:           ColorAttr{236, AttrUndefined},
 		Prompt:           ColorAttr{110, AttrUndefined},
 		Match:            ColorAttr{108, AttrUndefined},
@@ -761,9 +755,9 @@ func init() {
 		Input:            ColorAttr{colDefault, AttrUndefined},
 		Fg:               ColorAttr{colDefault, AttrUndefined},
 		Bg:               ColorAttr{colDefault, AttrUndefined},
-		SelectedFg:       ColorAttr{colDefault, AttrUndefined},
-		SelectedBg:       ColorAttr{colDefault, AttrUndefined},
-		SelectedMatch:    ColorAttr{colDefault, AttrUndefined},
+		SelectedFg:       ColorAttr{colUndefined, AttrUndefined},
+		SelectedBg:       ColorAttr{colUndefined, AttrUndefined},
+		SelectedMatch:    ColorAttr{colUndefined, AttrUndefined},
 		DarkBg:           ColorAttr{251, AttrUndefined},
 		Prompt:           ColorAttr{25, AttrUndefined},
 		Match:            ColorAttr{66, AttrUndefined},
@@ -822,7 +816,7 @@ func initTheme(theme *ColorTheme, baseTheme *ColorTheme, forceBlack bool) {
 	// These colors are not defined in the base themes
 	theme.SelectedFg = o(theme.Fg, theme.SelectedFg)
 	theme.SelectedBg = o(theme.Bg, theme.SelectedBg)
-	theme.SelectedMatch = o(theme.CurrentMatch, theme.SelectedMatch)
+	theme.SelectedMatch = o(theme.Match, theme.SelectedMatch)
 	theme.Disabled = o(theme.Input, theme.Disabled)
 	theme.Gutter = o(theme.DarkBg, theme.Gutter)
 	theme.PreviewFg = o(theme.Fg, theme.PreviewFg)
