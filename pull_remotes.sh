@@ -10,11 +10,7 @@ echo "==========================="
 
 function pull_remote() {
   readonly json_conf=${1:?"The json_conf must be specified."}
-
-  readonly remote_url=$(echo $json_conf | fx '.repo || ""')
-  readonly subtree_dir=$(echo $json_conf | fx '.gitSubtreeDir || ""')
-  readonly remote_ref=$(echo $json_conf | fx '.ref || "master"')
-  readonly callback=$(echo $json_conf | fx '.callback || ""')
+  IFS="|" read remote_url subtree_dir remote_ref callback <<< $(echo $json_conf | fx '[x.repo, x.gitSubtreeDir, x.ref || "master", x.callback || ""].join("|")')
 
   : ${remote_url:?"The repo must be specified in the json_conf."}
   : ${subtree_dir:?"The gitSubtreeDir must be specified in the json_conf."}
@@ -36,6 +32,6 @@ function pull_remote() {
   echo "------------------------------------------------------------"
 }
 
-yq -oj remote_repos.yml | fx  '.map(x => JSON.stringify(x))' '.join("\n")' | while read line; do
-  pull_remote $line
+fx --yaml remote_repos.yml '.map(x => JSON.stringify(x))' list | while read json_conf; do
+  pull_remote $json_conf
 done
