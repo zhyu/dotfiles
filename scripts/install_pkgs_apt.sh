@@ -43,7 +43,7 @@ function setup_compressed_executable_from_github () {
   fi
   chmod +x ${executable_name} && sudo ln -s ~/bin/${executable_name} /usr/local/bin/${executable_name}
 
-  rm -f ${file_name}
+  rm -f ${compressed_file_name}
 }
 
 # install basic dependencies
@@ -72,5 +72,5 @@ sudo apt autoremove -y
 setup_executable_from_github neovim neovim 'nvim.appimage$' nvim
 setup_executable_from_github nelsonenzo tmux-appimage 'tmux.appimage$' tmux
 setup_executable_from_github mikefarah yq 'yq_linux_amd64$' yq
-setup_compressed_executable_from_github ClementTsang bottom bottom_x86_64-unknown-linux-musl.tar.gz btm.tar.gz btm
-setup_compressed_executable_from_github dalance procs '-x86_64-linux.zip$' procs.zip procs
+setup_compressed_executable_from_github ClementTsang bottom bottom_x86_64-unknown-linux-musl.tar.gz btm-pkg.tar.gz btm
+setup_compressed_executable_from_github dalance procs '-x86_64-linux.zip$' procs-pkg.zip procs
