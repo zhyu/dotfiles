@@ -172,7 +172,9 @@ func Run(opts *Options) (int, error) {
 			return chunkList.Push(data)
 		}, eventBox, executor, opts.ReadZero, opts.Filter == nil)
 
-		go reader.ReadSource(opts.Input, opts.WalkerRoot, opts.WalkerOpts, opts.WalkerSkip, initialReload, initialEnv)
+		readyChan := make(chan bool)
+		go reader.ReadSource(opts.Input, opts.WalkerRoot, opts.WalkerOpts, opts.WalkerSkip, initialReload, initialEnv, readyChan)
+		<-readyChan
 	}
 
 	// Matcher
@@ -186,13 +188,19 @@ func Run(opts *Options) (int, error) {
 			forward = false
 		case byBegin:
 			forward = true
+		case byPathname:
+			withPos = true
+			forward = false
 		}
 	}
+
+	nth := opts.Nth
+	nthRevision := 0
 	patternCache := make(map[string]*Pattern)
 	patternBuilder := func(runes []rune) *Pattern {
 		return BuildPattern(cache, patternCache,
 			opts.Fuzzy, opts.FuzzyAlgo, opts.Extended, opts.Case, opts.Normalize, forward, withPos,
-			opts.Filter == nil, opts.Nth, opts.Delimiter, runes)
+			opts.Filter == nil, nth, opts.Delimiter, nthRevision, runes)
 	}
 	inputRevision := revision{}
 	snapshotRevision := revision{}
@@ -224,7 +232,7 @@ func Run(opts *Options) (int, error) {
 					}
 					return false
 				}, eventBox, executor, opts.ReadZero, false)
-			reader.ReadSource(opts.Input, opts.WalkerRoot, opts.WalkerOpts, opts.WalkerSkip, initialReload, initialEnv)
+			reader.ReadSource(opts.Input, opts.WalkerRoot, opts.WalkerOpts, opts.WalkerSkip, initialReload, initialEnv, nil)
 		} else {
 			eventBox.Unwatch(EvtReadNew)
 			eventBox.WaitFor(EvtReadFin)
@@ -299,7 +307,9 @@ func Run(opts *Options) (int, error) {
 		itemIndex = 0
 		inputRevision.bumpMajor()
 		header = make([]string, 0, opts.HeaderLines)
-		go reader.restart(command, environ)
+		readyChan := make(chan bool)
+		go reader.restart(command, environ, readyChan)
+		<-readyChan
 	}
 
 	exitCode := ExitOk
@@ -369,6 +379,14 @@ func Run(opts *Options) (int, error) {
 						command = val.command
 						environ = val.environ
 						changed = val.changed
+						if val.nth != nil {
+							// Change nth and clear caches
+							nth = *val.nth
+							nthRevision++
+							patternCache = make(map[string]*Pattern)
+							cache.Clear()
+							inputRevision.bumpMinor()
+						}
 						if command != nil {
 							useSnapshot = val.sync
 						}

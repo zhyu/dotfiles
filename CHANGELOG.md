@@ -1,6 +1,217 @@
 CHANGELOG
 =========
 
+0.59.0
+------
+- Prioritizing file name matches (#4192)
+    - Added a new tiebreak option `pathname` for prioritizing file name matches
+    - `--scheme=path` now sets `--tiebreak=pathname,length`
+    - fzf will automatically choose `path` scheme when the input is a TTY device, where fzf would start its built-in walker or run `$FZF_DEFAULT_COMMAND` which is usually a command for listing files.
+- Added `--header-lines-border` to display header from `--header-lines` with a separate border
+  ```sh
+  # Use --header-lines-border to separate two headers
+  ps -ef | fzf --style full --layout reverse --header-lines 1 \
+               --bind 'ctrl-r:reload(ps -ef)' --header 'Press CTRL-R to reload' \
+               --header-lines-border bottom --no-list-border
+  ```
+- `click-header` event now sets `$FZF_CLICK_HEADER_WORD` and `$FZF_CLICK_HEADER_NTH`. You can use them to implement a clickable header for changing the search scope using the new `transform-nth` action.
+  ```sh
+  # Click on the header line to limit search scope
+  ps -ef | fzf --style full --layout reverse --header-lines 1 \
+               --header-lines-border bottom --no-list-border \
+               --color fg:dim,nth:regular \
+               --bind 'click-header:transform-nth(
+                         echo $FZF_CLICK_HEADER_NTH
+                       )+transform-prompt(
+                         echo "$FZF_CLICK_HEADER_WORD> "
+                       )'
+  ```
+    - `$FZF_KEY` was updated to expose the type of the click. e.g. `click`, `ctrl-click`, etc. You can use it to implement a more sophisticated behavior.
+    - `kill` completion for bash and zsh were updated to use this feature
+- Added `--no-input` option to completely disable and hide the input section
+  ```sh
+  # Click header to trigger search
+  fzf --header '[src] [test]' --no-input --layout reverse \
+      --header-border bottom --input-border \
+      --bind 'click-header:transform-search:echo ${FZF_CLICK_HEADER_WORD:1:-1}'
+  ```
+- Extended `{q}` placeholder to support ranges. e.g. `{q:1}`, `{q:2..}`, etc.
+- Added `search(...)` and `transform-search(...)` action to trigger an fzf search with an arbitrary query string. This can be used to extend the search syntax of fzf. In the following example, fzf will use the first word of the query to trigger ripgrep search, and use the rest of the query to perform fzf search within the result.
+  ```sh
+  export TEMP=$(mktemp -u)
+  trap 'rm -f "$TEMP"' EXIT
+
+  TRANSFORMER='
+    rg_pat={q:1}      # The first word is passed to ripgrep
+    fzf_pat={q:2..}   # The rest are passed to fzf
+
+    if ! [[ -r "$TEMP" ]] || [[ $rg_pat != $(cat "$TEMP") ]]; then
+      echo "$rg_pat" > "$TEMP"
+      printf "reload:sleep 0.1; rg --column --line-number --no-heading --color=always --smart-case %q || true" "$rg_pat"
+    fi
+    echo "+search:$fzf_pat"
+  '
+  fzf --ansi --disabled \
+    --with-shell 'bash -c' \
+    --bind "start,change:transform:$TRANSFORMER"
+  ```
+- You can now bind actions to multiple keys and events at once by writing a comma-separated list of keys and events before the colon
+  ```sh
+  # Load 'ps -ef' output on start and reload it on CTRL-R
+  fzf --bind 'start,ctrl-r:reload:ps -ef'
+  ```
+- `--min-height` option now takes a number followed by `+`, which tells fzf to show at least that many items in the list section. The default value is now changed to `10+`.
+  ```sh
+  # You will only see the input section which takes 3 lines
+  fzf --style=full --height 1% --min-height 3
+
+  # You will see 3 items in the list section
+  fzf --style full --height 1% --min-height 3+
+  ```
+    - Shell integration scripts were updated to use `--min-height 20+` by default
+- Added `bell` action to ring the terminal bell
+  ```sh
+  # Press CTRL-Y to copy the current line to the clipboard and ring the bell
+  fzf --bind 'ctrl-y:execute-silent(echo -n {} | pbcopy)+bell'
+  ```
+- Bug fixes and improvements
+- Fixed fish script to support fish 3.1.2 or later (@bitraid)
+
+0.58.0
+------
+_Release highlights: https://junegunn.github.io/fzf/releases/0.58.0/_
+
+This version introduces three new border types, `--list-border`, `--input-border`, and `--header-border`, offering much greater flexibility for customizing the user interface.
+
+<img src="https://raw.githubusercontent.com/junegunn/i/master/fzf-4-borders.png" />
+
+Also, fzf now offers "style presets" for quick customization, which can be activated using the `--style` option.
+
+| Preset    | Screenshot                                                                             |
+| :---      | :---                                                                                   |
+| `default` | <img src="https://raw.githubusercontent.com/junegunn/i/master/fzf-style-default.png"/> |
+| `full`    | <img src="https://raw.githubusercontent.com/junegunn/i/master/fzf-style-full.png"/>    |
+| `minimal` | <img src="https://raw.githubusercontent.com/junegunn/i/master/fzf-style-minimal.png"/> |
+
+- Style presets (#4160)
+    - `--style=full[:BORDER_STYLE]`
+    - `--style=default`
+    - `--style=minimal`
+- Border and label for the list section (#4148)
+    - Options
+        - `--list-border[=STYLE]`
+        - `--list-label=LABEL`
+        - `--list-label-pos=COL[:bottom]`
+    - Colors
+        - `list-fg`
+        - `list-bg`
+        - `list-border`
+        - `list-label`
+    - Actions
+        - `change-list-label`
+        - `transform-list-label`
+- Border and label for the input section (prompt line and info line) (#4154)
+    - Options
+        - `--input-border[=STYLE]`
+        - `--input-label=LABEL`
+        - `--input-label-pos=COL[:bottom]`
+    - Colors
+        - `input-fg` (`query`)
+        - `input-bg`
+        - `input-border`
+        - `input-label`
+    - Actions
+        - `change-input-label`
+        - `transform-input-label`
+- Border and label for the header section (#4159)
+    - Options
+        - `--header-border[=STYLE]`
+        - `--header-label=LABEL`
+        - `--header-label-pos=COL[:bottom]`
+    - Colors
+        - `header-fg` (`header`)
+        - `header-bg`
+        - `header-border`
+        - `header-label`
+    - Actions
+        - `change-header-label`
+        - `transform-header-label`
+- Added `--preview-border[=STYLE]` as short for `--preview-window=border[-STYLE]`
+- Added new preview border style `line` which draws a single separator line between the preview window and the rest of the interface
+- fzf will now render a dashed line (`┈┈`) in each `--gap` for better visual separation.
+  ```sh
+  # All bash/zsh functions, highlighted
+  declare -f |
+    perl -0 -pe 's/^}\n/}\0/gm' |
+    bat --plain --language bash --color always |
+    fzf --read0 --ansi --layout reverse --multi --highlight-line --gap
+  ```
+    * You can customize the line using `--gap-line[=STR]`.
+- You can specify `border-native` to `--tmux` so that native tmux border is used instead of `--border`. This can be useful if you start a different program from inside the popup.
+  ```sh
+  fzf --tmux border-native --bind 'enter:execute:less {}'
+  ```
+- Added `toggle-multi-line` action
+- Added `toggle-hscroll` action
+- Added `change-nth` action for dynamically changing the value of the `--nth` option
+  ```sh
+  # Start with --nth 1, then 2, then 3, then back to the default, 1
+  echo 'foo foobar foobarbaz' | fzf --bind 'space:change-nth(2|3|)' --nth 1 -q foo
+  ```
+- `--nth` parts of each line can now be rendered in a different text style
+  ```sh
+  # nth in a different style
+  ls -al | fzf --nth -1 --color nth:italic
+  ls -al | fzf --nth -1 --color nth:reverse
+  ls -al | fzf --nth -1 --color nth:reverse:bold
+
+  # Dim the other parts
+  ls -al | fzf --nth -1 --color nth:regular,fg:dim
+
+  # With 'change-nth'. The current nth option is exported as $FZF_NTH.
+  ps -ef | fzf --reverse --header-lines 1 --header-border bottom --input-border \
+             --color nth:regular,fg:dim \
+             --bind 'ctrl-n:change-nth(8..|1|2|3|4|5|6|7|)' \
+             --bind 'result:transform-prompt:echo "${FZF_NTH}> "'
+  ```
+- A single-character delimiter is now treated as a plain string delimiter rather than a regular expression delimiter, even if it's a regular expression meta-character.
+    - This means you can just write `--delimiter '|'` instead of escaping it as `--delimiter '\|'`
+- Bug fixes
+- Bug fixes and improvements in fish scripts (thanks to @bitraid)
+
+0.57.0
+------
+- You can now resize the preview window by dragging the border
+- Built-in walker improvements
+    - `--walker-root` can take multiple directory arguments. e.g. `--walker-root include src lib`
+    - `--walker-skip` can handle multi-component patterns. e.g. `--walker-skip target/build`
+- Removed long processing delay when displaying images in the preview window
+- `FZF_PREVIEW_*` environment variables are exported to all child processes (#4098)
+- Bug fixes in fish scripts
+
+0.56.3
+------
+- Bug fixes in zsh scripts
+    - fix(zsh): handle backtick trigger edge case (#4090)
+    - revert(zsh): remove 'fc -RI' call in the history widget (#4093)
+    - Thanks to @LangLangBart for the contributions
+
+0.56.2
+------
+- Bug fixes
+    - Fixed abnormal scrolling behavior when `--wrap` is set (#4083)
+    - [zsh] Fixed warning message when `ksh_arrays` is set (#4084)
+
+0.56.1
+------
+- Bug fixes and improvements
+    - Fixed a race condition which would cause fzf to present stale results after `reload` (#4070)
+    - `page-up` and `page-down` actions now work correctly with multi-line items (#4069)
+    - `{n}` is allowed in `SCROLL` expression in `--preview-window` (#4079)
+    - [zsh] Fixed regression in history loading with shared option (#4071)
+    - [zsh] Better command extraction in zsh completion (#4082)
+- Thanks to @LangLangBart, @jaydee-coder, @alex-huff, and @vejkse for the contributions
+
 0.56.0
 ------
 - Added `--gap[=N]` option to display empty lines between items.
@@ -13,8 +224,11 @@ CHANGELOG
       ```
     - Or just to make the list easier to read. For single-line items, you probably want to set `--color gutter:-1` as well to hide the gutter.
       ```sh
-      fzf --gap --color gutter:-1
+      fzf --info inline-right --gap --color gutter:-1
       ```
+- Added `noinfo` option to `--preview-window` to hide the scroll indicator in the preview window
+- Bug fixes
+    - Thanks to @LangLangBart, @akinomyoga, and @charlievieth for fixing the bugs
 
 0.55.0
 ------
