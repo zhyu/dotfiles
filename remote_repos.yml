@@ -7,8 +7,6 @@
   gitSubtreeDir: zsh/ohmyzsh
 - repo: https://github.com/whjvenyl/fasd.git
   gitSubtreeDir: zsh/ohmyzsh/custom/plugins/fasd
-- repo: https://github.com/zdharma-continuum/fast-syntax-highlighting.git
-  gitSubtreeDir: zsh/ohmyzsh/custom/plugins/fast-syntax-highlighting
 - repo: https://github.com/Aloxaf/fzf-tab.git
   gitSubtreeDir: zsh/ohmyzsh/custom/plugins/fzf-tab
 - repo: https://github.com/zsh-users/zsh-autosuggestions.git

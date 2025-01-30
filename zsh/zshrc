@@ -49,11 +49,10 @@ plugins=(
   python
   nvm
   kubectl
-  # it's important to load fzf-tab, fast-syntax-highlighting and zsh-autosuggestions in
-  # the following order, otherwise, fzf may crash the terminal
+  # it's important to load fzf-tab and zsh-autosuggestions in the following order,
+  # otherwise, pressing <Tab> for the autocompletion may crash the terminal
   fzf-tab
   fzf-tab-conf
-  fast-syntax-highlighting
   zsh-autosuggestions
 )
 
