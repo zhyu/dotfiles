@@ -23,11 +23,17 @@ function pull_remote() {
   git remote | rg "^${remote_name}$" > /dev/null && git remote remove $remote_name
   git remote add $remote_name $remote_url
 
-  git subtree pull --prefix=$subtree_dir $remote_name $remote_ref --squash
+  # if the $subtree_dir doesn't exist, it means it's a new repo, so we need to add it to git subtree,
+  # otherwise we need to pull the changes
+  if [ ! -d $subtree_dir ]; then
+    git subtree add --prefix=$subtree_dir $remote_name $remote_ref --squash
+  else
+    git subtree pull --prefix=$subtree_dir $remote_name $remote_ref --squash
+  fi
 
   if [ -n "$callback" ]; then
-      echo "Running callback: $callback"
-      eval $callback
+    echo "Running callback: $callback"
+    eval $callback
   fi
   echo "------------------------------------------------------------"
 }
