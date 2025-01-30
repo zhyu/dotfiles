@@ -1,4 +1,14 @@
-# Note: FZF_DEFAULT_COMMAND should have been set to use fd by fzf plugin of omz
+# ~/.fzf should be linked to dotfiles/fzf by the setup.sh script
+export PATH="$PATH:$HOME/.fzf/bin"
+
+# Set up fzf key bindings and fuzzy completion
+source <(fzf --zsh)
+
+if [[ -z "$FZF_DEFAULT_COMMAND" ]]; then
+  if (( $+commands[fd] )); then
+    export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git'
+  fi
+fi
 
 # Use fd instead of the default find command for listing path candidates.
 # - The first argument to the function ($1) is the base path to start traversal

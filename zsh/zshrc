@@ -41,7 +41,6 @@ _FASD_INIT_OPTS=(
 plugins=(
   vi-mode
   aliases
-  fzf
   fzf-conf
   fasd
   fasd-conf
