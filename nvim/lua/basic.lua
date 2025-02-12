@@ -67,6 +67,9 @@ set.updatetime = 300
 -- completion menu setup suggested by nvim-cmp
 set.completeopt = { "menu", "menuone", "noselect" }
 
+-- disable modelines, which are lines at the top of a file that specify vim settings
+set.modeline = false
+
 -- disable node provider
 g.loaded_node_provider = 0
 -- disable ruby provider
