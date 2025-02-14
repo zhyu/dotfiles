@@ -4,7 +4,7 @@
 
 - zsh
 - git
-- [Homebrew](https://brew.sh/) (macOS only)
+- [Homebrew](https://brew.sh/) (required on macOS; also supported on Linux)
 
 ## External dependencies
 
