@@ -112,6 +112,36 @@ return {
 								end,
 							})
 						end,
+						["ruff"] = function()
+							require("lspconfig").ruff.setup({
+								on_attach = function(client, bufnr)
+									local function fmt()
+										local params = {
+											command = "ruff.applyOrganizeImports",
+											arguments = {
+												{
+													uri = vim.uri_from_bufnr(bufnr),
+													version = vim.lsp.util.buf_versions[bufnr],
+												},
+											},
+										}
+										local res = client.request_sync("workspace/executeCommand", params, 3000, bufnr)
+										for _, r in pairs(res and res.result or {}) do
+											if r.edit then
+												local enc = (vim.lsp.get_client_by_id(cid) or {}).offset_encoding
+													or "utf-16"
+												vim.lsp.util.apply_workspace_edit(r.edit, enc)
+											end
+										end
+										vim.lsp.buf.format()
+									end
+
+									vim.api.nvim_create_user_command("Ruff", fmt, {
+										desc = "Ruff format",
+									})
+								end,
+							})
+						end,
 					})
 				end,
 			},
@@ -183,7 +213,7 @@ return {
 		},
 		config = function()
 			require("mason-null-ls").setup({
-				ensure_installed = { "black", "isort", "prettierd", "stylua" },
+				ensure_installed = { "prettierd", "stylua" },
 				handlers = {},
 				-- This is for auto installing sources listed in the null-ls confs,
 				-- which is an alternative way to configure sources.
