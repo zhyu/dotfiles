@@ -162,22 +162,15 @@ return {
 		event = { "BufReadPre", "BufNewFile" },
 		dependencies = { "mason.nvim" },
 		opts = function()
-			local fmt_group = vim.api.nvim_create_augroup("null-ls fmt_on_save", { clear = true })
-
 			local function fmt_on_save(client, bufnr)
 				if client.supports_method("textDocument/formatting") then
+					local fmt_group = vim.api.nvim_create_augroup("null-ls fmt_on_save", { clear = true })
 					vim.api.nvim_create_autocmd("BufWritePre", {
 						desc = "null-ls autoformat on save",
 						group = fmt_group,
 						buffer = bufnr,
 						callback = function()
-							vim.lsp.buf.format({
-								timeout_ms = 3000,
-								buffer = bufnr,
-								filter = function(fClient)
-									return fClient.name == "null-ls"
-								end,
-							})
+							require("plugins.lsp.actions").format_sync(client, bufnr)
 						end,
 					})
 				end
