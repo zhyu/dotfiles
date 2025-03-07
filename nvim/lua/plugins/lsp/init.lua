@@ -104,10 +104,15 @@ return {
 						["eslint"] = function()
 							require("lspconfig").eslint.setup({
 								on_attach = function(client, bufnr)
-									-- fix all on save
+									local au_group =
+										vim.api.nvim_create_augroup("eslint fix_all_on_save", { clear = true })
 									vim.api.nvim_create_autocmd("BufWritePre", {
+										desc = "Eslint fix all on save",
+										group = au_group,
 										buffer = bufnr,
-										command = "EslintFixAll",
+										callback = function()
+											require("plugins.lsp.actions").fix_all_sync(client, bufnr)
+										end,
 									})
 								end,
 							})
