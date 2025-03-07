@@ -115,29 +115,19 @@ return {
 						["ruff"] = function()
 							require("lspconfig").ruff.setup({
 								on_attach = function(client, bufnr)
-									local function fmt()
-										local params = {
-											command = "ruff.applyOrganizeImports",
-											arguments = {
-												{
-													uri = vim.uri_from_bufnr(bufnr),
-													version = vim.lsp.util.buf_versions[bufnr],
-												},
-											},
-										}
-										local res = client.request_sync("workspace/executeCommand", params, 3000, bufnr)
-										for _, r in pairs(res and res.result or {}) do
-											if r.edit then
-												local enc = (vim.lsp.get_client_by_id(cid) or {}).offset_encoding
-													or "utf-16"
-												vim.lsp.util.apply_workspace_edit(r.edit, enc)
-											end
-										end
-										vim.lsp.buf.format()
-									end
+									local actions = require("plugins.lsp.actions")
+									local au_group =
+										vim.api.nvim_create_augroup("ruff actions_on_save", { clear = true })
 
-									vim.api.nvim_create_user_command("Ruff", fmt, {
-										desc = "Ruff format",
+									vim.api.nvim_create_autocmd("BufWritePre", {
+										desc = "Ruff fix, imports, fmt on save",
+										group = au_group,
+										buffer = bufnr,
+										callback = function()
+											actions.fix_all_sync(client, bufnr)
+											actions.organize_imports_sync(client, bufnr)
+											actions.format_sync(client, bufnr)
+										end,
 									})
 								end,
 							})
