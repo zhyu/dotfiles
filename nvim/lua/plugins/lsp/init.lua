@@ -115,7 +115,6 @@ return {
 						["ruff"] = function()
 							require("lspconfig").ruff.setup({
 								on_attach = function(client, bufnr)
-									local actions = require("plugins.lsp.actions")
 									local au_group =
 										vim.api.nvim_create_augroup("ruff actions_on_save", { clear = true })
 
@@ -124,6 +123,7 @@ return {
 										group = au_group,
 										buffer = bufnr,
 										callback = function()
+											local actions = require("plugins.lsp.actions")
 											actions.fix_all_sync(client, bufnr)
 											actions.organize_imports_sync(client, bufnr)
 											actions.format_sync(client, bufnr)
