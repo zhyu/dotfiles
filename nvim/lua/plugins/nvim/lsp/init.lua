@@ -118,26 +118,6 @@ return {
 								end,
 							})
 						end,
-						["ruff"] = function()
-							require("lspconfig").ruff.setup({
-								on_attach = function(client, bufnr)
-									local au_group =
-										vim.api.nvim_create_augroup("ruff actions_on_save", { clear = true })
-
-									vim.api.nvim_create_autocmd("BufWritePre", {
-										desc = "Ruff fix, imports, fmt on save",
-										group = au_group,
-										buffer = bufnr,
-										callback = function()
-											local actions = require("plugins.nvim.lsp.actions")
-											actions.fix_all_sync(client, bufnr)
-											actions.organize_imports_sync(client, bufnr)
-											actions.format_sync(client, bufnr)
-										end,
-									})
-								end,
-							})
-						end,
 					})
 				end,
 			},
@@ -202,7 +182,7 @@ return {
 		},
 		config = function()
 			require("mason-null-ls").setup({
-				ensure_installed = { "stylua" },
+				ensure_installed = { "black", "isort", "stylua" },
 				handlers = {},
 				-- This is for auto installing sources listed in the null-ls confs,
 				-- which is an alternative way to configure sources.
