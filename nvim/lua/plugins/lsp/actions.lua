@@ -63,7 +63,7 @@ end
 ---@param timeout_ms? integer
 ---@param attempts? integer
 local function code_action_sync(client, bufnr, kind, timeout_ms, attempts)
-	local params = vim.lsp.util.make_range_params()
+	local params = vim.lsp.util.make_range_params(0, client.offset_encoding or "utf-16")
 	params.context = { only = { kind }, diagnostics = {} }
 	local res = client.request_sync(ms.textDocument_codeAction, params, timeout_ms or 3000, bufnr)
 	-- codeAction can return either Command or CodeAction[]
