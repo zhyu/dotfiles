@@ -202,7 +202,7 @@ return {
 		},
 		config = function()
 			require("mason-null-ls").setup({
-				ensure_installed = { "prettierd", "stylua" },
+				ensure_installed = { "stylua" },
 				handlers = {},
 				-- This is for auto installing sources listed in the null-ls confs,
 				-- which is an alternative way to configure sources.
