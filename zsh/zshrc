@@ -47,6 +47,7 @@ plugins=(
   git
   git-jira
   python
+  poetry-env
   nvm
   kubectl
   # it's important to load fzf-tab and zsh-autosuggestions in the following order,
