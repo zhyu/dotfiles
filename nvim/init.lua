@@ -1,13 +1,18 @@
 vim.loader.enable()
 
--- basic editor options
-require("basic")
+if vim.g.vscode then
+	-- VSCode extension
+	require("lazyvim")
+else
+	-- basic editor options
+	require("basic")
 
--- plugins management and config
-require("lazyvim")
+	-- plugins management and config
+	require("lazyvim")
 
--- automatic commands
-require("autocmds")
+	-- automatic commands
+	require("autocmds")
 
--- custom keybindings
-require("keymaps")
+	-- custom keybindings
+	require("keymaps")
+end

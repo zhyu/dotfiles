@@ -112,7 +112,7 @@ return {
 										group = au_group,
 										buffer = bufnr,
 										callback = function()
-											require("plugins.lsp.actions").fix_all_sync(client, bufnr)
+											require("plugins.nvim.lsp.actions").fix_all_sync(client, bufnr)
 										end,
 									})
 								end,
@@ -129,7 +129,7 @@ return {
 										group = au_group,
 										buffer = bufnr,
 										callback = function()
-											local actions = require("plugins.lsp.actions")
+											local actions = require("plugins.nvim.lsp.actions")
 											actions.fix_all_sync(client, bufnr)
 											actions.organize_imports_sync(client, bufnr)
 											actions.format_sync(client, bufnr)
@@ -176,7 +176,7 @@ return {
 						group = fmt_group,
 						buffer = bufnr,
 						callback = function()
-							require("plugins.lsp.actions").format_sync(client, bufnr)
+							require("plugins.nvim.lsp.actions").format_sync(client, bufnr)
 						end,
 					})
 				end
