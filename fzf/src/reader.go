@@ -277,6 +277,9 @@ func (r *Reader) readFiles(roots []string, opts walkerOpts, ignores []string) bo
 	ignoresFull := []string{}
 	ignoresSuffix := []string{}
 	sep := string(os.PathSeparator)
+	if _, ok := os.LookupEnv("MSYSTEM"); ok {
+		sep = "/"
+	}
 	for _, ignore := range ignores {
 		if strings.ContainsRune(ignore, os.PathSeparator) {
 			if strings.HasPrefix(ignore, sep) {
@@ -319,6 +322,9 @@ func (r *Reader) readFiles(roots []string, opts walkerOpts, ignores []string) bo
 					if strings.HasSuffix(path, ignore) {
 						return filepath.SkipDir
 					}
+				}
+				if path != sep {
+					path += sep
 				}
 			}
 			if ((opts.file && !isDir) || (opts.dir && isDir)) && r.pusher(stringBytes(path)) {

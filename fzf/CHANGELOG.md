@@ -1,12 +1,105 @@
 CHANGELOG
 =========
 
+0.61.3
+------
+- Reverted #4351 as it caused `tmux run-shell 'fzf --tmux'` to fail (#4559 #4560)
+- More environment variables for child processes (#4356)
+
+0.61.2
+------
+- Fixed panic when using header border without pointer/marker (@phanen)
+- Fixed `--tmux` option when already inside a tmux popup (@peikk0)
+- Bug fixes and improvements in CTRL-T binding of fish (#4334) (@bitraid)
+- Added `--no-tty-default` option to make fzf search for the current TTY device instead of defaulting to `/dev/tty` (#4242)
+
+0.61.1
+------
+- Disable bracketed-paste mode on exit. This fixes issue where pasting breaks after running fzf on old bash versions that don't support the mode.
+
+0.61.0
+------
+- Added `--ghost=TEXT` to display a ghost text when the input is empty
+  ```sh
+  # Display "Type to search" when the input is empty
+  fzf --ghost "Type to search"
+  ```
+- Added `change-ghost` and `transform-ghost` actions for dynamically changing the ghost text
+- Added `change-pointer` and `transform-pointer` actions for dynamically changing the pointer sign
+- Added `r` flag for placeholder expression (raw mode) for unquoted output
+- Bug fixes and improvements
+
+0.60.3
+------
+- Bug fixes and improvements
+    - [fish] Enable multiple history commands insertion (#4280) (@bitraid)
+    - [walker] Append '/' to directory entries on MSYS2 (#4281)
+    - Trim trailing whitespaces after processing ANSI sequences (#4282)
+    - Remove temp files before `become` when using `--tmux` option (#4283)
+    - Fix condition for using item numlines cache (#4285) (@alex-huff)
+    - Make `--accept-nth` compatible with `--select-1` (#4287)
+    - Increase the query length limit from 300 to 1000 (#4292)
+    - [windows] Prevent fzf from consuming user input while paused (#4260)
+
+0.60.2
+------
+- Template for `--with-nth` and `--accept-nth` now supports `{n}` which evaluates to the zero-based ordinal index of the item
+- Fixed a regression that caused the last field in the "nth" expression to be trimmed when a regular expression delimiter is used
+    - Thanks to @phanen for the fix
+- Fixed 'jump' action when the pointer is an empty string
+
+0.60.1
+------
+- Bug fixes and minor improvements
+    - Built-in walker now prints directory entries with a trailing slash
+    - Fixed a bug causing unexpected behavior with [fzf-tab](https://github.com/Aloxaf/fzf-tab). Please upgrade if you use it.
+- Thanks to @alexeisersun, @bitraid, @Lompik, and @fsc0 for the contributions
+
+0.60.0
+------
+_Release highlights: https://junegunn.github.io/fzf/releases/0.60.0/_
+
+- Added `--accept-nth` for choosing output fields
+  ```sh
+  ps -ef | fzf --multi --header-lines 1 | awk '{print $2}'
+  # Becomes
+  ps -ef | fzf --multi --header-lines 1 --accept-nth 2
+
+  git branch | fzf | cut -c3-
+  # Can be rewritten as
+  git branch | fzf --accept-nth -1
+  ```
+- `--accept-nth` and `--with-nth` now support a template that includes multiple field index expressions in curly braces
+  ```sh
+  echo foo,bar,baz | fzf --delimiter , --accept-nth '{1}, {3}, {2}'
+    # foo, baz, bar
+
+  echo foo,bar,baz | fzf --delimiter , --with-nth '{1},{3},{2},{1..2}'
+    # foo,baz,bar,foo,bar
+  ```
+- Added `exclude` and `exclude-multi` actions for dynamically excluding items
+  ```sh
+  seq 100 | fzf --bind 'ctrl-x:exclude'
+
+  # 'exclude-multi' will exclude the selected items or the current item
+  seq 100 | fzf --multi --bind 'ctrl-x:exclude-multi'
+  ```
+- Preview window now prints wrap indicator when wrapping is enabled
+  ```sh
+  seq 100 | xargs | fzf --wrap --preview 'echo {}' --preview-window wrap
+  ```
+- Bug fixes and improvements
+
 0.59.0
 ------
+_Release highlights: https://junegunn.github.io/fzf/releases/0.59.0/_
+
 - Prioritizing file name matches (#4192)
     - Added a new tiebreak option `pathname` for prioritizing file name matches
     - `--scheme=path` now sets `--tiebreak=pathname,length`
-    - fzf will automatically choose `path` scheme when the input is a TTY device, where fzf would start its built-in walker or run `$FZF_DEFAULT_COMMAND` which is usually a command for listing files.
+    - fzf will automatically choose `path` scheme
+        * when the input is a TTY device, where fzf would start its built-in walker or run `$FZF_DEFAULT_COMMAND` which is usually a command for listing files,
+        * but not when `reload` or `transform` action is bound to `start` event, because in that case, fzf can't be sure of the input type.
 - Added `--header-lines-border` to display header from `--header-lines` with a separate border
   ```sh
   # Use --header-lines-border to separate two headers
@@ -34,7 +127,21 @@ CHANGELOG
   fzf --header '[src] [test]' --no-input --layout reverse \
       --header-border bottom --input-border \
       --bind 'click-header:transform-search:echo ${FZF_CLICK_HEADER_WORD:1:-1}'
+
+  # Vim-like mode switch
+  fzf --layout reverse-list --no-input \
+      --bind 'j:down,k:up,/:show-input+unbind(j,k,/)' \
+      --bind 'enter,esc,ctrl-c:transform:
+        if [[ $FZF_INPUT_STATE = enabled ]]; then
+          echo "rebind(j,k,/)+hide-input"
+        elif [[ $FZF_KEY = enter ]]; then
+          echo accept
+        else
+          echo abort
+        fi
+      '
   ```
+    - You can later show the input section using `show-input` or `toggle-input` action, and hide it again using `hide-input`, or `toggle-input`.
 - Extended `{q}` placeholder to support ranges. e.g. `{q:1}`, `{q:2..}`, etc.
 - Added `search(...)` and `transform-search(...)` action to trigger an fzf search with an arbitrary query string. This can be used to extend the search syntax of fzf. In the following example, fzf will use the first word of the query to trigger ripgrep search, and use the rest of the query to perform fzf search within the result.
   ```sh
@@ -69,11 +176,13 @@ CHANGELOG
   fzf --style full --height 1% --min-height 3+
   ```
     - Shell integration scripts were updated to use `--min-height 20+` by default
+- `--header-lines` will be displayed at the top in `reverse-list` layout
 - Added `bell` action to ring the terminal bell
   ```sh
   # Press CTRL-Y to copy the current line to the clipboard and ring the bell
   fzf --bind 'ctrl-y:execute-silent(echo -n {} | pbcopy)+bell'
   ```
+- Added `toggle-bind` action
 - Bug fixes and improvements
 - Fixed fish script to support fish 3.1.2 or later (@bitraid)
 
@@ -345,7 +454,7 @@ _Release highlights: https://junegunn.github.io/fzf/releases/0.54.0/_
 - fzf will not start the initial reader when `reload` or `reload-sync` is bound to `start` event. `fzf < /dev/null` or `: | fzf` are no longer required and extraneous `load` event will not fire due to the empty list.
   ```sh
   # Now this will work as expected. Previously, this would print an invalid header line.
-  # `fzf < /dev/null` or `: | fzf` would fix the problem, but then an extraneous 
+  # `fzf < /dev/null` or `: | fzf` would fix the problem, but then an extraneous
   # `load` event would fire and the header would be prematurely updated.
   fzf --header 'Loading ...' --header-lines 1 \
       --bind 'start:reload:sleep 1; ps -ef' \

@@ -41,6 +41,7 @@ Usage: fzf [options]
                              integer or a range expression ([BEGIN]..[END]).
     --with-nth=N[,..]        Transform the presentation of each line using
                              field index expressions
+    --accept-nth=N[,..]      Define which fields to print on accept
     -d, --delimiter=STR      Field delimiter regex (default: AWK-style)
     +s, --no-sort            Do not sort the result
     --literal                Do not normalize latin script letters
@@ -135,6 +136,7 @@ Usage: fzf [options]
     --separator=STR          Draw horizontal separator on info line using the string
                              (default: '─' or '-')
     --no-separator           Hide info line separator
+    --ghost=TEXT             Ghost text to display when the input is empty
     --filepath-word          Make word-wise movements respect path separators
     --input-border[=STYLE]   Draw border around the input section
                              [rounded|sharp|bold|block|thinblock|double|horizontal|vertical|
@@ -543,7 +545,8 @@ type Options struct {
 	Case              Case
 	Normalize         bool
 	Nth               []Range
-	WithNth           []Range
+	WithNth           func(Delimiter) func([]Token, int32) string
+	AcceptNth         func(Delimiter) func([]Token, int32) string
 	Delimiter         Delimiter
 	Sort              int
 	Track             trackOption
@@ -572,6 +575,7 @@ type Options struct {
 	InfoStyle         infoStyle
 	InfoPrefix        string
 	InfoCommand       string
+	Ghost             string
 	Separator         *string
 	JumpLabels        string
 	Prompt            string
@@ -627,6 +631,7 @@ type Options struct {
 	MEMProfile        string
 	BlockProfile      string
 	MutexProfile      string
+	TtyDefault        string
 }
 
 func filterNonEmpty(input []string) []string {
@@ -665,7 +670,6 @@ func defaultOptions() *Options {
 		Case:         CaseSmart,
 		Normalize:    true,
 		Nth:          make([]Range, 0),
-		WithNth:      make([]Range, 0),
 		Delimiter:    Delimiter{},
 		Sort:         1000,
 		Track:        trackDisabled,
@@ -688,6 +692,7 @@ func defaultOptions() *Options {
 		ScrollOff:    3,
 		FileWord:     false,
 		InfoStyle:    infoDefault,
+		Ghost:        "",
 		Separator:    nil,
 		JumpLabels:   defaultJumpLabels,
 		Prompt:       "> ",
@@ -726,6 +731,7 @@ func defaultOptions() *Options {
 		WalkerOpts:   walkerOpts{file: true, hidden: true, follow: true},
 		WalkerRoot:   []string{"."},
 		WalkerSkip:   []string{".git", "node_modules"},
+		TtyDefault:   tui.DefaultTtyDevice,
 		Help:         false,
 		Version:      false}
 }
@@ -766,6 +772,70 @@ func splitNth(str string) ([]Range, error) {
 		ranges[idx] = r
 	}
 	return ranges, nil
+}
+
+func nthTransformer(str string) (func(Delimiter) func([]Token, int32) string, error) {
+	// ^[0-9,-.]+$"
+	if match, _ := regexp.MatchString("^[0-9,-.]+$", str); match {
+		nth, err := splitNth(str)
+		if err != nil {
+			return nil, err
+		}
+		return func(Delimiter) func([]Token, int32) string {
+			return func(tokens []Token, index int32) string {
+				return JoinTokens(Transform(tokens, nth))
+			}
+		}, nil
+	}
+
+	// {...} {...} ...
+	placeholder := regexp.MustCompile("{[0-9,-.]+}|{n}")
+	indexes := placeholder.FindAllStringIndex(str, -1)
+	if indexes == nil {
+		return nil, errors.New("template should include at least 1 placeholder: " + str)
+	}
+
+	type NthParts struct {
+		str   string
+		index bool
+		nth   []Range
+	}
+
+	parts := make([]NthParts, len(indexes))
+	idx := 0
+	for _, index := range indexes {
+		if idx < index[0] {
+			parts = append(parts, NthParts{str: str[idx:index[0]]})
+		}
+		expr := str[index[0]+1 : index[1]-1]
+		if expr == "n" {
+			parts = append(parts, NthParts{index: true})
+		} else if nth, err := splitNth(expr); err == nil {
+			parts = append(parts, NthParts{nth: nth})
+		}
+		idx = index[1]
+	}
+	if idx < len(str) {
+		parts = append(parts, NthParts{str: str[idx:]})
+	}
+
+	return func(delimiter Delimiter) func([]Token, int32) string {
+		return func(tokens []Token, index int32) string {
+			str := ""
+			for _, holder := range parts {
+				if holder.nth != nil {
+					str += StripLastDelimiter(JoinTokens(Transform(tokens, holder.nth)), delimiter)
+				} else if holder.index {
+					if index >= 0 {
+						str += strconv.Itoa(int(index))
+					}
+				} else {
+					str += holder.str
+				}
+			}
+			return str
+		}
+	}, nil
 }
 
 func delimiterRegexp(str string) Delimiter {
@@ -885,7 +955,7 @@ func parseKeyChordsImpl(str string, message string) (map[tui.Event]string, error
 		case "right":
 			add(tui.Right)
 		case "enter", "return":
-			add(tui.CtrlM)
+			add(tui.Enter)
 		case "space":
 			chords[tui.Key(' ')] = key
 		case "backspace", "bspace", "bs":
@@ -1336,7 +1406,7 @@ const (
 
 func init() {
 	executeRegexp = regexp.MustCompile(
-		`(?si)[:+](become|execute(?:-multi|-silent)?|reload(?:-sync)?|preview|(?:change|transform)-(?:query|prompt|(?:border|list|preview|input|header)-label|header|search|nth)|transform|change-(?:preview-window|preview|multi)|(?:re|un)bind|pos|put|print|search)`)
+		`(?si)[:+](become|execute(?:-multi|-silent)?|reload(?:-sync)?|preview|(?:change|transform)-(?:query|prompt|(?:border|list|preview|input|header)-label|header|search|nth|pointer|ghost)|transform|change-(?:preview-window|preview|multi)|(?:re|un|toggle-)bind|pos|put|print|search)`)
 	splitRegexp = regexp.MustCompile("[,:]+")
 	actionNameRegexp = regexp.MustCompile("(?i)^[a-z-]+")
 }
@@ -1500,6 +1570,12 @@ func parseActionList(masked string, original string, prevActions []*action, putA
 			appendAction(actToggleTrack)
 		case "toggle-track-current":
 			appendAction(actToggleTrackCurrent)
+		case "toggle-input":
+			appendAction(actToggleInput)
+		case "hide-input":
+			appendAction(actHideInput)
+		case "show-input":
+			appendAction(actShowInput)
 		case "toggle-header":
 			appendAction(actToggleHeader)
 		case "toggle-wrap":
@@ -1594,6 +1670,10 @@ func parseActionList(masked string, original string, prevActions []*action, putA
 			}
 		case "bell":
 			appendAction(actBell)
+		case "exclude":
+			appendAction(actExclude)
+		case "exclude-multi":
+			appendAction(actExcludeMulti)
 		default:
 			t := isExecuteAction(specLower)
 			if t == actIgnore {
@@ -1620,7 +1700,7 @@ func parseActionList(masked string, original string, prevActions []*action, putA
 					actions = append(actions, &action{t: t, a: actionArg})
 				}
 				switch t {
-				case actUnbind, actRebind:
+				case actUnbind, actRebind, actToggleBind:
 					if _, err := parseKeyChordsImpl(actionArg, spec[0:offset]+" target required"); err != nil {
 						return nil, err
 					}
@@ -1705,6 +1785,8 @@ func isExecuteAction(str string) actionType {
 		return actUnbind
 	case "rebind":
 		return actRebind
+	case "toggle-bind":
+		return actToggleBind
 	case "preview":
 		return actPreview
 	case "change-header":
@@ -1719,6 +1801,10 @@ func isExecuteAction(str string) actionType {
 		return actChangeInputLabel
 	case "change-header-label":
 		return actChangeHeaderLabel
+	case "change-ghost":
+		return actChangeGhost
+	case "change-pointer":
+		return actChangePointer
 	case "change-preview-window":
 		return actChangePreviewWindow
 	case "change-preview":
@@ -1757,8 +1843,12 @@ func isExecuteAction(str string) actionType {
 		return actTransformHeaderLabel
 	case "transform-header":
 		return actTransformHeader
+	case "transform-ghost":
+		return actTransformGhost
 	case "transform-nth":
 		return actTransformNth
+	case "transform-pointer":
+		return actTransformPointer
 	case "transform-prompt":
 		return actTransformPrompt
 	case "transform-query":
@@ -2248,6 +2338,12 @@ func parseOptions(index *int, opts *Options, allArgs []string) error {
 			}
 		case "--no-tmux":
 			opts.Tmux = nil
+		case "--tty-default":
+			if opts.TtyDefault, err = nextString("tty device name required"); err != nil {
+				return err
+			}
+		case "--no-tty-default":
+			opts.TtyDefault = ""
 		case "--force-tty-in":
 			// NOTE: We need this because `system('fzf --tmux < /dev/tty')` doesn't
 			// work on Neovim. Same as '-' option of fzf-tmux.
@@ -2372,7 +2468,15 @@ func parseOptions(index *int, opts *Options, allArgs []string) error {
 			if err != nil {
 				return err
 			}
-			if opts.WithNth, err = splitNth(str); err != nil {
+			if opts.WithNth, err = nthTransformer(str); err != nil {
+				return err
+			}
+		case "--accept-nth":
+			str, err := nextString("nth expression required")
+			if err != nil {
+				return err
+			}
+			if opts.AcceptNth, err = nthTransformer(str); err != nil {
 				return err
 			}
 		case "-s", "--sort":
@@ -2512,6 +2616,10 @@ func parseOptions(index *int, opts *Options, allArgs []string) error {
 		case "--no-separator":
 			nosep := ""
 			opts.Separator = &nosep
+		case "--ghost":
+			if opts.Ghost, err = nextString("ghost text required"); err != nil {
+				return err
+			}
 		case "--scrollbar":
 			given, bar := optionalNextString()
 			if given {
@@ -3102,7 +3210,14 @@ func postProcessOptions(opts *Options) error {
 	if opts.HeaderLinesShape == tui.BorderNone {
 		opts.HeaderLinesShape = tui.BorderPhantom
 	} else if opts.HeaderLinesShape == tui.BorderUndefined {
-		opts.HeaderLinesShape = tui.BorderNone
+		// In reverse-list layout, header lines should be at the top, while
+		// ordinary header should be at the bottom. So let's use a separate
+		// window for the header lines.
+		if opts.Layout == layoutReverseList {
+			opts.HeaderLinesShape = tui.BorderPhantom
+		} else {
+			opts.HeaderLinesShape = tui.BorderNone
+		}
 	}
 
 	if opts.Pointer == nil {
@@ -3205,7 +3320,7 @@ func postProcessOptions(opts *Options) error {
 
 	// If 'double-click' is left unbound, bind it to the action bound to 'enter'
 	if _, prs := opts.Keymap[tui.DoubleClick.AsEvent()]; !prs {
-		opts.Keymap[tui.DoubleClick.AsEvent()] = opts.Keymap[tui.CtrlM.AsEvent()]
+		opts.Keymap[tui.DoubleClick.AsEvent()] = opts.Keymap[tui.Enter.AsEvent()]
 	}
 
 	// If we're not using extended search mode, --nth option becomes irrelevant

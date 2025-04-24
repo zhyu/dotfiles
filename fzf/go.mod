@@ -1,13 +1,13 @@
 module github.com/junegunn/fzf
 
 require (
-	github.com/charlievieth/fastwalk v1.0.9
+	github.com/charlievieth/fastwalk v1.0.10
 	github.com/gdamore/tcell/v2 v2.8.1
 	github.com/junegunn/go-shellwords v0.0.0-20250127100254-2aa3b3277741
 	github.com/mattn/go-isatty v0.0.20
 	github.com/rivo/uniseg v0.4.7
-	golang.org/x/sys v0.29.0
-	golang.org/x/term v0.28.0
+	golang.org/x/sys v0.30.0
+	golang.org/x/term v0.29.0
 )
 
 require (

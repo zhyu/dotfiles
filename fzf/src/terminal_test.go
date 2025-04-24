@@ -75,6 +75,14 @@ func TestReplacePlaceholder(t *testing.T) {
 	result = replacePlaceholderTest("echo {}", true, Delimiter{}, printsep, false, "query", items1)
 	checkFormat("echo {{.O}}  foo{{.I}}bar baz{{.O}}")
 
+	// {r}, strip ansi
+	result = replacePlaceholderTest("echo {r}", true, Delimiter{}, printsep, false, "query", items1)
+	checkFormat("echo   foo'bar baz")
+
+	// {r..}, strip ansi
+	result = replacePlaceholderTest("echo {r..}", true, Delimiter{}, printsep, false, "query", items1)
+	checkFormat("echo foo'bar baz")
+
 	// {}, with multiple items
 	result = replacePlaceholderTest("echo {}", true, Delimiter{}, printsep, false, "query", items2)
 	checkFormat("echo {{.O}}foo{{.I}}bar baz{{.O}}")
@@ -565,7 +573,7 @@ func (item *Item) String() string {
 }
 
 // Helper function to parse, execute and convert "text/template" to string. Panics on error.
-func templateToString(format string, data interface{}) string {
+func templateToString(format string, data any) string {
 	bb := &bytes.Buffer{}
 
 	err := template.Must(template.New("").Parse(format)).Execute(bb, data)
