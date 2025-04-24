@@ -28,7 +28,7 @@ const (
 	CtrlJ
 	CtrlK
 	CtrlL
-	CtrlM
+	Enter
 	CtrlN
 	CtrlO
 	CtrlP
@@ -103,6 +103,8 @@ const (
 
 	Invalid
 	Fatal
+	BracketedPasteBegin
+	BracketedPasteEnd
 
 	Mouse
 	DoubleClick
@@ -160,6 +162,9 @@ func (e Event) KeyName() string {
 
 	switch e.Type {
 	case Rune:
+		if e.Char == ' ' {
+			return "space"
+		}
 		return string(e.Char)
 	case Alt:
 		return "alt-" + string(e.Char)
@@ -616,6 +621,7 @@ type Renderer interface {
 	ShouldEmitResizeEvent() bool
 	Bell()
 	HideCursor()
+	ShowCursor()
 
 	GetChar() Event
 
@@ -655,6 +661,8 @@ type Window interface {
 	LinkEnd()
 	Erase()
 	EraseMaybe() bool
+
+	SetWrapSign(string, int)
 }
 
 type FullscreenRenderer struct {
