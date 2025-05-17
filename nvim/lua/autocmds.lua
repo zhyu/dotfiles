@@ -41,7 +41,7 @@ create_aucmd("LspAttach", {
 
 		bufmap("n", "gf", "<cmd>Lspsaga lsp_finder<CR>", "Find definitions, implementations, and references")
 
-		bufmap("n", "gi", function()
+		bufmap("n", "gri", function()
 			require("telescope.builtin").lsp_implementations()
 		end, "List all the implementations")
 
@@ -49,21 +49,21 @@ create_aucmd("LspAttach", {
 			require("telescope.builtin").lsp_type_definitions()
 		end, "Jump to the definition of the type symbol")
 
-		bufmap("n", "gr", function()
+		bufmap("n", "grr", function()
 			require("telescope.builtin").lsp_references()
 		end, "List all the references")
 
-		bufmap("n", "<Leader>rn", "<cmd>Lspsaga rename<CR>", "Rename all references to the symbol under the cursor")
+		bufmap("n", "grn", "<cmd>Lspsaga rename<CR>", "Rename all references to the symbol under the cursor")
 
 		bufmap(
 			"n",
-			"<Leader>ac",
+			"gra",
 			"<cmd>Lspsaga code_action<CR>",
 			"Select a code action available at the current cursor position"
 		)
 		bufmap(
 			"x",
-			"<Leader>ac",
+			"gra",
 			"<cmd>Lspsaga code_action<CR>",
 			"Select a code action available at the current cursor position"
 		)
