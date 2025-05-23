@@ -1,4 +1,69 @@
-# If not in tmux, not executing zsh script, and tmux is not disabled, start tmux
+# Z Shell Configuration with Context-Aware Loading
+# =================================================
+
+# Function to automatically detect shell context if not explicitly set
+_detect_shell_context() {
+  # If SHELL_CONTEXT is already set, use it
+  if [[ -n "$SHELL_CONTEXT" ]]; then
+    return
+  fi
+
+  # Enhanced auto-detection based on environment
+  # VS Code and derivatives detection (including Cursor, Code OSS, etc.)
+  if [[ -n "$VSCODE_INJECTION" ]] || \
+     [[ -n "$TERM_PROGRAM" && "$TERM_PROGRAM" =~ ^(vscode|cursor)$ ]] || \
+     [[ -n "$VSCODE_PID" ]] || \
+     [[ -n "$VSCODE_CWD" ]] || \
+     [[ "$TERM" == "xterm-256color" && -n "$COLORTERM" && "$PWD" =~ "/tmp/vscode-" ]]; then
+    export SHELL_CONTEXT="vscode"
+  # Script execution contexts
+  elif [[ -n "$ZSH_SCRIPT" || -n "$ZSH_EXECUTION_STRING" ]]; then
+    export SHELL_CONTEXT="script"
+  # Non-interactive shell detection
+  elif [[ ! -t 0 && ! -t 1 ]]; then
+    export SHELL_CONTEXT="script"
+  # Default to interactive
+  else
+    export SHELL_CONTEXT="interactive"
+  fi
+
+  # Debug logging (uncomment for troubleshooting)
+  # echo "SHELL_CONTEXT detected: $SHELL_CONTEXT" >&2
+}
+
+# =================================================
+# Shell Context Documentation
+# =================================================
+#
+# SHELL_CONTEXT controls plugin loading and shell behavior:
+#
+# Contexts:
+# - "interactive": Full-featured interactive shell (default)
+# - "vscode": VS Code/Cursor integrated terminal (core + dev tools)
+# - "script": Script execution (minimal plugins for performance)
+# - "minimal": Performance-critical contexts (core plugins only)
+#
+# Detection Logic:
+# - VS Code: VSCODE_INJECTION, TERM_PROGRAM=vscode/cursor, VSCODE_PID, etc.
+# - Scripts: ZSH_SCRIPT, ZSH_EXECUTION_STRING, non-tty environments
+# - Interactive: Default fallback for terminal sessions
+#
+# Manual Override: export SHELL_CONTEXT="context_name"
+# =================================================
+
+# Detect context early for performance optimizations
+_detect_shell_context
+
+# Performance optimization: skip expensive operations for non-interactive contexts
+if [[ "$SHELL_CONTEXT" == "script" ]]; then
+  # Minimal setup for scripts - skip most configuration
+  export ZSH="$HOME/.oh-my-zsh"
+  plugins=(git aliases)
+  [[ -f "$ZSH/oh-my-zsh.sh" ]] && source "$ZSH/oh-my-zsh.sh"
+  return
+fi
+
+# If not in tmux, not executing zsh script, and shell context allows, start tmux
 #
 # Although the tmux plugin of omz could achieve the same, it doesn't play well with
 # p10k instant prompt, especially connecting to a server via ssh.
@@ -7,7 +72,7 @@
 # Note: `tmux attach` should not be wrapped with `exec`, otherwise the connection will
 # be closed when connecting to a server via ssh and there are no tmux sessions to attach to.
 # The `exit` part would exit ssh and terminate the connection when detach or exit tmux.
-if [[ -z ${TMUX+X}${ZSH_SCRIPT+X}${ZSH_EXECUTION_STRING+X} ]] && [[ -z ${DISABLE_TMUX+X} ]]; then
+if [[ -z ${TMUX+X}${ZSH_SCRIPT+X}${ZSH_EXECUTION_STRING+X} ]] && [[ "${SHELL_CONTEXT:-interactive}" == "interactive" ]]; then
   # This is very important for nerdfont glyphs to work inside tmux
   # Ref: https://gitlab.com/gnachman/iterm2/-/issues/10879#note_1433417922
   export LANG=en_US.UTF-8
@@ -38,24 +103,70 @@ _FASD_INIT_OPTS=(
   zsh-wcomp-install
 )
 
-plugins=(
-  vi-mode
-  aliases
-  fzf-conf
-  fasd
-  fasd-conf
-  git
-  git-jira
-  python
-  poetry-env
-  nvm
-  kubectl
-  # it's important to load fzf-tab and zsh-autosuggestions in the following order,
-  # otherwise, pressing <Tab> for the autocompletion may crash the terminal
-  fzf-tab
-  fzf-tab-conf
-  zsh-autosuggestions
+# =================================================
+# Layered Plugin System
+# =================================================
+
+# Base Layer: Essential plugins for all contexts
+# Criteria: Core functionality, minimal performance impact, universally useful
+_BASE_PLUGINS=(
+  git        # Git integration for all contexts
+  aliases    # Common shell aliases
 )
+
+# Interactive Layer: Plugins for interactive shell sessions
+# Criteria: User interaction, command enhancement, terminal-specific features
+_INTERACTIVE_PLUGINS=(
+  vi-mode           # Vim-style editing (interactive only)
+  fzf-conf          # Fuzzy finder configuration
+  fasd              # Fast directory/file access
+  fasd-conf         # FASD configuration
+  # Order matters: fzf-tab must load before zsh-autosuggestions
+  fzf-tab           # Fuzzy tab completion
+  fzf-tab-conf      # FZF tab configuration
+  zsh-autosuggestions  # Command suggestions
+)
+
+# Development Layer: Development and project-specific tools
+# Criteria: Language/framework support, development workflow enhancement
+_DEVELOPMENT_PLUGINS=(
+  git-jira      # Jira integration
+  python        # Python environment support
+  poetry-env    # Poetry environment management
+  nvm           # Node.js version management
+  kubectl       # Kubernetes CLI support
+)
+
+# Configure plugins based on detected shell context
+case "${SHELL_CONTEXT:-interactive}" in
+  "vscode")
+    # VS Code context: Base + Development (no interactive features)
+    plugins=(
+      ${_BASE_PLUGINS[@]}
+      ${_DEVELOPMENT_PLUGINS[@]}
+    )
+    ;;
+  "script")
+    # Script context: Base only (maximum performance)
+    plugins=(
+      ${_BASE_PLUGINS[@]}
+    )
+    ;;
+  "minimal")
+    # Minimal context: Base only (performance-critical)
+    plugins=(
+      ${_BASE_PLUGINS[@]}
+    )
+    ;;
+  "interactive"|*)
+    # Interactive context: All layers (full feature set)
+    plugins=(
+      ${_BASE_PLUGINS[@]}
+      ${_INTERACTIVE_PLUGINS[@]}
+      ${_DEVELOPMENT_PLUGINS[@]}
+    )
+    ;;
+esac
 
 # init linuxbrew
 test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
@@ -103,3 +214,31 @@ export EDITOR="${VISUAL}"
 if [[ -f $HOME/.zshrc.post ]]; then
   source $HOME/.zshrc.post
 fi
+
+# =================================================
+# Diagnostic and Configuration Verification
+# =================================================
+
+# Function to display current shell context and loaded plugins
+zsh_context_info() {
+  echo "=== ZSH Context Information ==="
+  echo "SHELL_CONTEXT: ${SHELL_CONTEXT:-unset}"
+  echo "Loaded plugins (${#plugins[@]}): ${plugins[*]}"
+  echo ""
+  echo "=== Environment Detection Variables ==="
+  echo "VSCODE_INJECTION: ${VSCODE_INJECTION:-unset}"
+  echo "TERM_PROGRAM: ${TERM_PROGRAM:-unset}"
+  echo "VSCODE_PID: ${VSCODE_PID:-unset}"
+  echo "VSCODE_CWD: ${VSCODE_CWD:-unset}"
+  echo "ZSH_SCRIPT: ${ZSH_SCRIPT:-unset}"
+  echo "ZSH_EXECUTION_STRING: ${ZSH_EXECUTION_STRING:-unset}"
+  echo "TTY Input: $(tty 2>/dev/null || echo 'not a tty')"
+  echo "TTY Output: $([[ -t 1 ]] && echo 'yes' || echo 'no')"
+  echo ""
+  echo "=== Plugin Layer Information ==="
+  echo "Base plugins: ${_BASE_PLUGINS[*]}"
+  echo "Interactive plugins: ${_INTERACTIVE_PLUGINS[*]}"
+  echo "Development plugins: ${_DEVELOPMENT_PLUGINS[*]}"
+}
+
+# For complete SHELL_CONTEXT documentation, see comments at top of file
