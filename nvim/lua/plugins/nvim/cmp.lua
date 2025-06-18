@@ -179,7 +179,11 @@ return {
 						event = "VeryLazy",
 						config = function()
 							vim.defer_fn(function()
-								require("copilot").setup()
+								require("copilot").setup({
+									filetypes = {
+										yaml = true,
+									},
+								})
 							end, 100)
 						end,
 					},
