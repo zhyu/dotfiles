@@ -53,6 +53,11 @@ _detect_shell_context() {
 # Detect context early for performance optimizations
 _detect_shell_context
 
+# =================================================
+# Define core plugins up-front so the script fast-path can reference it safely
+typeset -ga _CORE_PLUGINS=()  # add names here if you want minimal plugins for script mode
+# =================================================
+
 # Performance optimization: skip expensive operations for non-interactive contexts
 if [[ "$SHELL_CONTEXT" == "script" ]]; then
   # Minimal setup for scripts - skip most configuration
@@ -104,75 +109,81 @@ _FASD_INIT_OPTS=(
 )
 
 # =================================================
-# Layered Plugin System
+# Ordered Plugin System
 # =================================================
+# Instead of managing multiple category arrays (core/shell-only/shared), we
+# maintain **one** ordered list that reflects the exact load order.  An
+# associative array maps each plugin to the contexts in which it should be
+# enabled.  This guarantees both predictable ordering **and** flexible
+# per-context activation.
 
-# Core Plugins: Essential functionality needed in all contexts (currently none defined)
-# Criteria: Core functionality, minimal performance impact, universally useful
-_CORE_PLUGINS=(
-  # (no plugins currently categorized as core)
+# 1) Define the desired load order once
+typeset -ga _PLUGIN_ORDER=(
+  # --- Editing helpers ---------------------------------------------------
+  vi-mode            # keep this first so key-bindings are available early
+
+  # --- Aliases & navigation ---------------------------------------------
+  aliases
+  fasd
+  fasd-conf
+
+  # --- VCS / DevOps ------------------------------------------------------
+  git
+  git-jira
+  kubectl
+
+  # --- Languages / Tooling ----------------------------------------------
+  python
+  poetry-env
+
+  # --- Runtime managers --------------------------------------------------
+  nvm
+
+  # --- Interactive tools -------------------------------------------------
+  fzf-conf           # must come before fzf-tab
+  fzf-tab            # fuzzy tab-completion engine
+  fzf-tab-conf       # fzf-tab's extra configuration
+  zsh-autosuggestions
 )
 
-# Shell-Only Plugins
-# Loaded exclusively in interactive shell environments
-# Criteria: Enhancements for direct user interaction and development workflows in the shell
-_SHELL_ONLY_PLUGINS=(
-  # Vim-style editing
-  vi-mode
+# 2) Map plugins -> allowed contexts (space-separated list)
+#    Use "all" (or leave blank) to load everywhere.
+typeset -A _PLUGIN_CONTEXTS=(
+  [vi-mode]="interactive"
+  [fzf-conf]="interactive vscode"
+  [fzf-tab]="interactive"
+  [fzf-tab-conf]="interactive"
+  [zsh-autosuggestions]="interactive"
 
-  # Aliases, completions, and functions
-  aliases           # Common shell aliases
-  fasd              # Fast directory/file access
-  fasd-conf         # FASD configuration
-  git               # aliases and functions for git
-  git-jira          # aliases and functions to manage git branches/comments for specific jira issues
-  kubectl           # aliases and completions for kubectl
-  python            # aliases and functions to run python projects and manage venvs
+  [aliases]="interactive"
+  [fasd]="interactive"
+  [fasd-conf]="interactive"
 
-  # Dev tools
-  poetry-env         # automatically activate/deactivate poetry environments
+  [git]="interactive"
+  [git-jira]="interactive"
+  [kubectl]="interactive"
 
-  # Interactive tools
-  fzf-conf          # Fuzzy finder configuration
-  # Important: load fzf-tab and zsh-autosuggestions in this order to prevent terminal crashes
-  # when pressing <Tab> for autocompletion
-  fzf-tab           # Fuzzy tab completion
-  fzf-tab-conf      # FZF tab configuration
-  zsh-autosuggestions  # Command suggestions
+  [python]="interactive"
+  [poetry-env]="interactive"
+
+  [nvm]="interactive vscode"
 )
 
-# Shared Plugins
-# Loaded in both interactive shell and editor (e.g., VS Code) contexts
-# Criteria: Tools useful in both direct shell interaction and integrated editor terminals
-_SHARED_PLUGINS=(
-  # Dev tools
-  nvm               # Node.js version management
-)
-
-# Configure plugins based on detected shell context
-case "${SHELL_CONTEXT:-interactive}" in
-  "vscode")
-    # VS Code context: Core + Shared Plugins
-    plugins=(
-      ${_CORE_PLUGINS[@]}
-      ${_SHARED_PLUGINS[@]}
-    )
-    ;;
-  "script")
-    # Script context: Core only (maximum performance)
-    plugins=(
-      ${_CORE_PLUGINS[@]}
-    )
-    ;;
-  "interactive"|*)
-    # Interactive context: Core + Shell-Only + Shared Plugins
-    plugins=(
-      ${_CORE_PLUGINS[@]}
-      ${_SHELL_ONLY_PLUGINS[@]}
-      ${_SHARED_PLUGINS[@]}
-    )
-    ;;
-esac
+# 3) Build the final `plugins` array based on current context.
+#    Skip this step entirely when we are in "script" mode because that case
+#    is already handled earlier for performance.
+if [[ "${SHELL_CONTEXT:-interactive}" != "script" ]]; then
+  plugins=()
+  _ctx="${SHELL_CONTEXT:-interactive}"
+  for _plg in "${_PLUGIN_ORDER[@]}"; do
+    _allowed="${_PLUGIN_CONTEXTS[$_plg]:-all}"
+    # When _allowed is "all" (or empty) OR explicitly contains the current
+    # context, we enable the plugin.
+    if [[ "$_allowed" == "all" ]] || [[ " $_allowed " == *" $_ctx "* ]]; then
+      plugins+=("$_plg")
+    fi
+  done
+fi
 
 # init linuxbrew
 test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
@@ -240,11 +251,6 @@ zsh_context_info() {
   echo "ZSH_EXECUTION_STRING: ${ZSH_EXECUTION_STRING:-unset}"
   echo "TTY Input: $(tty 2>/dev/null || echo 'not a tty')"
   echo "TTY Output: $([[ -t 1 ]] && echo 'yes' || echo 'no')"
-  echo ""
-  echo "=== Plugin Layer Information ==="
-  echo "Core plugins: ${_CORE_PLUGINS[*]}"
-  echo "Shell-Only plugins: ${_SHELL_ONLY_PLUGINS[*]}"
-  echo "Shared plugins: ${_SHARED_PLUGINS[*]}"
 }
 
 # For complete SHELL_CONTEXT documentation, see comments at top of file
