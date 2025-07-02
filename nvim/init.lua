@@ -1,18 +1,9 @@
 vim.loader.enable()
 
-if vim.g.vscode then
-	-- VSCode extension
-	require("lazyvim")
-else
-	-- basic editor options
-	require("basic")
+local env = require("env")
 
-	-- plugins management and config
-	require("lazyvim")
+-- setup lazyvim itself (plugins are conditionally loaded in the env)
+require("lazyvim")
 
-	-- automatic commands
-	require("autocmds")
-
-	-- custom keybindings
-	require("keymaps")
-end
+-- load env-specific config
+require("env." .. env.name)
