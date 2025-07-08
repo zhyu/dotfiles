@@ -32,28 +32,6 @@ _detect_shell_context() {
 }
 
 # =================================================
-# Diagnostic and Configuration Verification
-# =================================================
-
-# Function to display current shell context and loaded plugins
-zsh_context_info() {
-  echo "=== ZSH Context Information ==="
-  echo "SHELL_CONTEXT: ${SHELL_CONTEXT:-unset}"
-  echo "Loaded plugins (${#plugins[@]}): ${plugins[*]}"
-  echo ""
-  echo "=== Environment Detection Variables ==="
-  echo "VSCODE_INJECTION: ${VSCODE_INJECTION:-unset}"
-  echo "TERM_PROGRAM: ${TERM_PROGRAM:-unset}"
-  echo "VSCODE_PID: ${VSCODE_PID:-unset}"
-  echo "VSCODE_CWD: ${VSCODE_CWD:-unset}"
-  echo "ZSH_SCRIPT: ${ZSH_SCRIPT:-unset}"
-  echo "ZSH_EXECUTION_STRING: ${ZSH_EXECUTION_STRING:-unset}"
-  echo "TTY Input: $(tty 2>/dev/null || echo 'not a tty')"
-  echo "TTY Output: $([[ -t 1 ]] && echo 'yes' || echo 'no')"
-}
-
-
-# =================================================
 # Shell Context Documentation
 # =================================================
 #
@@ -61,7 +39,7 @@ zsh_context_info() {
 #
 # Contexts:
 # - "interactive": Full-featured interactive shell (default)
-# - "vscode": VS Code/Cursor integrated/agent terminal (clean shell)
+# - "vscode": VS Code/Cursor integrated terminal (core + dev tools)
 # - "script": Script execution (minimal plugins for performance)
 #
 # Detection Logic:
@@ -74,10 +52,6 @@ zsh_context_info() {
 
 # Detect context early for performance optimizations
 _detect_shell_context
-
-if [[ "$SHELL_CONTEXT" == "vscode" ]]; then
-    return
-fi
 
 # =================================================
 # Define core plugins up-front so the script fast-path can reference it safely
@@ -134,7 +108,17 @@ _FASD_INIT_OPTS=(
   zsh-wcomp-install
 )
 
-plugins=(
+# =================================================
+# Ordered Plugin System
+# =================================================
+# Instead of managing multiple category arrays (core/shell-only/shared), we
+# maintain **one** ordered list that reflects the exact load order.  An
+# associative array maps each plugin to the contexts in which it should be
+# enabled.  This guarantees both predictable ordering **and** flexible
+# per-context activation.
+
+# 1) Define the desired load order once
+typeset -ga _PLUGIN_ORDER=(
   # --- Editing helpers ---------------------------------------------------
   vi-mode            # keep this first so key-bindings are available early
 
@@ -162,6 +146,44 @@ plugins=(
   zsh-autosuggestions
 )
 
+# 2) Map plugins -> allowed contexts (space-separated list)
+#    Use "all" (or leave blank) to load everywhere.
+typeset -A _PLUGIN_CONTEXTS=(
+  [vi-mode]="interactive"
+  [fzf-conf]="interactive vscode"
+  [fzf-tab]="interactive"
+  [fzf-tab-conf]="interactive"
+  [zsh-autosuggestions]="interactive"
+
+  [aliases]="interactive"
+  [fasd]="interactive"
+  [fasd-conf]="interactive"
+
+  [git]="interactive"
+  [git-jira]="interactive"
+  [kubectl]="interactive"
+
+  [python]="interactive"
+  [poetry-env]="interactive"
+
+  [nvm]="interactive vscode"
+)
+
+# 3) Build the final `plugins` array based on current context.
+#    Skip this step entirely when we are in "script" mode because that case
+#    is already handled earlier for performance.
+if [[ "${SHELL_CONTEXT:-interactive}" != "script" ]]; then
+  plugins=()
+  _ctx="${SHELL_CONTEXT:-interactive}"
+  for _plg in "${_PLUGIN_ORDER[@]}"; do
+    _allowed="${_PLUGIN_CONTEXTS[$_plg]:-all}"
+    # When _allowed is "all" (or empty) OR explicitly contains the current
+    # context, we enable the plugin.
+    if [[ "$_allowed" == "all" ]] || [[ " $_allowed " == *" $_ctx "* ]]; then
+      plugins+=("$_plg")
+    fi
+  done
+fi
 
 # init linuxbrew
 test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
@@ -209,3 +231,26 @@ export EDITOR="${VISUAL}"
 if [[ -f $HOME/.zshrc.post ]]; then
   source $HOME/.zshrc.post
 fi
+
+# =================================================
+# Diagnostic and Configuration Verification
+# =================================================
+
+# Function to display current shell context and loaded plugins
+zsh_context_info() {
+  echo "=== ZSH Context Information ==="
+  echo "SHELL_CONTEXT: ${SHELL_CONTEXT:-unset}"
+  echo "Loaded plugins (${#plugins[@]}): ${plugins[*]}"
+  echo ""
+  echo "=== Environment Detection Variables ==="
+  echo "VSCODE_INJECTION: ${VSCODE_INJECTION:-unset}"
+  echo "TERM_PROGRAM: ${TERM_PROGRAM:-unset}"
+  echo "VSCODE_PID: ${VSCODE_PID:-unset}"
+  echo "VSCODE_CWD: ${VSCODE_CWD:-unset}"
+  echo "ZSH_SCRIPT: ${ZSH_SCRIPT:-unset}"
+  echo "ZSH_EXECUTION_STRING: ${ZSH_EXECUTION_STRING:-unset}"
+  echo "TTY Input: $(tty 2>/dev/null || echo 'not a tty')"
+  echo "TTY Output: $([[ -t 1 ]] && echo 'yes' || echo 'no')"
+}
+
+# For complete SHELL_CONTEXT documentation, see comments at top of file
