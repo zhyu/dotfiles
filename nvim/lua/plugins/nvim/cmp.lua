@@ -42,6 +42,7 @@ return {
 				path = "",
 				copilot = "",
 				cody = "󰱹",
+				codeium = "",
 			}
 
 			return {
@@ -51,8 +52,8 @@ return {
 					end,
 				},
 				sources = cmp.config.sources({
+					{ name = "codeium" },
 					{ name = "copilot" },
-					{ name = "cody" },
 					{ name = "nvim_lsp", max_item_count = 3 },
 					{ name = "luasnip", max_item_count = 3, keyword_length = 2 },
 				}, {
@@ -188,6 +189,12 @@ return {
 						end,
 					},
 				},
+			},
+			{
+				"Exafunction/windsurf.nvim",
+				config = function()
+					require("codeium").setup({})
+				end,
 			},
 			"saadparwaiz1/cmp_luasnip",
 			"hrsh7th/cmp-path",
