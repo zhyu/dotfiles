@@ -52,7 +52,7 @@ return {
 					end,
 				},
 				sources = cmp.config.sources({
-					{ name = "codeium" },
+					{ name = "codeium", max_item_count = 1 },
 					{ name = "copilot" },
 					{ name = "nvim_lsp", max_item_count = 3 },
 					{ name = "luasnip", max_item_count = 3, keyword_length = 2 },
@@ -193,7 +193,9 @@ return {
 			{
 				"Exafunction/windsurf.nvim",
 				config = function()
-					require("codeium").setup({})
+					require("codeium").setup({
+						enable_chat = false,
+					})
 				end,
 			},
 			"saadparwaiz1/cmp_luasnip",
